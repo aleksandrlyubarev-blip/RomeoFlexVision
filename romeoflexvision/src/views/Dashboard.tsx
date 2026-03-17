@@ -4,6 +4,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts';
 import { useTasks } from '../hooks/useTasks';
+import { useI18n } from '../context/I18nContext';
 
 // ---- ISA-101 color helpers ----
 function getSignalColor(value: number, warn: number, alert: number) {
@@ -73,6 +74,7 @@ function MetricCard({ label, value, unit, warn, alert, suffix = '' }: {
 
 export default function Dashboard() {
   const { tasks } = useTasks();
+  const { t } = useI18n();
   const [cpuData, setCpuData] = useState(() => genTimeSeries(20, 45, 20));
   const [gpuData, setGpuData] = useState(() => genTimeSeries(20, 72, 15));
   const [tokenData] = useState(() => genTokenData(7));
@@ -112,13 +114,13 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-text-primary">Мониторинг & FinOps</h1>
-            <p className="text-xs text-text-muted mt-0.5">Методология USE · ISA-101 HMI · Обновление каждые 3с</p>
+            <h1 className="text-xl font-semibold text-text-primary">{t.dashboard.title}</h1>
+            <p className="text-xs text-text-muted mt-0.5">{t.dashboard.subtitle}</p>
           </div>
           <div className="flex items-center gap-3">
             <select value={server} onChange={e => setServer(e.target.value)}
               className="bg-bg-card border border-border-subtle rounded-lg px-3 py-1.5 text-sm text-text-secondary outline-none focus:border-accent-blue transition-colors">
-              <option value="all">Все серверы</option>
+              <option value="all">{t.dashboard.allServers}</option>
               <option value="gpu01">GPU-01</option>
               <option value="gpu02">GPU-02</option>
               <option value="cpu01">CPU-01</option>
@@ -134,7 +136,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard label="CPU Utilization" value={latestCpu} unit="%" warn={80} alert={95} />
           <MetricCard label="GPU Utilization" value={latestGpu} unit="%" warn={85} alert={95} />
-          <MetricCard label="Task Queue Depth" value={queueDepth} warn={10} alert={20} suffix=" задач" />
+          <MetricCard label="Task Queue Depth" value={queueDepth} warn={10} alert={20} suffix={` ${t.workspace.tasks}`} />
           <MetricCard label="HW Errors (24h)" value={0} warn={1} alert={5} suffix=" err" />
         </div>
 
@@ -192,20 +194,20 @@ export default function Dashboard() {
         {/* AI Observability / FinOps */}
         <div className="grid md:grid-cols-3 gap-4">
           <div className="glass-panel p-4 flex flex-col gap-1">
-            <div className="metric-label mb-1">Затраты (7 дней)</div>
+            <div className="metric-label mb-1">{t.dashboard.costs7d}</div>
             <div className="font-mono text-3xl font-semibold text-text-primary">${totalCost}</div>
-            <div className="text-xs text-accent-cyan mt-1">Сэкономлено на кэше: ${savedCost}</div>
+            <div className="text-xs text-accent-cyan mt-1">{t.dashboard.savedCache}: ${savedCost}</div>
           </div>
           <div className="glass-panel p-4 flex flex-col gap-1">
-            <div className="metric-label mb-1">Cache Hit Rate</div>
+            <div className="metric-label mb-1">{t.dashboard.cacheHit}</div>
             <div className="font-mono text-3xl font-semibold text-accent-cyan">{cacheHitRate}%</div>
             <div className="mt-2 h-1.5 bg-bg-card rounded-full overflow-hidden">
               <div className="h-full bg-accent-cyan rounded-full" style={{ width: `${cacheHitRate}%` }} />
             </div>
-            <div className="text-xs text-text-muted mt-1">{(totalCached / 1000).toFixed(0)}K кэш-токенов</div>
+            <div className="text-xs text-text-muted mt-1">{(totalCached / 1000).toFixed(0)}K {t.dashboard.cacheTokens}</div>
           </div>
           <div className="glass-panel p-4 flex flex-col gap-1">
-            <div className="metric-label mb-1">Всего токенов (7 дней)</div>
+            <div className="metric-label mb-1">{t.dashboard.totalTokens}</div>
             <div className="font-mono text-3xl font-semibold text-text-primary">
               {((totalInput + totalOutput + totalCached) / 1_000_000).toFixed(2)}M
             </div>
@@ -218,7 +220,7 @@ export default function Dashboard() {
 
         {/* Token consumption chart */}
         <div className="glass-panel p-5">
-          <div className="metric-label mb-4">Token Consumption — Input / Output / Cached (7 дней)</div>
+          <div className="metric-label mb-4">{t.dashboard.tokenChart}</div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={tokenData} barGap={2}>
               <CartesianGrid strokeDasharray="3 3" stroke="#323a52" vertical={false} />
@@ -235,14 +237,12 @@ export default function Dashboard() {
               <Bar dataKey="cached" name="Cached tokens" fill="#73daca" fillOpacity={0.6} radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="mt-2 text-xs text-text-muted">
-            * Кэшированные токены тарифицируются по сниженной ставке. Высокий Cache Hit Rate снижает затраты на LLM.
-          </div>
+          <div className="mt-2 text-xs text-text-muted">{t.dashboard.tokenNote}</div>
         </div>
 
         {/* Agent cost breakdown */}
         <div className="glass-panel p-5">
-          <div className="metric-label mb-4">Затраты по агентам</div>
+          <div className="metric-label mb-4">{t.dashboard.agentCosts}</div>
           <div className="space-y-2">
             {[
               { name: 'Andrew Analytic', cost: 12.40, pct: 38, color: '#73daca' },

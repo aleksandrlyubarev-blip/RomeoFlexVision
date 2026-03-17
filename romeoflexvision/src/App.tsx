@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { I18nProvider, useI18n } from './context/I18nContext';
 import Sidebar from './components/Sidebar';
 import AuthModal from './components/AuthModal';
 import ToastContainer from './components/Toast';
@@ -11,9 +12,25 @@ import Dashboard from './views/Dashboard';
 import Profile from './views/Profile';
 import type { View } from './types';
 
+// ---- Language toggle button ----
+function LangToggle() {
+  const { locale, setLocale } = useI18n();
+  return (
+    <button
+      onClick={() => setLocale(locale === 'ru' ? 'en' : 'ru')}
+      className="flex items-center gap-1 px-2 py-1 rounded-md bg-bg-card border border-border-subtle text-xs text-text-secondary hover:text-text-primary hover:border-accent-blue transition-colors"
+      title="Toggle language / Сменить язык"
+    >
+      <span>{locale === 'ru' ? '🇷🇺' : '🇬🇧'}</span>
+      <span className="font-mono uppercase">{locale}</span>
+    </button>
+  );
+}
+
 // ---- Inner shell ----
 function Shell() {
   const { user, loading, signOut } = useAuth();
+  const { t } = useI18n();
   const [currentView, setCurrentView] = useState<View>('landing');
   const [authModal, setAuthModal] = useState<{ open: boolean; tab: 'login' | 'register' }>({ open: false, tab: 'login' });
 
@@ -38,7 +55,7 @@ function Shell() {
       <div className="flex h-screen items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-4">
           <span className="text-4xl text-accent-blue animate-pulse" style={{ filter: 'drop-shadow(0 0 12px #7aa2f7)' }}>⬢</span>
-          <span className="text-sm text-text-muted">Инициализация платформы...</span>
+          <span className="text-sm text-text-muted">RomeoFlexVision...</span>
         </div>
       </div>
     );
@@ -53,10 +70,12 @@ function Shell() {
         <header className="h-14 border-b border-border-subtle flex items-center px-6 gap-4 shrink-0">
           <div className="flex items-center gap-2 text-xs text-text-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
-            Система в норме
+            {t.topbar.systemOk}
           </div>
 
           <div className="ml-auto flex items-center gap-3">
+            <LangToggle />
+
             {isAuthenticated ? (
               <>
                 <button
@@ -69,13 +88,17 @@ function Shell() {
                   <span className="text-xs text-text-secondary max-w-[160px] truncate">{user?.email}</span>
                 </button>
                 <button onClick={() => { signOut(); setCurrentView('landing'); }} className="btn-ghost text-xs">
-                  Выйти
+                  {t.auth.signOut}
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => setAuthModal({ open: true, tab: 'login' })} className="btn-ghost text-xs">Войти</button>
-                <button onClick={() => setAuthModal({ open: true, tab: 'register' })} className="btn-primary text-xs py-1.5">Создать аккаунт</button>
+                <button onClick={() => setAuthModal({ open: true, tab: 'login' })} className="btn-ghost text-xs">
+                  {t.auth.signIn}
+                </button>
+                <button onClick={() => setAuthModal({ open: true, tab: 'register' })} className="btn-primary text-xs py-1.5">
+                  {t.auth.register}
+                </button>
               </>
             )}
           </div>
@@ -108,9 +131,11 @@ function Shell() {
 export default function App() {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <Shell />
-      </ToastProvider>
+      <I18nProvider>
+        <ToastProvider>
+          <Shell />
+        </ToastProvider>
+      </I18nProvider>
     </AuthProvider>
   );
 }

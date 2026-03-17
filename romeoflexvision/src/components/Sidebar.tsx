@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import { useI18n } from '../context/I18nContext';
 import type { View } from '../types';
 
 interface SidebarProps {
@@ -7,18 +8,20 @@ interface SidebarProps {
   isAuthenticated: boolean;
 }
 
-const NAV_ITEMS: { view: View; label: string; icon: string; requiresAuth: boolean }[] = [
-  { view: 'landing',   label: 'Главная',               icon: '⬡', requiresAuth: false },
-  { view: 'catalog',   label: 'Агенты',                icon: '◈', requiresAuth: false },
-  { view: 'workspace', label: 'Рабочее пространство',  icon: '◆', requiresAuth: true  },
-  { view: 'dashboard', label: 'Мониторинг',             icon: '◉', requiresAuth: true  },
-  { view: 'profile',   label: 'Профиль',                icon: '○', requiresAuth: true  },
-];
-
 export default function Sidebar({ currentView, onNavigate, isAuthenticated }: SidebarProps) {
   const { user } = useAuth();
+  const { t } = useI18n();
+
   const initials = user?.email?.[0]?.toUpperCase() ?? '?';
-  const emailShort = user?.email ?? 'Гость';
+  const emailShort = user?.email ?? t.auth.guest;
+
+  const NAV_ITEMS: { view: View; label: string; icon: string; requiresAuth: boolean }[] = [
+    { view: 'landing',   label: t.nav.home,      icon: '⬡', requiresAuth: false },
+    { view: 'catalog',   label: t.nav.agents,    icon: '◈', requiresAuth: false },
+    { view: 'workspace', label: t.nav.workspace, icon: '◆', requiresAuth: true  },
+    { view: 'dashboard', label: t.nav.monitor,   icon: '◉', requiresAuth: true  },
+    { view: 'profile',   label: t.nav.profile,   icon: '○', requiresAuth: true  },
+  ];
 
   return (
     <aside className="w-14 lg:w-56 bg-bg-secondary border-r border-border-subtle flex flex-col h-screen sticky top-0 shrink-0">
@@ -52,7 +55,7 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
                     ? 'text-text-muted opacity-50 hover:opacity-70'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
               `}
-              title={locked ? 'Требуется авторизация' : item.label}
+              title={locked ? t.nav.locked : item.label}
             >
               <span className="text-base w-5 text-center shrink-0">{item.icon}</span>
               <span className="hidden lg:block truncate">{item.label}</span>
@@ -76,10 +79,10 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
           </div>
           <div className="hidden lg:block min-w-0">
             <div className="text-xs text-text-secondary truncate" title={emailShort}>
-              {isAuthenticated ? emailShort : 'Не авторизован'}
+              {isAuthenticated ? emailShort : t.auth.notAuth}
             </div>
             {isAuthenticated && (
-              <div className="text-xs text-text-muted">Оператор</div>
+              <div className="text-xs text-text-muted">{t.auth.operator}</div>
             )}
           </div>
         </div>

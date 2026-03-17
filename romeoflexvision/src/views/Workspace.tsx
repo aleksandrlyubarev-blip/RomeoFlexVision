@@ -3,6 +3,7 @@ import AgentAvatar from '../components/AgentAvatar';
 import { AGENTS } from '../data/agents';
 import { useTasks } from '../hooks/useTasks';
 import { useToast } from '../context/ToastContext';
+import { useI18n } from '../context/I18nContext';
 import { isSupabaseConfigured } from '../lib/supabase';
 import type { TraceStep } from '../types';
 
@@ -29,14 +30,6 @@ const MOCK_TRACE: TraceStep[] = [
     latencyMs: 0, status: 'ok', timestamp: '14:32:07.500' },
 ];
 
-const STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  queued:       { label: 'В очереди',         className: 'text-text-muted bg-bg-card border-border-subtle' },
-  running:      { label: 'Выполняется',        className: 'text-accent-blue bg-accent-blue bg-opacity-10 border-accent-blue border-opacity-30' },
-  completed:    { label: 'Завершено',          className: 'text-accent-cyan bg-accent-cyan bg-opacity-10 border-accent-cyan border-opacity-30' },
-  error:        { label: 'Ошибка',             className: 'text-signal-alert bg-signal-alert bg-opacity-10 border-signal-alert border-opacity-30' },
-  waiting_human:{ label: 'Ожидает оператора', className: 'text-signal-warning bg-signal-warning bg-opacity-10 border-signal-warning border-opacity-30' },
-};
-
 const TYPE_COLOR: Record<string, string> = {
   tool_call: '#9d7cd8', tool_response: '#73daca', prompt: '#7aa2f7', llm_response: '#6c7086',
 };
@@ -47,6 +40,7 @@ const TYPE_LABEL: Record<string, string> = {
 export default function Workspace() {
   const { tasks, loading, addTask, approveTask, clearCompleted } = useTasks();
   const { toast } = useToast();
+  const { t } = useI18n();
   const [prompt, setPrompt] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [showTrace, setShowTrace] = useState(false);
@@ -55,6 +49,14 @@ export default function Workspace() {
   const pendingApproval = tasks.filter(t => t.status === 'waiting_human');
   const runningCount = tasks.filter(t => t.status === 'running').length;
 
+  const STATUS_BADGE: Record<string, { label: string; className: string }> = {
+    queued:        { label: t.status.queued,        className: 'text-text-muted bg-bg-card border-border-subtle' },
+    running:       { label: t.status.running,       className: 'text-accent-blue bg-accent-blue bg-opacity-10 border-accent-blue border-opacity-30' },
+    completed:     { label: t.status.completed,     className: 'text-accent-cyan bg-accent-cyan bg-opacity-10 border-accent-cyan border-opacity-30' },
+    error:         { label: t.status.error,         className: 'text-signal-alert bg-signal-alert bg-opacity-10 border-signal-alert border-opacity-30' },
+    waiting_human: { label: t.status.waiting_human, className: 'text-signal-warning bg-signal-warning bg-opacity-10 border-signal-warning border-opacity-30' },
+  };
+
   const handleSubmit = async () => {
     if (!prompt.trim() || submitting) return;
     setSubmitting(true);
@@ -62,20 +64,20 @@ export default function Workspace() {
     setSubmitting(false);
     if (task) {
       setPrompt('');
-      toast('Задача отправлена оркестратору', 'success');
+      toast(t.workspace.toastSent, 'success');
     } else {
-      toast('Не удалось создать задачу', 'error');
+      toast(t.workspace.toastError, 'error');
     }
   };
 
   const handleApprove = async (taskId: string) => {
     await approveTask(taskId);
-    toast('Задача подтверждена оператором', 'success');
+    toast(t.workspace.toastApproved, 'success');
   };
 
   const handleClearCompleted = async () => {
     await clearCompleted();
-    toast('Завершённые задачи удалены', 'info');
+    toast(t.workspace.toastCleared, 'info');
   };
 
   return (
@@ -84,15 +86,15 @@ export default function Workspace() {
       <div className="px-6 lg:px-8 py-5 border-b border-border-subtle flex items-center gap-3">
         <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" />
         <div>
-          <h1 className="text-base font-semibold text-text-primary">Рабочее пространство</h1>
+          <h1 className="text-base font-semibold text-text-primary">{t.workspace.title}</h1>
           <p className="text-xs text-text-muted">
-            Оркестратор-рабочий паттерн · {tasks.length} задач
-            {!isSupabaseConfigured && <span className="ml-2 opacity-60">(демо-режим)</span>}
+            {t.workspace.subtitle} · {tasks.length} {t.workspace.tasks}
+            {!isSupabaseConfigured && <span className="ml-2 opacity-60">{t.workspace.demoMode}</span>}
           </p>
         </div>
         {tasks.some(t => t.status === 'completed') && (
           <button onClick={handleClearCompleted} className="ml-auto btn-ghost text-xs border border-border-subtle">
-            Очистить завершённые
+            {t.workspace.clearDone}
           </button>
         )}
       </div>
@@ -102,18 +104,18 @@ export default function Workspace() {
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {/* Input */}
           <div className="glass-panel p-4">
-            <div className="text-xs text-text-muted uppercase tracking-widest mb-3">Новая задача оркестратору</div>
+            <div className="text-xs text-text-muted uppercase tracking-widest mb-3">{t.workspace.newTaskLabel}</div>
             <div className="flex gap-2">
               <input
                 value={prompt}
                 onChange={e => setPrompt(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                placeholder="Опишите задачу для мультиагентной системы..."
+                placeholder={t.workspace.placeholder}
                 className="flex-1 bg-bg-card border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-blue transition-colors"
               />
               <button onClick={handleSubmit} disabled={submitting || !prompt.trim()} className="btn-primary px-4 flex items-center gap-1.5 disabled:opacity-60">
                 {submitting && <span className="w-3 h-3 border-2 border-bg-primary border-t-transparent rounded-full animate-spin" />}
-                Отправить
+                {t.workspace.send}
               </button>
             </div>
           </div>
@@ -124,17 +126,15 @@ export default function Workspace() {
               <div className="flex items-start gap-3">
                 <span className="text-signal-warning text-lg shrink-0">⚠</span>
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-signal-warning mb-1">Требуется подтверждение оператора</div>
+                  <div className="text-sm font-medium text-signal-warning mb-1">{t.workspace.humanAlert}</div>
                   <div className="text-xs text-text-secondary mb-2 truncate">{task.title}</div>
-                  <div className="text-xs text-text-secondary mb-3">
-                    Агент не уверен в классификации (неопределённость &gt;40%). Проверьте результаты и подтвердите продолжение.
-                  </div>
+                  <div className="text-xs text-text-secondary mb-3">{t.workspace.humanDesc}</div>
                   <div className="flex gap-2">
                     <button onClick={() => handleApprove(task.id)} className="btn-primary text-xs py-1.5 px-3">
-                      Подтвердить и продолжить
+                      {t.workspace.approve}
                     </button>
                     <button className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">
-                      Отклонить задачу
+                      {t.workspace.reject}
                     </button>
                   </div>
                 </div>
@@ -144,13 +144,13 @@ export default function Workspace() {
 
           {/* Task pipeline */}
           <div className="glass-panel p-5">
-            <div className="text-xs text-text-muted uppercase tracking-widest mb-5">Конвейер выполнения задач</div>
+            <div className="text-xs text-text-muted uppercase tracking-widest mb-5">{t.workspace.pipeline}</div>
 
             {/* Orchestrator node */}
             <div className="flex items-center gap-3 mb-4">
               <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" />
               <div className="text-sm font-medium text-text-primary">OrchestratorCore</div>
-              <span className="ml-auto text-xs text-text-muted">{tasks.length} задач</span>
+              <span className="ml-auto text-xs text-text-muted">{tasks.length} {t.workspace.tasks}</span>
             </div>
 
             <div className="ml-5 border-l border-border-subtle pl-6 space-y-3">
@@ -160,7 +160,7 @@ export default function Workspace() {
                 ))
               ) : tasks.length === 0 ? (
                 <div className="py-8 text-center text-xs text-text-muted">
-                  Нет активных задач. Введите запрос выше.
+                  {t.workspace.noTasks}
                 </div>
               ) : (
                 tasks.map(task => {
@@ -196,11 +196,11 @@ export default function Workspace() {
         {/* Right: trace panel */}
         <div className="w-80 border-l border-border-subtle flex flex-col overflow-hidden">
           <div className="px-4 py-3 border-b border-border-subtle flex items-center gap-2">
-            <span className="text-xs uppercase tracking-widest text-text-muted flex-1">Трассировка вызовов</span>
+            <span className="text-xs uppercase tracking-widest text-text-muted flex-1">{t.workspace.traceTitle}</span>
             <button
               onClick={() => { setShowTrace(v => !v); setTraceStep(0); }}
               className="text-xs text-accent-blue hover:underline">
-              {showTrace ? 'Скрыть' : 'Показать демо'}
+              {showTrace ? t.workspace.traceHide : t.workspace.traceShow}
             </button>
           </div>
 
@@ -232,7 +232,7 @@ export default function Workspace() {
               {traceStep < MOCK_TRACE.length - 1 && (
                 <button onClick={() => setTraceStep(s => s + 1)}
                   className="w-full text-xs text-accent-blue hover:underline py-2">
-                  Следующий шаг ↓
+                  {t.workspace.traceNext}
                 </button>
               )}
             </div>
@@ -240,7 +240,7 @@ export default function Workspace() {
             <div className="flex-1 flex items-center justify-center text-center p-6">
               <div>
                 <div className="text-2xl text-text-muted mb-2">◎</div>
-                <div className="text-xs text-text-muted">Нажмите «Показать демо» для пошаговой отладки агента</div>
+                <div className="text-xs text-text-muted">{t.workspace.traceEmpty}</div>
               </div>
             </div>
           )}
