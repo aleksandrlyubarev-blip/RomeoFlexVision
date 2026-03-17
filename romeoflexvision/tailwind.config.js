@@ -54,12 +54,17 @@ export default {
           '0%': { transform: 'rotateY(0deg) rotateX(0deg)' },
           '100%': { transform: 'rotateY(360deg) rotateX(30deg)' },
         },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         morph: 'morph 8s ease-in-out infinite',
         float: 'float 4s ease-in-out infinite',
         'pulse-ring': 'pulse-ring 2s ease-out infinite',
         rotate3d: 'rotate3d 12s linear infinite',
+        'fade-in': 'fade-in 0.2s ease-out',
       },
     },
   },

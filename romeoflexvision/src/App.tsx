@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastProvider } from './context/ToastContext';
 import Sidebar from './components/Sidebar';
 import AuthModal from './components/AuthModal';
+import ToastContainer from './components/Toast';
 import Landing from './views/Landing';
 import AgentCatalog from './views/AgentCatalog';
 import Workspace from './views/Workspace';
 import Dashboard from './views/Dashboard';
+import Profile from './views/Profile';
 import type { View } from './types';
 
-// ---- Inner shell (has access to AuthContext) ----
+// ---- Inner shell ----
 function Shell() {
   const { user, loading, signOut } = useAuth();
   const [currentView, setCurrentView] = useState<View>('landing');
@@ -17,23 +20,16 @@ function Shell() {
   const isAuthenticated = Boolean(user);
 
   const navigate = (view: View) => {
-    if ((view === 'workspace' || view === 'dashboard') && !isAuthenticated) {
+    if ((view === 'workspace' || view === 'dashboard' || view === 'profile') && !isAuthenticated) {
       setAuthModal({ open: true, tab: 'login' });
       return;
     }
     setCurrentView(view);
   };
 
-  const openRegister = () => setAuthModal({ open: true, tab: 'register' });
-  const openLogin = () => setAuthModal({ open: true, tab: 'login' });
+  const handleAuthSuccess = () => setCurrentView('catalog');
 
-  const handleAuthSuccess = () => {
-    // After successful auth, go to catalog
-    setCurrentView('catalog');
-  };
-
-  // Redirect to landing if session ends while on protected view
-  if (!isAuthenticated && (currentView === 'workspace' || currentView === 'dashboard')) {
+  if (!isAuthenticated && (currentView === 'workspace' || currentView === 'dashboard' || currentView === 'profile')) {
     setCurrentView('landing');
   }
 
@@ -63,41 +59,38 @@ function Shell() {
           <div className="ml-auto flex items-center gap-3">
             {isAuthenticated ? (
               <>
-                <div className="hidden sm:flex items-center gap-2">
-                  {/* User avatar */}
+                <button
+                  onClick={() => navigate('profile')}
+                  className="hidden sm:flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
                   <div className="w-6 h-6 rounded-full bg-accent-blue bg-opacity-20 border border-accent-blue border-opacity-40 flex items-center justify-center text-xs text-accent-blue font-medium">
                     {user?.email?.[0]?.toUpperCase() ?? '○'}
                   </div>
                   <span className="text-xs text-text-secondary max-w-[160px] truncate">{user?.email}</span>
-                </div>
-                <button
-                  onClick={() => { signOut(); setCurrentView('landing'); }}
-                  className="btn-ghost text-xs"
-                >
+                </button>
+                <button onClick={() => { signOut(); setCurrentView('landing'); }} className="btn-ghost text-xs">
                   Выйти
                 </button>
               </>
             ) : (
               <>
-                <button onClick={openLogin} className="btn-ghost text-xs">Войти</button>
-                <button onClick={openRegister} className="btn-primary text-xs py-1.5">Создать аккаунт</button>
+                <button onClick={() => setAuthModal({ open: true, tab: 'login' })} className="btn-ghost text-xs">Войти</button>
+                <button onClick={() => setAuthModal({ open: true, tab: 'register' })} className="btn-primary text-xs py-1.5">Создать аккаунт</button>
               </>
             )}
           </div>
         </header>
 
-        {/* View content */}
+        {/* Views */}
         <div className="flex-1 flex overflow-hidden">
-          {currentView === 'landing' && (
-            <Landing onNavigate={navigate} onRegister={openRegister} />
-          )}
-          {currentView === 'catalog' && <AgentCatalog />}
-          {currentView === 'workspace' && isAuthenticated && <Workspace />}
-          {currentView === 'dashboard' && isAuthenticated && <Dashboard />}
+          {currentView === 'landing'    && <Landing onNavigate={navigate} onRegister={() => setAuthModal({ open: true, tab: 'register' })} />}
+          {currentView === 'catalog'    && <AgentCatalog />}
+          {currentView === 'workspace'  && isAuthenticated && <Workspace />}
+          {currentView === 'dashboard'  && isAuthenticated && <Dashboard />}
+          {currentView === 'profile'    && isAuthenticated && <Profile />}
         </div>
       </main>
 
-      {/* Auth modal */}
       {authModal.open && (
         <AuthModal
           initialTab={authModal.tab}
@@ -105,15 +98,19 @@ function Shell() {
           onSuccess={handleAuthSuccess}
         />
       )}
+
+      <ToastContainer />
     </div>
   );
 }
 
-// ---- Root: wrap with AuthProvider ----
+// ---- Root ----
 export default function App() {
   return (
     <AuthProvider>
-      <Shell />
+      <ToastProvider>
+        <Shell />
+      </ToastProvider>
     </AuthProvider>
   );
 }

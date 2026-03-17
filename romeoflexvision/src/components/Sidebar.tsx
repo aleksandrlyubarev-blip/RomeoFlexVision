@@ -8,10 +8,11 @@ interface SidebarProps {
 }
 
 const NAV_ITEMS: { view: View; label: string; icon: string; requiresAuth: boolean }[] = [
-  { view: 'landing', label: 'Главная', icon: '⬡', requiresAuth: false },
-  { view: 'catalog', label: 'Агенты', icon: '◈', requiresAuth: false },
-  { view: 'workspace', label: 'Рабочее пространство', icon: '◆', requiresAuth: true },
-  { view: 'dashboard', label: 'Мониторинг', icon: '◉', requiresAuth: true },
+  { view: 'landing',   label: 'Главная',               icon: '⬡', requiresAuth: false },
+  { view: 'catalog',   label: 'Агенты',                icon: '◈', requiresAuth: false },
+  { view: 'workspace', label: 'Рабочее пространство',  icon: '◆', requiresAuth: true  },
+  { view: 'dashboard', label: 'Мониторинг',             icon: '◉', requiresAuth: true  },
+  { view: 'profile',   label: 'Профиль',                icon: '○', requiresAuth: true  },
 ];
 
 export default function Sidebar({ currentView, onNavigate, isAuthenticated }: SidebarProps) {

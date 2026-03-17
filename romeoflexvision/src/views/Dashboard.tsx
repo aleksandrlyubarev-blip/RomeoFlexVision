@@ -3,6 +3,7 @@ import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts';
+import { useTasks } from '../hooks/useTasks';
 
 // ---- ISA-101 color helpers ----
 function getSignalColor(value: number, warn: number, alert: number) {
@@ -71,10 +72,13 @@ function MetricCard({ label, value, unit, warn, alert, suffix = '' }: {
 }
 
 export default function Dashboard() {
+  const { tasks } = useTasks();
   const [cpuData, setCpuData] = useState(() => genTimeSeries(20, 45, 20));
   const [gpuData, setGpuData] = useState(() => genTimeSeries(20, 72, 15));
   const [tokenData] = useState(() => genTokenData(7));
   const [server, setServer] = useState('all');
+
+  const queueDepth = tasks.filter(t => t.status === 'queued' || t.status === 'running').length;
 
   // Live update
   useEffect(() => {
@@ -130,7 +134,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard label="CPU Utilization" value={latestCpu} unit="%" warn={80} alert={95} />
           <MetricCard label="GPU Utilization" value={latestGpu} unit="%" warn={85} alert={95} />
-          <MetricCard label="Task Queue Depth" value={3} warn={10} alert={20} suffix=" задач" />
+          <MetricCard label="Task Queue Depth" value={queueDepth} warn={10} alert={20} suffix=" задач" />
           <MetricCard label="HW Errors (24h)" value={0} warn={1} alert={5} suffix=" err" />
         </div>
 
