@@ -15,7 +15,6 @@ const FEATURES = [
   { icon: '⬡', title: 'FinOps & Observability', desc: 'Трекинг токенов, кэша и инфраструктурных затрат в реальном времени' },
 ];
 
-// Demo data for try-before-register
 const DEMO_RESULT = {
   defects: 3,
   confidence: 94.2,
@@ -26,7 +25,6 @@ const DEMO_RESULT = {
 export default function Landing({ onNavigate, onRegister }: LandingProps) {
   const [demoActive, setDemoActive] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
-  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
 
   const handleDemoRun = () => {
     setDemoLoading(true);
@@ -36,15 +34,10 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
     }, 1800);
   };
 
-  const handleFullAccess = () => {
-    setShowRegisterPrompt(true);
-  };
-
   return (
     <div className="flex-1 overflow-y-auto">
       {/* Hero */}
       <section className="relative overflow-hidden px-6 lg:px-12 py-20 lg:py-28">
-        {/* Background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full opacity-10 pointer-events-none"
           style={{ background: 'radial-gradient(circle, #7aa2f7 0%, transparent 70%)' }} />
 
@@ -72,8 +65,11 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
             <button onClick={() => onNavigate('catalog')} className="btn-primary px-6 py-3 text-base">
               Посмотреть агентов
             </button>
-            <button onClick={handleDemoRun} className="btn-ghost px-6 py-3 text-base border border-border-subtle"
-              disabled={demoLoading}>
+            <button
+              onClick={handleDemoRun}
+              disabled={demoLoading}
+              className="btn-ghost px-6 py-3 text-base border border-border-subtle"
+            >
               {demoLoading ? 'Анализ...' : 'Попробовать QC-демо ↓'}
             </button>
           </div>
@@ -104,8 +100,10 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
               <div className="space-y-4">
                 {/* Heatmap placeholder */}
                 <div className="relative bg-bg-card rounded-lg overflow-hidden h-36 flex items-center justify-center">
-                  <div className="absolute inset-0 opacity-20"
-                    style={{ background: 'radial-gradient(ellipse at 35% 60%, #ef4444 0%, transparent 40%), radial-gradient(ellipse at 70% 30%, #d97706 0%, transparent 30%)' }} />
+                  <div
+                    className="absolute inset-0 opacity-20"
+                    style={{ background: 'radial-gradient(ellipse at 35% 60%, #ef4444 0%, transparent 40%), radial-gradient(ellipse at 70% 30%, #d97706 0%, transparent 30%)' }}
+                  />
                   <div className="relative text-center">
                     <div className="text-text-muted text-xs mb-1">Тепловая карта дефектов</div>
                     <div className="text-4xl font-mono font-bold text-signal-alert">{DEMO_RESULT.defects}</div>
@@ -129,12 +127,12 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
                   <span className="text-text-primary font-mono">{DEMO_RESULT.location}</span>
                 </div>
 
-                {/* Lazy registration prompt */}
+                {/* Lazy registration CTA */}
                 <div className="border border-accent-blue border-opacity-30 bg-accent-blue bg-opacity-5 rounded-lg p-4">
                   <p className="text-sm text-text-secondary mb-3">
                     Это базовое демо. Для полного доступа к тепловым картам, Chain-of-Thought и исторической аналитике:
                   </p>
-                  <button onClick={handleFullAccess} className="btn-primary w-full">
+                  <button onClick={onRegister} className="btn-primary w-full">
                     Создать бесплатный аккаунт
                   </button>
                 </div>
@@ -142,27 +140,6 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
             )}
           </div>
         </section>
-      )}
-
-      {/* Registration modal (lazy) */}
-      {showRegisterPrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
-          onClick={() => setShowRegisterPrompt(false)}>
-          <div className="glass-panel p-8 max-w-md w-full" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl font-semibold text-text-primary mb-2">Начать работу</h2>
-            <p className="text-text-secondary text-sm mb-6">Создайте аккаунт для полного доступа к платформе</p>
-            <div className="space-y-3">
-              <input type="email" placeholder="Email" className="w-full bg-bg-card border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-blue transition-colors" />
-              <input type="password" placeholder="Пароль" className="w-full bg-bg-card border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-blue transition-colors" />
-              <button onClick={() => { setShowRegisterPrompt(false); onRegister(); }} className="btn-primary w-full py-2.5">
-                Создать аккаунт
-              </button>
-            </div>
-            <p className="text-xs text-text-muted text-center mt-4">
-              Уже есть аккаунт? <button onClick={() => { setShowRegisterPrompt(false); onRegister(); }} className="text-accent-blue hover:underline">Войти</button>
-            </p>
-          </div>
-        </div>
       )}
 
       {/* Agent grid preview */}

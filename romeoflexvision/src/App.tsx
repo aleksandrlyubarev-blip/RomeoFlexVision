@@ -1,24 +1,52 @@
 import { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
+import AuthModal from './components/AuthModal';
 import Landing from './views/Landing';
 import AgentCatalog from './views/AgentCatalog';
 import Workspace from './views/Workspace';
 import Dashboard from './views/Dashboard';
 import type { View } from './types';
 
-export default function App() {
+// ---- Inner shell (has access to AuthContext) ----
+function Shell() {
+  const { user, loading, signOut } = useAuth();
   const [currentView, setCurrentView] = useState<View>('landing');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authModal, setAuthModal] = useState<{ open: boolean; tab: 'login' | 'register' }>({ open: false, tab: 'login' });
+
+  const isAuthenticated = Boolean(user);
 
   const navigate = (view: View) => {
-    if ((view === 'workspace' || view === 'dashboard') && !isAuthenticated) return;
+    if ((view === 'workspace' || view === 'dashboard') && !isAuthenticated) {
+      setAuthModal({ open: true, tab: 'login' });
+      return;
+    }
     setCurrentView(view);
   };
 
-  const handleRegister = () => {
-    setIsAuthenticated(true);
+  const openRegister = () => setAuthModal({ open: true, tab: 'register' });
+  const openLogin = () => setAuthModal({ open: true, tab: 'login' });
+
+  const handleAuthSuccess = () => {
+    // After successful auth, go to catalog
     setCurrentView('catalog');
   };
+
+  // Redirect to landing if session ends while on protected view
+  if (!isAuthenticated && (currentView === 'workspace' || currentView === 'dashboard')) {
+    setCurrentView('landing');
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-bg-primary">
+        <div className="flex flex-col items-center gap-4">
+          <span className="text-4xl text-accent-blue animate-pulse" style={{ filter: 'drop-shadow(0 0 12px #7aa2f7)' }}>⬢</span>
+          <span className="text-sm text-text-muted">Инициализация платформы...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-bg-primary text-text-primary overflow-hidden">
@@ -31,22 +59,29 @@ export default function App() {
             <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
             Система в норме
           </div>
+
           <div className="ml-auto flex items-center gap-3">
-            {!isAuthenticated ? (
+            {isAuthenticated ? (
               <>
-                <button onClick={() => setIsAuthenticated(true)} className="btn-ghost text-xs">
-                  Войти
-                </button>
-                <button onClick={handleRegister} className="btn-primary text-xs py-1.5">
-                  Создать аккаунт
+                <div className="hidden sm:flex items-center gap-2">
+                  {/* User avatar */}
+                  <div className="w-6 h-6 rounded-full bg-accent-blue bg-opacity-20 border border-accent-blue border-opacity-40 flex items-center justify-center text-xs text-accent-blue font-medium">
+                    {user?.email?.[0]?.toUpperCase() ?? '○'}
+                  </div>
+                  <span className="text-xs text-text-secondary max-w-[160px] truncate">{user?.email}</span>
+                </div>
+                <button
+                  onClick={() => { signOut(); setCurrentView('landing'); }}
+                  className="btn-ghost text-xs"
+                >
+                  Выйти
                 </button>
               </>
             ) : (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-text-muted">Оператор</span>
-                <button onClick={() => { setIsAuthenticated(false); setCurrentView('landing'); }}
-                  className="btn-ghost text-xs">Выйти</button>
-              </div>
+              <>
+                <button onClick={openLogin} className="btn-ghost text-xs">Войти</button>
+                <button onClick={openRegister} className="btn-primary text-xs py-1.5">Создать аккаунт</button>
+              </>
             )}
           </div>
         </header>
@@ -54,25 +89,31 @@ export default function App() {
         {/* View content */}
         <div className="flex-1 flex overflow-hidden">
           {currentView === 'landing' && (
-            <Landing onNavigate={navigate} onRegister={handleRegister} />
+            <Landing onNavigate={navigate} onRegister={openRegister} />
           )}
           {currentView === 'catalog' && <AgentCatalog />}
           {currentView === 'workspace' && isAuthenticated && <Workspace />}
           {currentView === 'dashboard' && isAuthenticated && <Dashboard />}
-
-          {/* Auth wall */}
-          {(currentView === 'workspace' || currentView === 'dashboard') && !isAuthenticated && (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-4xl text-text-muted mb-4">🔒</div>
-                <h2 className="text-lg font-semibold text-text-primary mb-2">Требуется авторизация</h2>
-                <p className="text-sm text-text-secondary mb-6">Войдите в аккаунт для доступа к этому разделу</p>
-                <button onClick={handleRegister} className="btn-primary">Создать аккаунт</button>
-              </div>
-            </div>
-          )}
         </div>
       </main>
+
+      {/* Auth modal */}
+      {authModal.open && (
+        <AuthModal
+          initialTab={authModal.tab}
+          onClose={() => setAuthModal(m => ({ ...m, open: false }))}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
     </div>
+  );
+}
+
+// ---- Root: wrap with AuthProvider ----
+export default function App() {
+  return (
+    <AuthProvider>
+      <Shell />
+    </AuthProvider>
   );
 }
