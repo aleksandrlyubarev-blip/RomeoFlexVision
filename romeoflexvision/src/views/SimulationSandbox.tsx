@@ -147,7 +147,7 @@ export default function SimulationSandbox() {
                   isActive ? 'border-accent-blue border-opacity-60 bg-accent-blue bg-opacity-5' : 'hover:border-border-DEFAULT'
                 }`}>
                 <div className="flex items-center gap-2 mb-1.5">
-                  {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />}
+                  {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />}
                   <div className="text-xs font-medium text-text-primary truncate">{s.title}</div>
                 </div>
                 <div className="text-xs text-text-muted">{s.timestamp}</div>
@@ -271,14 +271,14 @@ export default function SimulationSandbox() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="glass-panel p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      {origAgent && <AgentAvatar color={origAgent.color} icon={origAgent.icon} status={origAgent.status} size="sm" animate={false} />}
+                      {origAgent && <AgentAvatar color={origAgent.color} icon={origAgent.icon} status={origAgent.status} size="sm" animate={false} agentId={origAgent.id} />}
                       <span className="text-xs font-medium text-text-muted">Оригинал · {selectedScenario.originalModel.split('-').slice(1, 3).join(' ')}</span>
                     </div>
                     <p className="text-xs text-text-secondary leading-relaxed">{selectedScenario.originalResult}</p>
                   </div>
                   <div className="glass-panel p-4 border-accent-blue border-opacity-30">
                     <div className="flex items-center gap-2 mb-3">
-                      {newAgent && <AgentAvatar color={newAgent.color} icon={newAgent.icon} status={newAgent.status} size="sm" animate={false} />}
+                      {newAgent && <AgentAvatar color={newAgent.color} icon={newAgent.icon} status={newAgent.status} size="sm" animate={false} agentId={newAgent.id} />}
                       <span className="text-xs font-medium text-accent-blue">Симуляция · {altModel.split('-').slice(1, 3).join(' ')}</span>
                     </div>
                     <p className="text-xs text-text-secondary leading-relaxed">{runResult.result}</p>

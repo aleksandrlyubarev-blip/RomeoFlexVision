@@ -138,7 +138,7 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
           {AGENTS.filter(a => a.id !== 'orchestrator').map(agent => (
             <button key={agent.id} onClick={() => onNavigate('catalog')}
               className="glass-panel p-4 flex flex-col items-center gap-3 hover:border-border-DEFAULT transition-all duration-200 text-center group">
-              <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />
+              <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />
               <div>
                 <div className="text-sm font-medium text-text-primary group-hover:text-accent-blue transition-colors">{agent.name}</div>
                 <div className="text-xs text-text-muted mt-0.5">{agent.nameRu}</div>

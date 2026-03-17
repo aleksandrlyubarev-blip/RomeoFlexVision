@@ -24,7 +24,7 @@ function AgentDetail({ agent, onClose, mobile }: AgentDetailProps) {
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-start gap-4 p-5 border-b border-border-subtle shrink-0">
-        <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="md" />
+        <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="md" agentId={agent.id} />
         <div className="flex-1 min-w-0">
           <h2 className="text-base font-semibold text-text-primary leading-tight">{agent.name}</h2>
           <div className="text-xs text-text-muted mt-0.5">{agent.nameRu}</div>
@@ -186,7 +186,7 @@ export default function AgentCatalog() {
                   }`}
                   onClick={() => setSelected(isActive ? null : agent)}>
                   <div className="flex items-start gap-3">
-                    <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={agent.status === 'computing'} />
+                    <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={agent.status === 'computing'} agentId={agent.id} />
                     <div className="flex-1 min-w-0">
                       <div className={`font-medium text-sm transition-colors ${isActive ? 'text-accent-blue' : 'text-text-primary group-hover:text-accent-blue'}`}>
                         {agent.name}

@@ -208,7 +208,7 @@ export default function FinOpsOptimizer() {
                   <div key={d.agentId}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />}
+                        {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />}
                         <span className="text-xs text-text-secondary">{agent?.name}</span>
                         <span className="tag text-xs font-mono border-0 px-1 py-0" style={{ color: MODEL_COLOR[d.model], backgroundColor: `${MODEL_COLOR[d.model]}15` }}>
                           {d.model}
@@ -253,7 +253,7 @@ export default function FinOpsOptimizer() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                          {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />}
+                          {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />}
                           <div className="text-sm font-medium text-text-primary">{rec.title}</div>
                         </div>
                         <p className="text-xs text-text-secondary leading-relaxed mb-3">{rec.desc}</p>

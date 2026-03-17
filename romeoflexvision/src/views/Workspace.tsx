@@ -85,7 +85,7 @@ export default function Workspace() {
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-6 lg:px-8 py-5 border-b border-border-subtle flex items-center gap-3">
-        <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" />
+        <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" agentId={ORCHESTRATOR.id} />
         <div>
           <h1 className="text-base font-semibold text-text-primary">{t.workspace.title}</h1>
           <p className="text-xs text-text-muted">
@@ -158,7 +158,7 @@ export default function Workspace() {
 
             {/* Orchestrator node */}
             <div className="flex items-center gap-3 mb-4">
-              <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" />
+              <AgentAvatar color={ORCHESTRATOR.color} icon={ORCHESTRATOR.icon} status={runningCount > 0 ? 'computing' : 'idle'} size="sm" agentId={ORCHESTRATOR.id} />
               <div className="text-sm font-medium text-text-primary">OrchestratorCore</div>
               <span className="ml-auto text-xs text-text-muted">{tasks.length} {t.workspace.tasks}</span>
             </div>
@@ -197,7 +197,7 @@ export default function Workspace() {
                         <AgentAvatar
                           color={agent.color} icon={agent.icon}
                           status={task.status === 'running' ? 'computing' : task.status === 'error' ? 'error' : 'idle'}
-                          size="sm" animate={task.status === 'running'} />
+                          size="sm" animate={task.status === 'running'} agentId={agent.id} />
                       )}
                       <div className="flex-1 min-w-0">
                         <div className="text-sm text-text-primary truncate">{task.title}</div>

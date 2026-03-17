@@ -263,7 +263,7 @@ export default function KnowledgeVault() {
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {RAG_AGENTS.map(agent => (
             <div key={agent.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-bg-card">
-              <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />
+              <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-medium text-text-primary">{agent.name}</div>
                 <div className="text-xs text-text-muted">{docs.filter(d => d.status === 'ready').length} docs</div>
