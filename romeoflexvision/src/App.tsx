@@ -12,17 +12,26 @@ import Dashboard from './views/Dashboard';
 import Profile from './views/Profile';
 import type { View } from './types';
 
-// ---- Language toggle button ----
+// ---- Language toggle button (cycles RU → EN → HE → RU) ----
+const LOCALE_CYCLE = ['ru', 'en', 'he'] as const;
+const LOCALE_META: Record<string, { flag: string; label: string }> = {
+  ru: { flag: '🇷🇺', label: 'RU' },
+  en: { flag: '🇬🇧', label: 'EN' },
+  he: { flag: '🇮🇱', label: 'HE' },
+};
+
 function LangToggle() {
   const { locale, setLocale } = useI18n();
+  const next = LOCALE_CYCLE[(LOCALE_CYCLE.indexOf(locale) + 1) % LOCALE_CYCLE.length];
+  const { flag, label } = LOCALE_META[locale];
   return (
     <button
-      onClick={() => setLocale(locale === 'ru' ? 'en' : 'ru')}
+      onClick={() => setLocale(next)}
       className="flex items-center gap-1 px-2 py-1 rounded-md bg-bg-card border border-border-subtle text-xs text-text-secondary hover:text-text-primary hover:border-accent-blue transition-colors"
-      title="Toggle language / Сменить язык"
+      title="Toggle language / Сменить язык / שנה שפה"
     >
-      <span>{locale === 'ru' ? '🇷🇺' : '🇬🇧'}</span>
-      <span className="font-mono uppercase">{locale}</span>
+      <span>{flag}</span>
+      <span className="font-mono">{label}</span>
     </button>
   );
 }
