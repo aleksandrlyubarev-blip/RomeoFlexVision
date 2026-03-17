@@ -8,7 +8,7 @@ import { isSupabaseConfigured } from '../lib/supabase';
 export default function Profile() {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { tasks } = useTasks();
 
   const [copied, setCopied] = useState(false);
@@ -33,8 +33,9 @@ export default function Profile() {
   };
 
   const initials = user?.email?.[0]?.toUpperCase() ?? '?';
+  const dateLocale = locale === 'he' ? 'he-IL' : locale === 'en' ? 'en-GB' : 'ru-RU';
   const createdDate = user?.created_at
-    ? new Date(user.created_at).toLocaleDateString('ru', { day: 'numeric', month: 'long', year: 'numeric' })
+    ? new Date(user.created_at).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })
     : '—';
 
   return (

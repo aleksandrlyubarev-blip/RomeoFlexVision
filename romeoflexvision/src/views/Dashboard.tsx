@@ -110,7 +110,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="px-6 lg:px-8 py-6 space-y-6">
+      <div className="px-4 md:px-6 lg:px-8 py-4 md:py-6 space-y-4 md:space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -149,7 +149,7 @@ export default function Dashboard() {
                 {latestCpu.toFixed(1)}%
               </span>
             </div>
-            <ResponsiveContainer width="100%" height={120}>
+            <ResponsiveContainer width="100%" height={100}>
               <AreaChart data={cpuData}>
                 <defs>
                   <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
@@ -173,7 +173,7 @@ export default function Dashboard() {
                 {latestGpu.toFixed(1)}%
               </span>
             </div>
-            <ResponsiveContainer width="100%" height={120}>
+            <ResponsiveContainer width="100%" height={100}>
               <AreaChart data={gpuData}>
                 <defs>
                   <linearGradient id="gpuGrad" x1="0" y1="0" x2="0" y2="1">
@@ -221,7 +221,7 @@ export default function Dashboard() {
         {/* Token consumption chart */}
         <div className="glass-panel p-5">
           <div className="metric-label mb-4">{t.dashboard.tokenChart}</div>
-          <ResponsiveContainer width="100%" height={200}>
+          <ResponsiveContainer width="100%" height={160}>
             <BarChart data={tokenData} barGap={2}>
               <CartesianGrid strokeDasharray="3 3" stroke="#323a52" vertical={false} />
               <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#6c7086' }} axisLine={false} tickLine={false} />

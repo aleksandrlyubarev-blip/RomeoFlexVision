@@ -1,19 +1,13 @@
 import { useState } from 'react';
 import AgentAvatar from '../components/AgentAvatar';
 import { AGENTS } from '../data/agents';
+import { useI18n } from '../context/I18nContext';
 import type { View } from '../types';
 
 interface LandingProps {
   onNavigate: (view: View) => void;
   onRegister: () => void;
 }
-
-const FEATURES = [
-  { icon: '◈', title: 'Компьютерное зрение', desc: 'QC-агент детектирует дефекты в реальном времени с точностью 94%' },
-  { icon: '◉', title: 'Оркестрация задач', desc: 'Центральный маршрутизатор декомпозирует сложные задачи между агентами' },
-  { icon: '◆', title: 'Предиктивное обслуживание', desc: 'Прогнозирование отказов оборудования за 72 часа до события' },
-  { icon: '⬡', title: 'FinOps & Observability', desc: 'Трекинг токенов, кэша и инфраструктурных затрат в реальном времени' },
-];
 
 const DEMO_RESULT = {
   defects: 3,
@@ -23,15 +17,20 @@ const DEMO_RESULT = {
 };
 
 export default function Landing({ onNavigate, onRegister }: LandingProps) {
+  const { t } = useI18n();
   const [demoActive, setDemoActive] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
 
+  const FEATURES = [
+    { icon: '◈', title: 'Компьютерное зрение', desc: 'QC-агент детектирует дефекты в реальном времени с точностью 94%' },
+    { icon: '◉', title: 'Оркестрация задач', desc: 'Центральный маршрутизатор декомпозирует сложные задачи между агентами' },
+    { icon: '◆', title: 'Предиктивное обслуживание', desc: 'Прогнозирование отказов оборудования за 72 часа до события' },
+    { icon: '⬡', title: 'FinOps & Observability', desc: 'Трекинг токенов, кэша и инфраструктурных затрат в реальном времени' },
+  ];
+
   const handleDemoRun = () => {
     setDemoLoading(true);
-    setTimeout(() => {
-      setDemoLoading(false);
-      setDemoActive(true);
-    }, 1800);
+    setTimeout(() => { setDemoLoading(false); setDemoActive(true); }, 1800);
   };
 
   return (
@@ -44,48 +43,44 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
         <div className="max-w-4xl relative">
           <div className="flex items-center gap-2 mb-6">
             <span className="tag bg-accent-blue bg-opacity-15 text-accent-blue border border-accent-blue border-opacity-30">
-              Индустрия 4.0
+              {t.landing.industry}
             </span>
             <span className="tag bg-bg-card text-text-muted border border-border-subtle">
-              Agentic AI
+              {t.landing.agentic}
             </span>
           </div>
 
           <h1 className="text-4xl lg:text-6xl font-semibold text-text-primary leading-tight tracking-tight text-balance mb-6">
-            Многоагентная ИИ-платформа<br />
-            <span className="text-accent-blue">для умного производства</span>
+            {t.landing.heroTitle}<br />
+            <span className="text-accent-blue">{t.landing.heroTitleAccent}</span>
           </h1>
 
           <p className="text-lg text-text-secondary max-w-2xl mb-10 leading-relaxed">
-            RomeoFlexVision объединяет специализированных ИИ-агентов для контроля качества,
-            аналитики данных, предиктивного обслуживания и творческих задач в единой среде.
+            {t.landing.heroDesc}
           </p>
 
           <div className="flex flex-wrap gap-3">
             <button onClick={() => onNavigate('catalog')} className="btn-primary px-6 py-3 text-base">
-              Посмотреть агентов
+              {t.landing.viewAgents}
             </button>
-            <button
-              onClick={handleDemoRun}
-              disabled={demoLoading}
-              className="btn-ghost px-6 py-3 text-base border border-border-subtle"
-            >
-              {demoLoading ? 'Анализ...' : 'Попробовать QC-демо ↓'}
+            <button onClick={handleDemoRun} disabled={demoLoading}
+              className="btn-ghost px-6 py-3 text-base border border-border-subtle">
+              {demoLoading ? t.landing.demoLoading : t.landing.tryDemo}
             </button>
           </div>
         </div>
       </section>
 
-      {/* Lazy Demo — try before register */}
+      {/* QC Demo */}
       {(demoLoading || demoActive) && (
         <section className="px-6 lg:px-12 pb-12">
           <div className="glass-panel p-6 max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-text-muted text-xs uppercase tracking-widest">QC-агент · Live Demo</span>
+              <span className="text-text-muted text-xs uppercase tracking-widest">{t.landing.demoLabel}</span>
               {demoLoading && (
                 <span className="flex items-center gap-1.5 text-accent-blue text-xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse" />
-                  Обработка тестового изображения...
+                  {t.landing.demoProcessing}
                 </span>
               )}
             </div>
@@ -98,42 +93,36 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Heatmap placeholder */}
                 <div className="relative bg-bg-card rounded-lg overflow-hidden h-36 flex items-center justify-center">
-                  <div
-                    className="absolute inset-0 opacity-20"
-                    style={{ background: 'radial-gradient(ellipse at 35% 60%, #ef4444 0%, transparent 40%), radial-gradient(ellipse at 70% 30%, #d97706 0%, transparent 30%)' }}
-                  />
+                  <div className="absolute inset-0 opacity-20"
+                    style={{ background: 'radial-gradient(ellipse at 35% 60%, #ef4444 0%, transparent 40%), radial-gradient(ellipse at 70% 30%, #d97706 0%, transparent 30%)' }} />
                   <div className="relative text-center">
-                    <div className="text-text-muted text-xs mb-1">Тепловая карта дефектов</div>
+                    <div className="text-text-muted text-xs mb-1">{t.landing.demoHeatmap}</div>
                     <div className="text-4xl font-mono font-bold text-signal-alert">{DEMO_RESULT.defects}</div>
-                    <div className="text-text-muted text-xs">обнаружено дефектов</div>
+                    <div className="text-text-muted text-xs">{t.landing.demoDetected}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="bg-bg-card rounded-lg p-3">
-                    <div className="metric-label mb-1">Уверенность</div>
+                    <div className="metric-label mb-1">{t.landing.demoConfidence}</div>
                     <div className="text-2xl font-mono text-text-primary">{DEMO_RESULT.confidence}%</div>
                   </div>
                   <div className="bg-bg-card rounded-lg p-3">
-                    <div className="metric-label mb-1">Тип дефекта</div>
+                    <div className="metric-label mb-1">{t.landing.demoDefectType}</div>
                     <div className="text-sm text-signal-warning font-medium">{DEMO_RESULT.type}</div>
                   </div>
                 </div>
 
                 <div className="bg-bg-card rounded-lg p-3 text-sm">
-                  <span className="text-text-muted">Локация: </span>
+                  <span className="text-text-muted">{t.landing.demoLocation}: </span>
                   <span className="text-text-primary font-mono">{DEMO_RESULT.location}</span>
                 </div>
 
-                {/* Lazy registration CTA */}
                 <div className="border border-accent-blue border-opacity-30 bg-accent-blue bg-opacity-5 rounded-lg p-4">
-                  <p className="text-sm text-text-secondary mb-3">
-                    Это базовое демо. Для полного доступа к тепловым картам, Chain-of-Thought и исторической аналитике:
-                  </p>
+                  <p className="text-sm text-text-secondary mb-3">{t.landing.demoCtaDesc}</p>
                   <button onClick={onRegister} className="btn-primary w-full">
-                    Создать бесплатный аккаунт
+                    {t.landing.demoCreateAccount}
                   </button>
                 </div>
               </div>
@@ -144,14 +133,11 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
 
       {/* Agent grid preview */}
       <section className="px-6 lg:px-12 pb-16">
-        <h2 className="text-sm uppercase tracking-widest text-text-muted mb-6">Специализированные агенты</h2>
+        <h2 className="text-sm uppercase tracking-widest text-text-muted mb-6">{t.landing.agentsSection}</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {AGENTS.filter(a => a.id !== 'orchestrator').map(agent => (
-            <button
-              key={agent.id}
-              onClick={() => onNavigate('catalog')}
-              className="glass-panel p-4 flex flex-col items-center gap-3 hover:border-border-DEFAULT transition-all duration-200 text-center group"
-            >
+            <button key={agent.id} onClick={() => onNavigate('catalog')}
+              className="glass-panel p-4 flex flex-col items-center gap-3 hover:border-border-DEFAULT transition-all duration-200 text-center group">
               <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} />
               <div>
                 <div className="text-sm font-medium text-text-primary group-hover:text-accent-blue transition-colors">{agent.name}</div>
@@ -164,7 +150,7 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
 
       {/* Features */}
       <section className="px-6 lg:px-12 pb-20 border-t border-border-subtle pt-12">
-        <h2 className="text-sm uppercase tracking-widest text-text-muted mb-8">Возможности платформы</h2>
+        <h2 className="text-sm uppercase tracking-widest text-text-muted mb-8">{t.landing.featuresSection}</h2>
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl">
           {FEATURES.map(f => (
             <div key={f.title} className="flex gap-4">

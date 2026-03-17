@@ -48,6 +48,7 @@ export default function Workspace() {
 
   const pendingApproval = tasks.filter(t => t.status === 'waiting_human');
   const runningCount = tasks.filter(t => t.status === 'running').length;
+  const [mobileTrace, setMobileTrace] = useState(false);
 
   const STATUS_BADGE: Record<string, { label: string; className: string }> = {
     queued:        { label: t.status.queued,        className: 'text-text-muted bg-bg-card border-border-subtle' },
@@ -92,11 +93,20 @@ export default function Workspace() {
             {!isSupabaseConfigured && <span className="ml-2 opacity-60">{t.workspace.demoMode}</span>}
           </p>
         </div>
-        {tasks.some(t => t.status === 'completed') && (
-          <button onClick={handleClearCompleted} className="ml-auto btn-ghost text-xs border border-border-subtle">
-            {t.workspace.clearDone}
+        <div className="ml-auto flex items-center gap-2">
+          {tasks.some(t => t.status === 'completed') && (
+            <button onClick={handleClearCompleted} className="btn-ghost text-xs border border-border-subtle hidden sm:inline-flex">
+              {t.workspace.clearDone}
+            </button>
+          )}
+          {/* Mobile trace toggle */}
+          <button
+            onClick={() => setMobileTrace(v => !v)}
+            className="md:hidden btn-ghost text-xs border border-border-subtle flex items-center gap-1"
+          >
+            ◎ {t.workspace.traceTitle}
           </button>
-        )}
+        </div>
       </div>
 
       <div className="flex-1 flex overflow-hidden">
@@ -159,8 +169,23 @@ export default function Workspace() {
                   <div key={i} className="h-16 rounded-lg bg-bg-card animate-pulse" />
                 ))
               ) : tasks.length === 0 ? (
-                <div className="py-8 text-center text-xs text-text-muted">
-                  {t.workspace.noTasks}
+                <div className="py-6 space-y-4">
+                  <div className="text-center">
+                    <div className="text-3xl mb-2 opacity-30">⬡</div>
+                    <div className="text-sm font-medium text-text-secondary">{t.workspace.onboardingTitle}</div>
+                    <div className="text-xs text-text-muted mt-1">{t.workspace.onboardingDesc}</div>
+                  </div>
+                  <div className="space-y-2">
+                    {t.workspace.examples.map((ex: string) => (
+                      <button
+                        key={ex}
+                        onClick={() => setPrompt(ex)}
+                        className="w-full text-left px-3 py-2.5 rounded-lg border border-border-subtle bg-bg-card hover:border-accent-blue hover:bg-accent-blue hover:bg-opacity-5 transition-colors text-xs text-text-secondary"
+                      >
+                        <span className="text-accent-blue mr-2">→</span>{ex}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 tasks.map(task => {
@@ -193,15 +218,22 @@ export default function Workspace() {
           </div>
         </div>
 
-        {/* Right: trace panel */}
-        <div className="w-80 border-l border-border-subtle flex flex-col overflow-hidden">
+        {/* Right: trace panel — hidden on mobile, shown as bottom sheet via mobileTrace */}
+        <div className={`
+          border-border-subtle flex-col overflow-hidden
+          hidden md:flex md:w-80 md:border-l
+          ${mobileTrace ? '!flex fixed inset-x-0 bottom-0 z-40 h-2/3 bg-bg-secondary border-t rounded-t-xl shadow-2xl' : ''}
+        `}>
           <div className="px-4 py-3 border-b border-border-subtle flex items-center gap-2">
             <span className="text-xs uppercase tracking-widest text-text-muted flex-1">{t.workspace.traceTitle}</span>
-            <button
-              onClick={() => { setShowTrace(v => !v); setTraceStep(0); }}
+            <button onClick={() => { setShowTrace(v => !v); setTraceStep(0); }}
               className="text-xs text-accent-blue hover:underline">
               {showTrace ? t.workspace.traceHide : t.workspace.traceShow}
             </button>
+            {mobileTrace && (
+              <button onClick={() => setMobileTrace(false)}
+                className="md:hidden ml-1 text-text-muted hover:text-text-primary text-sm">✕</button>
+            )}
           </div>
 
           {showTrace ? (
