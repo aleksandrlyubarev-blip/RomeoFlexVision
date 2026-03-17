@@ -7,6 +7,11 @@ import AuthModal from './components/AuthModal';
 import ToastContainer from './components/Toast';
 import Landing from './views/Landing';
 import AgentCatalog from './views/AgentCatalog';
+import AgentGraph from './views/AgentGraph';
+import AgentBuilder from './views/AgentBuilder';
+import KnowledgeVault from './views/KnowledgeVault';
+import FinOpsOptimizer from './views/FinOpsOptimizer';
+import SimulationSandbox from './views/SimulationSandbox';
 import Workspace from './views/Workspace';
 import Dashboard from './views/Dashboard';
 import Profile from './views/Profile';
@@ -117,6 +122,11 @@ function Shell() {
         <div className="flex-1 flex overflow-hidden">
           {currentView === 'landing'    && <Landing onNavigate={navigate} onRegister={() => setAuthModal({ open: true, tab: 'register' })} />}
           {currentView === 'catalog'    && <AgentCatalog />}
+          {currentView === 'graph'      && <AgentGraph />}
+          {currentView === 'builder'    && <AgentBuilder />}
+          {currentView === 'vault'      && <KnowledgeVault />}
+          {currentView === 'finops'     && isAuthenticated && <FinOpsOptimizer />}
+          {currentView === 'sandbox'    && isAuthenticated && <SimulationSandbox />}
           {currentView === 'workspace'  && isAuthenticated && <Workspace />}
           {currentView === 'dashboard'  && isAuthenticated && <Dashboard />}
           {currentView === 'profile'    && isAuthenticated && <Profile />}

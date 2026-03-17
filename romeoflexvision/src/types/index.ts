@@ -16,7 +16,7 @@ export interface Agent {
   color: string;
 }
 
-export type View = 'landing' | 'catalog' | 'workspace' | 'dashboard' | 'profile';
+export type View = 'landing' | 'catalog' | 'graph' | 'builder' | 'vault' | 'workspace' | 'dashboard' | 'finops' | 'sandbox' | 'profile';
 
 export interface TraceStep {
   id: string;

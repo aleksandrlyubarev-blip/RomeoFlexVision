@@ -18,6 +18,11 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
   const NAV_ITEMS: { view: View; label: string; icon: string; requiresAuth: boolean }[] = [
     { view: 'landing',   label: t.nav.home,      icon: '⬡', requiresAuth: false },
     { view: 'catalog',   label: t.nav.agents,    icon: '◈', requiresAuth: false },
+    { view: 'graph',     label: t.nav.graph,     icon: '◇', requiresAuth: false },
+    { view: 'builder',   label: t.nav.builder,   icon: '⊕', requiresAuth: false },
+    { view: 'vault',     label: t.nav.vault,     icon: '◫', requiresAuth: false },
+    { view: 'finops',    label: t.nav.finops,    icon: '$', requiresAuth: true  },
+    { view: 'sandbox',   label: t.nav.sandbox,   icon: '⊘', requiresAuth: true  },
     { view: 'workspace', label: t.nav.workspace, icon: '◆', requiresAuth: true  },
     { view: 'dashboard', label: t.nav.monitor,   icon: '◉', requiresAuth: true  },
     { view: 'profile',   label: t.nav.profile,   icon: '○', requiresAuth: true  },
