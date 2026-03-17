@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background-color: #1a1d23;
+    color: #cdd6f4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1d23;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #404968;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7aa2f7;
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(122, 162, 247, 0.3);
+    color: #cdd6f4;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-bg-panel border border-border-subtle rounded-xl;
+  }
+
+  .metric-value {
+    @apply font-mono text-4xl font-semibold text-text-primary tracking-tight;
+  }
+
+  .metric-label {
+    @apply text-xs font-medium text-text-muted uppercase tracking-widest;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-accent-blue text-bg-primary rounded-lg font-medium text-sm
+           hover:bg-opacity-90 transition-all duration-150 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 text-text-secondary rounded-lg text-sm
+           hover:bg-bg-hover hover:text-text-primary transition-all duration-150;
+  }
+
+  .tag {
+    @apply px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  /* ISA-101 signal colors */
+  .signal-normal { @apply text-text-muted; }
+  .signal-ok { @apply text-signal-normal; }
+  .signal-warning { @apply text-signal-warning; }
+  .signal-alert { @apply text-signal-alert; }
+
+  .bg-signal-warning { background-color: rgba(217, 119, 6, 0.15); border-color: rgba(217, 119, 6, 0.4); }
+  .bg-signal-alert { background-color: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .perspective { perspective: 1000px; }
+}
