@@ -1,0 +1,8 @@
+{
+  "requestId": "sample-001",
+  "model": "gpt-5-mini",
+  "costUsd": 0.42,
+  "tokenCount": 18750,
+  "cacheHitRate": 0.52,
+  "traceUrl": "https://example.invalid/traces/sample-001"
+}

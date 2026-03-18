@@ -1,0 +1,31 @@
+name: FinOps Alert
+
+on:
+  workflow_dispatch:
+    inputs:
+      metrics-path:
+        description: "Relative path to request metrics JSON"
+        required: false
+        default: "finops/request-metrics.json"
+  repository_dispatch:
+    types: [finops-alert]
+
+jobs:
+  open-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Evaluate cost and cache metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          METRICS_PATH: ${{ github.event.inputs.metrics-path || 'finops/request-metrics.json' }}
+        run: node scripts/finops-issue.mjs
