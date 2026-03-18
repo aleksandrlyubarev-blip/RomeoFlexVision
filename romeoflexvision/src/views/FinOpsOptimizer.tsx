@@ -1,41 +1,12 @@
 import { useState } from 'react';
-import { useI18n } from '../context/I18nContext';
+import { useMetrics } from '../hooks/useMetrics';
 import { AGENTS } from '../data/agents';
 import AgentAvatar from '../components/AgentAvatar';
 
-// ---- Demo data (7-day window) ----
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// ---- Model color map ----
+const MODEL_COLOR: Record<string, string> = { opus: '#9d7cd8', sonnet: '#7aa2f7', haiku: '#73daca' };
 
-interface AgentSpend {
-  agentId: string;
-  inputTokens: number;
-  outputTokens: number;
-  cachedTokens: number;
-  calls: number;
-  costUsd: number;
-  model: 'opus' | 'sonnet' | 'haiku';
-}
-
-const SPEND_DATA: AgentSpend[] = [
-  { agentId: 'romeo-phd',       inputTokens: 48200, outputTokens: 31400, cachedTokens: 18600, calls: 142, costUsd: 4.82, model: 'opus'   },
-  { agentId: 'robo-qc',         inputTokens: 38900, outputTokens: 12100, cachedTokens: 24300, calls: 318, costUsd: 2.14, model: 'sonnet' },
-  { agentId: 'andrew-analytic', inputTokens: 29700, outputTokens: 18400, cachedTokens: 11200, calls: 207, costUsd: 1.87, model: 'sonnet' },
-  { agentId: 'bassito-animator',inputTokens: 14200, outputTokens: 22100, cachedTokens: 2800,  calls: 54,  costUsd: 2.31, model: 'opus'   },
-  { agentId: 'perevodchik',     inputTokens: 9800,  outputTokens: 11200, cachedTokens: 5600,  calls: 89,  costUsd: 0.61, model: 'haiku'  },
-  { agentId: 'chertejnik',      inputTokens: 3200,  outputTokens: 4100,  cachedTokens: 400,   calls: 12,  costUsd: 0.38, model: 'haiku'  },
-];
-
-const TOTAL_COST   = SPEND_DATA.reduce((s, d) => s + d.costUsd, 0);
-const TOTAL_INPUT  = SPEND_DATA.reduce((s, d) => s + d.inputTokens, 0);
-const TOTAL_OUTPUT = SPEND_DATA.reduce((s, d) => s + d.outputTokens, 0);
-const TOTAL_CACHED = SPEND_DATA.reduce((s, d) => s + d.cachedTokens, 0);
-const TOTAL_TOKENS = TOTAL_INPUT + TOTAL_OUTPUT + TOTAL_CACHED;
-const CACHE_HIT    = Math.round(TOTAL_CACHED / TOTAL_TOKENS * 100);
-
-// Daily spend for bar chart (simulated)
-const DAILY_SPEND = [1.82, 2.44, 1.61, 2.08, 2.91, 0.94, 0.33];
-
-// ---- Recommendations ----
+// ---- Recommendations (business rules — static) ----
 interface Rec {
   id: string;
   impact: 'high' | 'medium' | 'low';
@@ -69,27 +40,59 @@ const RECS: Rec[] = [
   {
     id: 'r4', impact: 'low', agentId: 'andrew-analytic',
     title: 'Пакетные запросы Andrew Analytic',
-    desc: 'Andrew выполняет 207 отдельных запросов к ClickHouse. Группировка в batch-запросы сократит calls на 60% и задержку на 40%.',
+    desc: 'Andrew выполняет много отдельных запросов к ClickHouse. Группировка в batch-запросы сократит calls на 60% и задержку на 40%.',
     savingUsd: 0.28, savingPct: 15, action: 'Включить батчинг',
   },
 ];
 
 const IMPACT_COLOR = { high: '#f7768e', medium: '#e0af68', low: '#73daca' };
 const IMPACT_LABEL = { high: 'Высокий', medium: 'Средний', low: 'Низкий' };
-const MODEL_COLOR  = { opus: '#9d7cd8', sonnet: '#7aa2f7', haiku: '#73daca' };
 
-// ---- Projected savings ----
-function SavingsProjection({ applied }: { applied: Set<string> }) {
-  const saved = RECS.filter(r => applied.has(r.id)).reduce((s, r) => s + r.savingUsd, 0);
-  const newCost = TOTAL_COST - saved;
-  const pct = Math.round(saved / TOTAL_COST * 100);
+// ---- DAYS for bar chart ----
+const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
+// ---- Spend chart ----
+function SpendChart({ daily30d }: { daily30d: { cost: number; label: string }[] }) {
+  const last7 = daily30d.slice(-7);
+  const max = Math.max(...last7.map(d => d.cost));
+  return (
+    <div className="glass-panel p-5">
+      <div className="text-xs uppercase tracking-widest text-text-muted mb-4">Затраты по дням (USD)</div>
+      <div className="flex items-end gap-2 h-24">
+        {last7.map((d, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center gap-1">
+            <div className="text-xs font-mono text-text-muted">${d.cost.toFixed(2)}</div>
+            <div className="w-full rounded-t transition-all duration-300"
+              style={{ height: `${Math.max(4, (d.cost / max) * 64)}px`, backgroundColor: '#7aa2f760' }} />
+            <div className="text-xs text-text-muted">{DAYS[i]}</div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-between mt-3 text-xs text-text-muted">
+        <span>Total 7d: <span className="text-text-primary font-mono">
+          ${last7.reduce((s, d) => s + d.cost, 0).toFixed(2)}
+        </span></span>
+        <span>Avg/day: <span className="text-text-primary font-mono">
+          ${(last7.reduce((s, d) => s + d.cost, 0) / 7).toFixed(2)}
+        </span></span>
+      </div>
+    </div>
+  );
+}
+
+// ---- Savings projection ----
+function SavingsProjection({ applied, totalCost }: { applied: Set<string>; totalCost: number }) {
+  const saved   = RECS.filter(r => applied.has(r.id)).reduce((s, r) => s + r.savingUsd, 0);
+  const newCost = totalCost - saved;
+  const pct     = Math.round(saved / totalCost * 100);
+
   return (
     <div className="glass-panel p-5 space-y-3">
       <div className="text-xs uppercase tracking-widest text-text-muted">Прогноз сбережений</div>
-      <div className="flex gap-6">
+      <div className="flex gap-6 flex-wrap">
         <div>
           <div className="text-xs text-text-muted mb-0.5">Текущие затраты/нед</div>
-          <div className="text-xl font-mono font-semibold text-text-primary">${TOTAL_COST.toFixed(2)}</div>
+          <div className="text-xl font-mono font-semibold text-text-primary">${totalCost.toFixed(2)}</div>
         </div>
         <div className="text-2xl text-text-muted self-center">→</div>
         <div>
@@ -106,54 +109,34 @@ function SavingsProjection({ applied }: { applied: Set<string> }) {
           </div>
         )}
       </div>
-      {/* Month projection */}
       {saved > 0 && (
-        <div className="text-xs text-text-muted pt-1 border-t border-border-subtle">
-          Экономия в месяц: <span className="text-accent-cyan font-mono font-semibold">${(saved * 4.3).toFixed(2)}</span>
-          {' · '}в год: <span className="text-accent-cyan font-mono font-semibold">${(saved * 52).toFixed(2)}</span>
+        <div className="text-xs text-text-muted pt-2 border-t border-border-subtle">
+          Экономия в месяц:{' '}
+          <span className="text-accent-cyan font-mono font-semibold">${(saved * 4.3).toFixed(2)}</span>
+          {' · '}в год:{' '}
+          <span className="text-accent-cyan font-mono font-semibold">${(saved * 52).toFixed(2)}</span>
         </div>
       )}
     </div>
   );
 }
 
-// ---- Bar chart (spend) ----
-function SpendChart() {
-  const max = Math.max(...DAILY_SPEND);
-  return (
-    <div className="glass-panel p-5">
-      <div className="text-xs uppercase tracking-widest text-text-muted mb-4">Затраты по дням (USD)</div>
-      <div className="flex items-end gap-2 h-24">
-        {DAILY_SPEND.map((v, i) => (
-          <div key={i} className="flex-1 flex flex-col items-center gap-1">
-            <div className="text-xs font-mono text-text-muted">${v.toFixed(2)}</div>
-            <div className="w-full rounded-t"
-              style={{ height: `${(v / max) * 64}px`, backgroundColor: '#7aa2f760' }} />
-            <div className="text-xs text-text-muted">{DAYS[i]}</div>
-          </div>
-        ))}
-      </div>
-      <div className="flex justify-between mt-3 text-xs text-text-muted">
-        <span>Total 7d: <span className="text-text-primary font-mono">${TOTAL_COST.toFixed(2)}</span></span>
-        <span>Avg/day: <span className="text-text-primary font-mono">${(TOTAL_COST / 7).toFixed(2)}</span></span>
-      </div>
-    </div>
-  );
-}
-
 // ---- Main ----
 export default function FinOpsOptimizer() {
-  useI18n();
-  const [applied, setApplied] = useState<Set<string>>(new Set());
-  const [analysing, setAnalysing] = useState(false);
-  const [analysed, setAnalysed] = useState(true);
+  const {
+    agentSpend,
+    daily30d,
+    totalCost,
+    totalCached,
+    totalTokens,
+    totalCalls,
+    cacheHitRate,
+    appliedRecs,
+    toggleRec,
+  } = useMetrics();
 
-  const toggleApply = (id: string) =>
-    setApplied(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
+  const [analysing, setAnalysing] = useState(false);
+  const [analysed,  setAnalysed]  = useState(true);
 
   const handleAnalyse = async () => {
     setAnalysing(true);
@@ -165,8 +148,9 @@ export default function FinOpsOptimizer() {
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="px-6 lg:px-8 py-6 space-y-6 max-w-5xl">
+
         {/* Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <div>
             <h1 className="text-xl font-semibold text-text-primary">FinOps Optimizer</h1>
             <p className="text-sm text-text-muted mt-0.5">Анализ затрат на LLM и авто-рекомендации · последние 7 дней</p>
@@ -178,13 +162,13 @@ export default function FinOpsOptimizer() {
           </button>
         </div>
 
-        {/* Top metrics */}
+        {/* Top metrics — same numbers as Dashboard */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Затраты (7д)', value: `$${TOTAL_COST.toFixed(2)}`, accent: 'text-text-primary' },
-            { label: 'Cache Hit Rate', value: `${CACHE_HIT}%`, accent: 'text-accent-cyan' },
-            { label: 'Всего токенов', value: `${(TOTAL_TOKENS / 1000).toFixed(0)}K`, accent: 'text-accent-blue' },
-            { label: 'Вызовов агентов', value: String(SPEND_DATA.reduce((s, d) => s + d.calls, 0)), accent: 'text-text-primary' },
+            { label: 'Затраты (7д)',      value: `$${totalCost.toFixed(2)}`,                accent: 'text-text-primary' },
+            { label: 'Cache Hit Rate',    value: `${cacheHitRate.toFixed(1)}%`,             accent: 'text-accent-cyan'  },
+            { label: 'Всего токенов',     value: `${(totalTokens / 1000).toFixed(0)}K`,     accent: 'text-accent-blue'  },
+            { label: 'Вызовов агентов',   value: String(totalCalls),                        accent: 'text-text-primary' },
           ].map(m => (
             <div key={m.label} className="glass-panel p-4">
               <div className="text-xs text-text-muted uppercase tracking-widest mb-1.5">{m.label}</div>
@@ -194,23 +178,27 @@ export default function FinOpsOptimizer() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Spend chart */}
-          <SpendChart />
+          {/* Spend bar chart */}
+          <SpendChart daily30d={daily30d} />
 
           {/* Agent breakdown */}
           <div className="glass-panel p-5">
             <div className="text-xs uppercase tracking-widest text-text-muted mb-4">Затраты по агентам</div>
             <div className="space-y-3">
-              {SPEND_DATA.sort((a, b) => b.costUsd - a.costUsd).map(d => {
+              {agentSpend.slice().sort((a, b) => b.costUsd - a.costUsd).map(d => {
                 const agent = AGENTS.find(a => a.id === d.agentId);
-                const pct = d.costUsd / TOTAL_COST * 100;
+                const pct   = d.costUsd / totalCost * 100;
                 return (
                   <div key={d.agentId}>
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />}
-                        <span className="text-xs text-text-secondary">{agent?.name}</span>
-                        <span className="tag text-xs font-mono border-0 px-1 py-0" style={{ color: MODEL_COLOR[d.model], backgroundColor: `${MODEL_COLOR[d.model]}15` }}>
+                        {agent && (
+                          <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status}
+                            size="sm" animate={false} agentId={agent.id} />
+                        )}
+                        <span className="text-xs text-text-secondary">{agent?.name ?? d.agentId}</span>
+                        <span className="tag text-xs font-mono border-0 px-1 py-0"
+                          style={{ color: MODEL_COLOR[d.model], backgroundColor: `${MODEL_COLOR[d.model]}15` }}>
                           {d.model}
                         </span>
                       </div>
@@ -224,45 +212,61 @@ export default function FinOpsOptimizer() {
                 );
               })}
             </div>
+            {/* Cache savings callout */}
+            <div className="mt-4 px-3 py-2.5 rounded-lg bg-accent-cyan bg-opacity-5 border border-accent-cyan border-opacity-20 text-xs text-text-secondary">
+              Кэш сэкономил: <span className="text-accent-cyan font-mono font-semibold">
+                ${((totalCached / 1_000_000) * 1.5 * 0.9).toFixed(2)}
+              </span> за 7 дней
+            </div>
           </div>
         </div>
 
         {/* Savings projection */}
-        <SavingsProjection applied={applied} />
+        <SavingsProjection applied={appliedRecs} totalCost={totalCost} />
 
         {/* Recommendations */}
         {analysed && (
           <div>
             <div className="text-xs uppercase tracking-widest text-text-muted mb-3">
               Рекомендации оптимизатора · {RECS.length} найдено
+              {appliedRecs.size > 0 && (
+                <span className="ml-2 text-accent-cyan">· {appliedRecs.size} применено</span>
+              )}
             </div>
             <div className="space-y-3">
               {RECS.map(rec => {
-                const agent = AGENTS.find(a => a.id === rec.agentId);
-                const isApplied = applied.has(rec.id);
+                const agent     = AGENTS.find(a => a.id === rec.agentId);
+                const isApplied = appliedRecs.has(rec.id);
                 return (
                   <div key={rec.id} className={`glass-panel p-5 transition-all duration-200 ${
-                    isApplied ? 'border-accent-cyan border-opacity-50 bg-accent-cyan bg-opacity-3' : ''
+                    isApplied ? 'border-accent-cyan border-opacity-50 bg-accent-cyan bg-opacity-[0.03]' : ''
                   }`}>
                     <div className="flex items-start gap-4">
-                      <div>
+                      <div className="shrink-0">
                         <div className="text-xs font-medium px-2 py-0.5 rounded-full border"
-                          style={{ color: IMPACT_COLOR[rec.impact], borderColor: `${IMPACT_COLOR[rec.impact]}40`, backgroundColor: `${IMPACT_COLOR[rec.impact]}10` }}>
+                          style={{
+                            color: IMPACT_COLOR[rec.impact],
+                            borderColor: `${IMPACT_COLOR[rec.impact]}40`,
+                            backgroundColor: `${IMPACT_COLOR[rec.impact]}10`,
+                          }}>
                           {IMPACT_LABEL[rec.impact]}
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                          {agent && <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />}
+                          {agent && (
+                            <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status}
+                              size="sm" animate={false} agentId={agent.id} />
+                          )}
                           <div className="text-sm font-medium text-text-primary">{rec.title}</div>
                         </div>
                         <p className="text-xs text-text-secondary leading-relaxed mb-3">{rec.desc}</p>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 flex-wrap">
                           <div className="text-xs text-accent-cyan font-mono">
                             −${rec.savingUsd.toFixed(2)}/нед (−{rec.savingPct}%)
                           </div>
                           <button
-                            onClick={() => toggleApply(rec.id)}
+                            onClick={() => toggleRec(rec.id)}
                             className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
                               isApplied
                                 ? 'bg-accent-cyan bg-opacity-15 text-accent-cyan border-accent-cyan border-opacity-40'
@@ -270,6 +274,9 @@ export default function FinOpsOptimizer() {
                             }`}>
                             {isApplied ? '✓ Применено' : rec.action}
                           </button>
+                          {isApplied && (
+                            <span className="text-xs text-text-muted">сохранено</span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -279,6 +286,7 @@ export default function FinOpsOptimizer() {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );
