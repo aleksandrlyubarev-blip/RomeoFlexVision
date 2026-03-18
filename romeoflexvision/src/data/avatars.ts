@@ -340,24 +340,61 @@ export const AGENT_AVATARS: Record<string, string> = {
   </svg>`,
 
   'orchestrator': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <defs>
+      <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#aaff00" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="#aaff00" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="eyeL" cx="35%" cy="30%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+        <stop offset="40%" stop-color="#44ff44"/>
+        <stop offset="100%" stop-color="#1a8c1a"/>
+      </radialGradient>
+      <radialGradient id="eyeR" cx="35%" cy="30%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+        <stop offset="40%" stop-color="#44ff44"/>
+        <stop offset="100%" stop-color="#1a8c1a"/>
+      </radialGradient>
+      <radialGradient id="headGrad" cx="45%" cy="30%">
+        <stop offset="0%" stop-color="#4466cc"/>
+        <stop offset="100%" stop-color="#1a2f80"/>
+      </radialGradient>
+    </defs>
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <polygon points="32,8 52,20 52,44 32,56 12,44 12,20" fill="#7aa2f708" stroke="#7aa2f740" stroke-width="1.5"/>
-    <line x1="32" y1="23" x2="32" y2="14" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="32" cy="13" r="2.5" fill="#7aa2f7"/>
-    <line x1="40.5" y1="27" x2="48" y2="22" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="49" cy="21" r="2.5" fill="#7aa2f7"/>
-    <line x1="40.5" y1="37" x2="48" y2="42" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="49" cy="43" r="2.5" fill="#7aa2f7"/>
-    <line x1="32" y1="41" x2="32" y2="50" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="32" cy="51" r="2.5" fill="#7aa2f7"/>
-    <line x1="23.5" y1="37" x2="16" y2="42" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="15" cy="43" r="2.5" fill="#7aa2f7"/>
-    <line x1="23.5" y1="27" x2="16" y2="22" stroke="#7aa2f750" stroke-width="1"/>
-    <circle cx="15" cy="21" r="2.5" fill="#7aa2f7"/>
-    <circle cx="32" cy="32" r="10" fill="#0d1117" stroke="#7aa2f7" stroke-width="2"/>
-    <circle cx="32" cy="32" r="6" fill="#7aa2f730"/>
-    <circle cx="32" cy="32" r="3.5" fill="#7aa2f7"/>
-    <circle cx="30.5" cy="30.5" r="1" fill="white" opacity="0.5"/>
+    <!-- Eye glow halo -->
+    <ellipse cx="32" cy="34" rx="22" ry="14" fill="url(#eyeGlow)" opacity="0.8"/>
+    <!-- Tentacles left side -->
+    <path d="M 18 38 Q 8 42 6 50 Q 7 56 12 54" stroke="#1a2f80" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M 12 54 Q 10 58 14 57" stroke="#1a2f80" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 20 42 Q 12 50 10 58 Q 12 62 16 59" stroke="#1a2f80" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 16 59 Q 14 63 18 61" stroke="#1a2f80" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Tentacles right side -->
+    <path d="M 46 38 Q 56 42 58 50 Q 57 56 52 54" stroke="#1a2f80" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M 52 54 Q 54 58 50 57" stroke="#1a2f80" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 44 42 Q 52 50 54 58 Q 52 62 48 59" stroke="#1a2f80" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 48 59 Q 50 63 46 61" stroke="#1a2f80" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Center beak/mouth tentacles -->
+    <path d="M 29 46 Q 26 52 24 56 Q 25 60 28 58" stroke="#1a2f80" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M 35 46 Q 38 52 40 56 Q 39 60 36 58" stroke="#1a2f80" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path d="M 32 47 Q 32 54 32 58 Q 33 62 32 61" stroke="#1a2f80" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Head body -->
+    <ellipse cx="32" cy="26" rx="18" ry="20" fill="url(#headGrad)"/>
+    <!-- Head highlight -->
+    <ellipse cx="28" cy="16" rx="7" ry="5" fill="#6688ee" opacity="0.5"/>
+    <ellipse cx="26" cy="14" rx="3" ry="2" fill="white" opacity="0.25"/>
+    <!-- Brow ridge / frown -->
+    <path d="M 19 30 Q 23 27 27 29" stroke="#0f1f60" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 37 29 Q 41 27 45 30" stroke="#0f1f60" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Left eye -->
+    <circle cx="23" cy="34" r="8" fill="#0d1117" opacity="0.4"/>
+    <circle cx="23" cy="34" r="7.5" fill="url(#eyeL)"/>
+    <circle cx="23" cy="34" r="7.5" fill="none" stroke="#0f1f60" stroke-width="1"/>
+    <circle cx="21" cy="32" r="2.5" fill="white" opacity="0.6"/>
+    <!-- Right eye -->
+    <circle cx="41" cy="34" r="8" fill="#0d1117" opacity="0.4"/>
+    <circle cx="41" cy="34" r="7.5" fill="url(#eyeR)"/>
+    <circle cx="41" cy="34" r="7.5" fill="none" stroke="#0f1f60" stroke-width="1"/>
+    <circle cx="39" cy="32" r="2.5" fill="white" opacity="0.6"/>
   </svg>`,
 };
 
