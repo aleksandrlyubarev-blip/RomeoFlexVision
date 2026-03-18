@@ -6,26 +6,60 @@ export const AGENT_AVATARS: Record<string, string> = {
 
   'robo-qc': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="10" fill="#7aa2f710" stroke="#7aa2f740" stroke-width="1.5"/>
-    <circle cx="26" cy="28" r="9" fill="#0d1117" stroke="#7aa2f7" stroke-width="1.5"/>
-    <circle cx="26" cy="28" r="6" fill="#7aa2f720"/>
-    <circle cx="26" cy="28" r="4" fill="#7aa2f760"/>
-    <circle cx="26" cy="28" r="2" fill="#7aa2f7"/>
-    <circle cx="24" cy="26" r="0.8" fill="white" opacity="0.6"/>
-    <rect x="37" y="22" width="12" height="12" rx="2" fill="#0d1117" stroke="#7aa2f7" stroke-width="1"/>
-    <line x1="40.5" y1="22" x2="40.5" y2="34" stroke="#7aa2f7" stroke-width="0.6"/>
-    <line x1="44.5" y1="22" x2="44.5" y2="34" stroke="#7aa2f7" stroke-width="0.6"/>
-    <line x1="37" y1="26" x2="49" y2="26" stroke="#7aa2f7" stroke-width="0.6"/>
-    <line x1="37" y1="30" x2="49" y2="30" stroke="#7aa2f7" stroke-width="0.6"/>
-    <rect x="14" y="41" width="36" height="5" rx="2.5" fill="#7aa2f715"/>
-    <rect x="16" y="42.5" width="5" height="2" rx="1" fill="#7aa2f7"/>
-    <rect x="23" y="42.5" width="5" height="2" rx="1" fill="#7aa2f7"/>
-    <rect x="30" y="42.5" width="5" height="2" rx="1" fill="#7aa2f7"/>
-    <rect x="37" y="42.5" width="5" height="2" rx="1" fill="#7aa2f7"/>
-    <line x1="32" y1="12" x2="32" y2="6" stroke="#7aa2f7" stroke-width="1.5"/>
-    <circle cx="32" cy="5" r="2.5" fill="#7aa2f7"/>
-    <line x1="10" y1="24" x2="14" y2="24" stroke="#7aa2f780" stroke-width="1"/>
-    <line x1="50" y1="24" x2="54" y2="24" stroke="#7aa2f780" stroke-width="1"/>
+    <!-- Armor collar / shoulders -->
+    <ellipse cx="16" cy="62" rx="16" ry="9" fill="#1a3a6a"/>
+    <ellipse cx="48" cy="62" rx="16" ry="9" fill="#1a3a6a"/>
+    <rect x="18" y="52" width="28" height="10" rx="2" fill="#c8d4e0"/>
+    <rect x="22" y="54" width="20" height="6" rx="1" fill="#dce8f0"/>
+    <!-- Dome interior - circuit board -->
+    <circle cx="32" cy="27" r="22" fill="#080e18"/>
+    <!-- PCB traces -->
+    <line x1="20" y1="16" x2="44" y2="16" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="20" y1="16" x2="20" y2="40" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="44" y1="16" x2="44" y2="38" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="20" y1="22" x2="28" y2="22" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="36" y1="22" x2="44" y2="22" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="28" y1="22" x2="28" y2="16" stroke="#7aa2f728" stroke-width="0.9"/>
+    <line x1="36" y1="22" x2="36" y2="16" stroke="#7aa2f728" stroke-width="0.9"/>
+    <rect x="23" y="10" width="9" height="6" rx="0.8" fill="#7aa2f718" stroke="#7aa2f740" stroke-width="0.6"/>
+    <rect x="35" y="10" width="7" height="5" rx="0.8" fill="#7aa2f718" stroke="#7aa2f740" stroke-width="0.6"/>
+    <rect x="20" y="41" width="10" height="5" rx="0.8" fill="#7aa2f718" stroke="#7aa2f740" stroke-width="0.6"/>
+    <rect x="33" y="41" width="10" height="5" rx="0.8" fill="#7aa2f718" stroke="#7aa2f740" stroke-width="0.6"/>
+    <circle cx="32" cy="11" r="1.5" fill="#ff6b3520" stroke="#ff6b35" stroke-width="0.6"/>
+    <circle cx="36" cy="8" r="1" fill="#7aa2f740"/>
+    <!-- Brass cylinder (mouth) -->
+    <rect x="26" y="40" width="12" height="5" rx="2.5" fill="#b8952a"/>
+    <rect x="27" y="41" width="10" height="3" rx="1.5" fill="#9a7d22"/>
+    <line x1="30" y1="40" x2="30" y2="45" stroke="#c8a83a" stroke-width="0.6"/>
+    <line x1="34" y1="40" x2="34" y2="45" stroke="#c8a83a" stroke-width="0.6"/>
+    <!-- Left side camera -->
+    <circle cx="12" cy="27" r="5.5" fill="#0d1f3a" stroke="#7aa2f7" stroke-width="1.5"/>
+    <circle cx="12" cy="27" r="3.5" fill="#040c18"/>
+    <circle cx="12" cy="27" r="2.2" fill="#1a4080"/>
+    <circle cx="12" cy="27" r="1.2" fill="#7aa2f7" opacity="0.9"/>
+    <circle cx="11.2" cy="26.2" r="0.5" fill="white" opacity="0.7"/>
+    <!-- Left eye glow -->
+    <circle cx="23" cy="29" r="7.5" fill="#040c18"/>
+    <circle cx="23" cy="29" r="6" fill="#0a1e3a"/>
+    <circle cx="23" cy="29" r="4.5" fill="#1040a0"/>
+    <circle cx="23" cy="29" r="3" fill="#7aa2f7"/>
+    <circle cx="23" cy="29" r="1.5" fill="white" opacity="0.95"/>
+    <circle cx="21.8" cy="27.8" r="0.7" fill="white"/>
+    <!-- Right eye glow -->
+    <circle cx="41" cy="29" r="7.5" fill="#040c18"/>
+    <circle cx="41" cy="29" r="6" fill="#0a1e3a"/>
+    <circle cx="41" cy="29" r="4.5" fill="#1040a0"/>
+    <circle cx="41" cy="29" r="3" fill="#7aa2f7"/>
+    <circle cx="41" cy="29" r="1.5" fill="white" opacity="0.95"/>
+    <circle cx="39.8" cy="27.8" r="0.7" fill="white"/>
+    <!-- Light beam from right eye -->
+    <path d="M 48 27 L 64 21" stroke="#7aa2f7" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 48 29 L 64 26" stroke="#7aa2f7" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+    <path d="M 48 31 L 64 31" stroke="#7aa2f7" stroke-width="0.6" stroke-linecap="round" opacity="0.2"/>
+    <!-- Glass dome outline -->
+    <circle cx="32" cy="27" r="22" fill="none" stroke="#7aa2f7" stroke-width="1" opacity="0.45"/>
+    <!-- Glass reflection highlight -->
+    <path d="M 17 14 Q 26 8 38 11" stroke="white" stroke-width="1.8" fill="none" opacity="0.18" stroke-linecap="round"/>
   </svg>`,
 
   'romeo-phd': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
