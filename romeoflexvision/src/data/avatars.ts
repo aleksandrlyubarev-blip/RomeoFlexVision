@@ -162,45 +162,116 @@ export const AGENT_AVATARS: Record<string, string> = {
 
   'chertejnik': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="4" fill="#e0af6810" stroke="#e0af6840" stroke-width="1.5"/>
-    <circle cx="24" cy="27" r="9" fill="#0d1117" stroke="#e0af68" stroke-width="1.5"/>
-    <line x1="24" y1="18.5" x2="24" y2="35.5" stroke="#e0af68" stroke-width="0.8"/>
-    <line x1="15.5" y1="27" x2="32.5" y2="27" stroke="#e0af68" stroke-width="0.8"/>
-    <circle cx="24" cy="27" r="4" fill="#e0af6820"/>
-    <circle cx="24" cy="27" r="2" fill="#e0af68"/>
-    <rect x="35" y="19" width="16" height="16" rx="2" fill="#0d1117" stroke="#e0af68" stroke-width="1.5"/>
-    <rect x="38" y="22" width="10" height="10" rx="1" fill="#e0af6815"/>
-    <circle cx="43" cy="27" r="3" fill="#e0af68"/>
-    <line x1="40" y1="24" x2="46" y2="30" stroke="#e0af6870" stroke-width="0.8"/>
-    <rect x="12" y="41" width="40" height="5" rx="2.5" fill="#e0af6815"/>
-    <line x1="16" y1="41" x2="16" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="22" y1="41" x2="22" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="28" y1="41" x2="28" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="34" y1="41" x2="34" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="40" y1="41" x2="40" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="46" y1="41" x2="46" y2="46" stroke="#e0af68" stroke-width="1"/>
-    <line x1="30" y1="12" x2="28" y2="5" stroke="#e0af68" stroke-width="1.5"/>
-    <line x1="34" y1="12" x2="36" y2="5" stroke="#e0af68" stroke-width="1.5"/>
-    <line x1="26" y1="6" x2="38" y2="6" stroke="#e0af68" stroke-width="0.8"/>
+    <!-- Ears -->
+    <circle cx="13" cy="36" r="7" fill="#6b3a1f"/>
+    <circle cx="51" cy="36" r="7" fill="#6b3a1f"/>
+    <circle cx="13" cy="36" r="4.5" fill="#8b4e28"/>
+    <circle cx="51" cy="36" r="4.5" fill="#8b4e28"/>
+    <!-- Head -->
+    <circle cx="32" cy="42" r="21" fill="#8b4e28"/>
+    <!-- Forehead fur texture -->
+    <circle cx="22" cy="34" r="5" fill="#7a4422" opacity="0.5"/>
+    <circle cx="42" cy="34" r="5" fill="#7a4422" opacity="0.5"/>
+    <!-- Muzzle -->
+    <ellipse cx="32" cy="52" rx="13" ry="9" fill="#c8906a"/>
+    <!-- Cheek fur -->
+    <circle cx="15" cy="48" r="6" fill="#7a4422" opacity="0.4"/>
+    <circle cx="49" cy="48" r="6" fill="#7a4422" opacity="0.4"/>
+    <!-- Hard hat brim -->
+    <rect x="8" y="24" width="48" height="5" rx="2.5" fill="#d4920a"/>
+    <!-- Hard hat dome -->
+    <ellipse cx="32" cy="18" rx="24" ry="17" fill="#f0b800"/>
+    <!-- Hat shine -->
+    <ellipse cx="26" cy="10" rx="7" ry="4" fill="white" opacity="0.3" transform="rotate(-20 26 10)"/>
+    <ellipse cx="38" cy="8" rx="3" ry="2" fill="white" opacity="0.2" transform="rotate(-10 38 8)"/>
+    <!-- Hat ridge lines -->
+    <path d="M 32 3 Q 32 22 32 24" stroke="#c8a000" stroke-width="1" fill="none" opacity="0.6"/>
+    <path d="M 22 6 Q 20 18 16 24" stroke="#c8a000" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <path d="M 42 6 Q 44 18 48 24" stroke="#c8a000" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <!-- Pencil tucked in hat (right side) -->
+    <rect x="46" y="14" width="4" height="18" rx="1" fill="#f5e060" transform="rotate(15 48 23)"/>
+    <rect x="46" y="14" width="4" height="3" rx="1" fill="#e8b870" transform="rotate(15 48 23)"/>
+    <polygon points="48,32 46,35 50,35" fill="#e8c090" transform="rotate(15 48 23)"/>
+    <!-- Glasses left frame -->
+    <circle cx="22" cy="38" r="9" fill="#111827"/>
+    <!-- Glasses right frame -->
+    <circle cx="42" cy="38" r="9" fill="#111827"/>
+    <!-- Bridge -->
+    <rect x="31" y="36.5" width="0" height="0"/>
+    <line x1="31" y1="38" x2="33" y2="38" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+    <!-- Temple arms -->
+    <line x1="13" y1="38" x2="9" y2="37" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+    <line x1="51" y1="38" x2="55" y2="37" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+    <!-- Left lens golden ring -->
+    <circle cx="22" cy="38" r="7.5" fill="#b8860b"/>
+    <circle cx="22" cy="38" r="6.5" fill="#1a3000"/>
+    <!-- Left lens green glow -->
+    <radialGradient id="ch1" cx="40%" cy="38%"><stop offset="0%" stop-color="#90ff30"/><stop offset="50%" stop-color="#44cc00"/><stop offset="100%" stop-color="#0a2200"/></radialGradient>
+    <circle cx="22" cy="38" r="6.5" fill="url(#ch1)"/>
+    <circle cx="19.5" cy="35.5" r="2" fill="white" opacity="0.85"/>
+    <circle cx="21" cy="34.5" r="1" fill="white" opacity="0.6"/>
+    <!-- Right lens golden ring -->
+    <circle cx="42" cy="38" r="7.5" fill="#b8860b"/>
+    <circle cx="42" cy="38" r="6.5" fill="#1a3000"/>
+    <!-- Right lens green glow -->
+    <radialGradient id="ch2" cx="40%" cy="38%"><stop offset="0%" stop-color="#90ff30"/><stop offset="50%" stop-color="#44cc00"/><stop offset="100%" stop-color="#0a2200"/></radialGradient>
+    <circle cx="42" cy="38" r="6.5" fill="url(#ch2)"/>
+    <circle cx="39.5" cy="35.5" r="2" fill="white" opacity="0.85"/>
+    <circle cx="41" cy="34.5" r="1" fill="white" opacity="0.6"/>
+    <!-- Nose -->
+    <ellipse cx="32" cy="50" rx="3.5" ry="2.8" fill="#2a1a0a"/>
+    <!-- Smile -->
+    <path d="M 24 55 Q 32 61 40 55" stroke="#2a1a0a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Whisker dots -->
+    <circle cx="22" cy="53" r="0.8" fill="#5a3010" opacity="0.6"/>
+    <circle cx="25" cy="54" r="0.8" fill="#5a3010" opacity="0.6"/>
+    <circle cx="42" cy="53" r="0.8" fill="#5a3010" opacity="0.6"/>
+    <circle cx="39" cy="54" r="0.8" fill="#5a3010" opacity="0.6"/>
   </svg>`,
 
   'perevodchik': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="14" fill="#b4f9f810" stroke="#b4f9f840" stroke-width="1.5"/>
-    <rect x="13" y="19" width="18" height="14" rx="4" fill="#0d1117" stroke="#b4f9f8" stroke-width="1.5"/>
-    <line x1="19" y1="33" x2="16" y2="38" stroke="#b4f9f8" stroke-width="1.5" stroke-linecap="round"/>
-    <circle cx="19.5" cy="26" r="2.5" fill="#b4f9f8"/>
-    <circle cx="26.5" cy="26" r="2.5" fill="#b4f9f8"/>
-    <circle cx="42" cy="26" r="9" fill="#0d1117" stroke="#b4f9f8" stroke-width="1.5"/>
-    <circle cx="42" cy="26" r="5.5" fill="#b4f9f820"/>
-    <circle cx="42" cy="26" r="3" fill="#b4f9f8"/>
-    <circle cx="40.5" cy="24.5" r="0.8" fill="white" opacity="0.5"/>
-    <circle cx="20" cy="42" r="2.5" fill="#b4f9f8"/>
-    <circle cx="32" cy="42" r="2.5" fill="#b4f9f8"/>
-    <circle cx="44" cy="42" r="2.5" fill="#b4f9f8"/>
-    <line x1="32" y1="12" x2="32" y2="5" stroke="#b4f9f8" stroke-width="1.5"/>
-    <path d="M 26 4 Q 32 1 38 4" stroke="#b4f9f8" stroke-width="1.2" fill="none"/>
-    <path d="M 23 6.5 Q 32 2.5 41 6.5" stroke="#b4f9f8" stroke-width="0.7" fill="none" opacity="0.5"/>
+    <!-- Parrot head base - green -->
+    <circle cx="32" cy="38" r="23" fill="#28b030"/>
+    <!-- Blue left feather patch -->
+    <ellipse cx="17" cy="35" rx="13" ry="15" fill="#1a6ad0"/>
+    <!-- Yellow/golden right cheek -->
+    <ellipse cx="47" cy="40" rx="13" ry="12" fill="#d89010"/>
+    <!-- Green top feathers overlay -->
+    <ellipse cx="32" cy="27" rx="19" ry="15" fill="#38d040"/>
+    <!-- Bright green highlight center -->
+    <ellipse cx="32" cy="26" rx="12" ry="9" fill="#58f050" opacity="0.7"/>
+    <!-- Headphone band -->
+    <path d="M 9 34 Q 32 8 55 34" stroke="#252525" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <!-- Left cup -->
+    <rect x="5" y="30" width="9" height="13" rx="4.5" fill="#2a2a2a"/>
+    <rect x="6.5" y="31.5" width="6" height="10" rx="3" fill="#111"/>
+    <!-- Right cup -->
+    <rect x="50" y="30" width="9" height="13" rx="4.5" fill="#2a2a2a"/>
+    <rect x="51.5" y="31.5" width="6" height="10" rx="3" fill="#111"/>
+    <!-- Mic boom -->
+    <path d="M 55 40 Q 54 50 46 52" stroke="#2a2a2a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="44.5" cy="52.5" rx="3" ry="2" fill="#1a1a1a" stroke="#333" stroke-width="0.5"/>
+    <!-- Left eye -->
+    <circle cx="21" cy="35" r="9" fill="#061206"/>
+    <circle cx="21" cy="35" r="7.5" fill="#0a2200"/>
+    <radialGradient id="pe1" cx="38%" cy="35%"><stop offset="0%" stop-color="#a0ff40"/><stop offset="45%" stop-color="#38d000"/><stop offset="100%" stop-color="#082000"/></radialGradient>
+    <circle cx="21" cy="35" r="6" fill="url(#pe1)"/>
+    <circle cx="18.5" cy="32.5" r="2.2" fill="white" opacity="0.9"/>
+    <circle cx="20" cy="31.5" r="1" fill="white" opacity="0.65"/>
+    <!-- Right eye -->
+    <circle cx="43" cy="35" r="9" fill="#061206"/>
+    <circle cx="43" cy="35" r="7.5" fill="#0a2200"/>
+    <radialGradient id="pe2" cx="38%" cy="35%"><stop offset="0%" stop-color="#a0ff40"/><stop offset="45%" stop-color="#38d000"/><stop offset="100%" stop-color="#082000"/></radialGradient>
+    <circle cx="43" cy="35" r="6" fill="url(#pe2)"/>
+    <circle cx="40.5" cy="32.5" r="2.2" fill="white" opacity="0.9"/>
+    <circle cx="42" cy="31.5" r="1" fill="white" opacity="0.65"/>
+    <!-- Beak upper -->
+    <path d="M 27 44 Q 32 39 37 44 L 34 50 Q 32 52 30 50 Z" fill="#d87010"/>
+    <!-- Beak lower / open -->
+    <path d="M 29 48 Q 32 54 35 48" fill="#1a0505"/>
+    <!-- Beak highlight -->
+    <path d="M 29 42 Q 32 40 35 42" stroke="#f09828" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.8"/>
   </svg>`,
 
   'pino-cut': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
