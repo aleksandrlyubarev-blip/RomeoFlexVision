@@ -108,39 +108,54 @@ export const AGENT_AVATARS: Record<string, string> = {
   </svg>`,
 
   'andrew-analytic': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <defs>
+      <radialGradient id="alens" cx="40%" cy="35%">
+        <stop offset="0%" stop-color="#aaffa0"/>
+        <stop offset="45%" stop-color="#22cc00"/>
+        <stop offset="100%" stop-color="#003300"/>
+      </radialGradient>
+      <radialGradient id="headg" cx="45%" cy="35%">
+        <stop offset="0%" stop-color="#ff9030"/>
+        <stop offset="100%" stop-color="#cc5500"/>
+      </radialGradient>
+    </defs>
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <!-- Fox ears -->
-    <polygon points="15,33 21,9 31,29" fill="#d96a10"/>
-    <polygon points="33,29 43,9 49,33" fill="#d96a10"/>
-    <polygon points="18,31 22,15 29,28" fill="#f0b878"/>
-    <polygon points="35,28 42,15 46,31" fill="#f0b878"/>
+    <!-- Left ear outer -->
+    <polygon points="14,36 20,6 32,30" fill="#cc5500"/>
+    <!-- Right ear outer -->
+    <polygon points="50,36 44,6 32,30" fill="#cc5500"/>
+    <!-- Left ear inner -->
+    <polygon points="17,32 21,12 29,28" fill="#f0d0a0"/>
+    <!-- Right ear inner -->
+    <polygon points="47,32 43,12 35,28" fill="#f0d0a0"/>
     <!-- Head -->
-    <ellipse cx="32" cy="37" rx="20" ry="18" fill="#e8780a"/>
-    <!-- Muzzle -->
-    <ellipse cx="32" cy="47" rx="12" ry="8" fill="#f5d5a0"/>
-    <!-- Glasses left frame -->
-    <rect x="10" y="30" width="18" height="12" rx="3.5" fill="#111827"/>
-    <!-- Glasses right frame -->
-    <rect x="36" y="30" width="18" height="12" rx="3.5" fill="#111827"/>
+    <ellipse cx="32" cy="38" rx="20" ry="17" fill="url(#headg)"/>
+    <!-- Cheeks / muzzle -->
+    <ellipse cx="32" cy="48" rx="13" ry="9" fill="#f5ddb0"/>
+    <!-- Cheek sides -->
+    <ellipse cx="18" cy="44" rx="6" ry="5" fill="#f5ddb0" opacity="0.6"/>
+    <ellipse cx="46" cy="44" rx="6" ry="5" fill="#f5ddb0" opacity="0.6"/>
+    <!-- Left glasses frame -->
+    <rect x="9" y="28" width="20" height="13" rx="4" fill="#111"/>
+    <!-- Right glasses frame -->
+    <rect x="35" y="28" width="20" height="13" rx="4" fill="#111"/>
     <!-- Bridge -->
-    <rect x="28" y="33.5" width="8" height="2.5" rx="1.2" fill="#111827"/>
+    <rect x="29" y="31.5" width="6" height="2.5" rx="1.2" fill="#111"/>
     <!-- Temple arms -->
-    <line x1="10" y1="35" x2="6" y2="34" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
-    <line x1="54" y1="35" x2="58" y2="34" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="9" y1="33" x2="5" y2="32" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="55" y1="33" x2="59" y2="32" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
     <!-- Left lens -->
-    <rect x="11.5" y="31.5" width="15" height="9" rx="2.5" fill="#011a00"/>
-    <radialGradient id="lg1" cx="45%" cy="40%"><stop offset="0%" stop-color="#7fff50"/><stop offset="60%" stop-color="#39dd00"/><stop offset="100%" stop-color="#001a00"/></radialGradient>
-    <rect x="11.5" y="31.5" width="15" height="9" rx="2.5" fill="url(#lg1)" opacity="0.9"/>
-    <circle cx="16" cy="34" r="1.2" fill="white" opacity="0.8"/>
+    <rect x="10.5" y="29.5" width="17" height="10" rx="3" fill="#011a00"/>
+    <rect x="10.5" y="29.5" width="17" height="10" rx="3" fill="url(#alens)" opacity="0.95"/>
+    <circle cx="15" cy="32.5" r="2" fill="white" opacity="0.7"/>
     <!-- Right lens -->
-    <rect x="37.5" y="31.5" width="15" height="9" rx="2.5" fill="#011a00"/>
-    <radialGradient id="lg2" cx="45%" cy="40%"><stop offset="0%" stop-color="#7fff50"/><stop offset="60%" stop-color="#39dd00"/><stop offset="100%" stop-color="#001a00"/></radialGradient>
-    <rect x="37.5" y="31.5" width="15" height="9" rx="2.5" fill="url(#lg2)" opacity="0.9"/>
-    <circle cx="42" cy="34" r="1.2" fill="white" opacity="0.8"/>
+    <rect x="36.5" y="29.5" width="17" height="10" rx="3" fill="#011a00"/>
+    <rect x="36.5" y="29.5" width="17" height="10" rx="3" fill="url(#alens)" opacity="0.95"/>
+    <circle cx="41" cy="32.5" r="2" fill="white" opacity="0.7"/>
     <!-- Nose -->
-    <ellipse cx="32" cy="48" rx="2.5" ry="2" fill="#1a1a1a"/>
+    <ellipse cx="32" cy="49" rx="2.5" ry="2" fill="#1a1a1a"/>
     <!-- Smile -->
-    <path d="M 27 52 Q 32 56 37 52" stroke="#a0784a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M 27 53 Q 32 57 37 53" stroke="#996633" stroke-width="1.8" fill="none" stroke-linecap="round"/>
   </svg>`,
 
   'bassito-animator': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
