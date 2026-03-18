@@ -30,39 +30,83 @@ export const AGENT_AVATARS: Record<string, string> = {
 
   'romeo-phd': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="13" width="44" height="40" rx="12" fill="#9d7cd810" stroke="#9d7cd840" stroke-width="1.5"/>
-    <circle cx="22" cy="28" r="7.5" fill="#0d1117" stroke="#9d7cd8" stroke-width="1.5"/>
-    <circle cx="22" cy="28" r="4.5" fill="#9d7cd820"/>
-    <circle cx="22" cy="28" r="2.5" fill="#9d7cd8"/>
-    <circle cx="20.5" cy="26.5" r="0.8" fill="white" opacity="0.5"/>
-    <circle cx="42" cy="28" r="7.5" fill="#0d1117" stroke="#9d7cd8" stroke-width="1.5"/>
-    <circle cx="42" cy="28" r="4.5" fill="#9d7cd820"/>
-    <circle cx="42" cy="28" r="2.5" fill="#9d7cd8"/>
-    <circle cx="40.5" cy="26.5" r="0.8" fill="white" opacity="0.5"/>
-    <line x1="29.5" y1="28" x2="34.5" y2="28" stroke="#9d7cd8" stroke-width="1.5"/>
-    <line x1="10" y1="25" x2="14.5" y2="27" stroke="#9d7cd8" stroke-width="1"/>
-    <line x1="54" y1="25" x2="49.5" y2="27" stroke="#9d7cd8" stroke-width="1"/>
-    <path d="M 20 40 Q 32 48 44 40" stroke="#9d7cd8" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <line x1="32" y1="13" x2="32" y2="6" stroke="#9d7cd8" stroke-width="1.5"/>
-    <rect x="25" y="2" width="14" height="4" rx="0.5" fill="#9d7cd8"/>
-    <rect x="28" y="5.5" width="8" height="3" rx="0.5" fill="#9d7cd870"/>
-    <circle cx="25" cy="4" r="1" fill="#0d1117"/>
+    <!-- Green line chart floating above -->
+    <circle cx="21" cy="10" r="1.8" fill="#39ff14"/>
+    <circle cx="29" cy="7" r="1.3" fill="#39ff14"/>
+    <circle cx="37" cy="9" r="2.2" fill="#39ff14"/>
+    <circle cx="45" cy="6" r="1.5" fill="#39ff14"/>
+    <polyline points="21,10 29,7 37,9 45,6" stroke="#39ff14" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    <!-- Ear tufts -->
+    <polygon points="19,29 23,14 29,27" fill="#232b38"/>
+    <polygon points="35,27 41,14 45,29" fill="#232b38"/>
+    <!-- Owl head -->
+    <circle cx="32" cy="39" r="20" fill="#364050"/>
+    <!-- Feather scales -->
+    <circle cx="22" cy="33" r="4" fill="#232b38" opacity="0.45"/>
+    <circle cx="32" cy="29" r="4.5" fill="#232b38" opacity="0.4"/>
+    <circle cx="42" cy="33" r="4" fill="#232b38" opacity="0.45"/>
+    <circle cx="16" cy="42" r="4" fill="#232b38" opacity="0.4"/>
+    <circle cx="48" cy="42" r="4" fill="#232b38" opacity="0.4"/>
+    <!-- White facial disk -->
+    <ellipse cx="22" cy="38" rx="9.5" ry="10.5" fill="#dde1e6" opacity="0.9"/>
+    <ellipse cx="42" cy="38" rx="9.5" ry="10.5" fill="#dde1e6" opacity="0.9"/>
+    <!-- Glasses left frame -->
+    <rect x="10" y="30" width="21" height="14" rx="4" fill="#111827"/>
+    <!-- Glasses right frame -->
+    <rect x="33" y="30" width="21" height="14" rx="4" fill="#111827"/>
+    <!-- Bridge -->
+    <rect x="31" y="34" width="2" height="4" rx="1" fill="#111827"/>
+    <!-- Temple arms -->
+    <line x1="10" y1="37" x2="6" y2="36" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="37" x2="58" y2="36" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Left lens -->
+    <rect x="11.5" y="31.5" width="18" height="11" rx="2.8" fill="#011a00"/>
+    <radialGradient id="ow1" cx="42%" cy="38%"><stop offset="0%" stop-color="#8fff55"/><stop offset="55%" stop-color="#33cc00"/><stop offset="100%" stop-color="#011a00"/></radialGradient>
+    <rect x="11.5" y="31.5" width="18" height="11" rx="2.8" fill="url(#ow1)"/>
+    <circle cx="16.5" cy="35.5" r="1.6" fill="white" opacity="0.85"/>
+    <!-- Right lens -->
+    <rect x="34.5" y="31.5" width="18" height="11" rx="2.8" fill="#011a00"/>
+    <radialGradient id="ow2" cx="42%" cy="38%"><stop offset="0%" stop-color="#8fff55"/><stop offset="55%" stop-color="#33cc00"/><stop offset="100%" stop-color="#011a00"/></radialGradient>
+    <rect x="34.5" y="31.5" width="18" height="11" rx="2.8" fill="url(#ow2)"/>
+    <circle cx="39.5" cy="35.5" r="1.6" fill="white" opacity="0.85"/>
+    <!-- Beak -->
+    <polygon points="28.5,43 35.5,43 32,49" fill="#6b7a8d"/>
   </svg>`,
 
   'andrew-analytic': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="8" fill="#73daca10" stroke="#73daca40" stroke-width="1.5"/>
-    <rect x="12" y="19" width="20" height="18" rx="3" fill="#0d1117" stroke="#73daca" stroke-width="1"/>
-    <rect x="15" y="30" width="3.5" height="5" rx="0.5" fill="#73daca"/>
-    <rect x="20" y="26" width="3.5" height="9" rx="0.5" fill="#73daca"/>
-    <rect x="25" y="22" width="3.5" height="13" rx="0.5" fill="#73daca"/>
-    <circle cx="43" cy="28" r="9" fill="#0d1117" stroke="#73daca" stroke-width="1.5"/>
-    <circle cx="43" cy="28" r="5.5" fill="#73daca20"/>
-    <circle cx="43" cy="28" r="3" fill="#73daca"/>
-    <circle cx="41.5" cy="26.5" r="0.8" fill="white" opacity="0.5"/>
-    <path d="M 12 43 Q 20 40 28 43 Q 36 46 44 43 Q 48 41 52 43" stroke="#73daca" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <line x1="28" y1="12" x2="28" y2="6" stroke="#73daca" stroke-width="1.5"/>
-    <polyline points="24,8 26.5,5 28,7.5 30,4 32,6.5" stroke="#73daca" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Fox ears -->
+    <polygon points="15,33 21,9 31,29" fill="#d96a10"/>
+    <polygon points="33,29 43,9 49,33" fill="#d96a10"/>
+    <polygon points="18,31 22,15 29,28" fill="#f0b878"/>
+    <polygon points="35,28 42,15 46,31" fill="#f0b878"/>
+    <!-- Head -->
+    <ellipse cx="32" cy="37" rx="20" ry="18" fill="#e8780a"/>
+    <!-- Muzzle -->
+    <ellipse cx="32" cy="47" rx="12" ry="8" fill="#f5d5a0"/>
+    <!-- Glasses left frame -->
+    <rect x="10" y="30" width="18" height="12" rx="3.5" fill="#111827"/>
+    <!-- Glasses right frame -->
+    <rect x="36" y="30" width="18" height="12" rx="3.5" fill="#111827"/>
+    <!-- Bridge -->
+    <rect x="28" y="33.5" width="8" height="2.5" rx="1.2" fill="#111827"/>
+    <!-- Temple arms -->
+    <line x1="10" y1="35" x2="6" y2="34" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="35" x2="58" y2="34" stroke="#111827" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Left lens -->
+    <rect x="11.5" y="31.5" width="15" height="9" rx="2.5" fill="#011a00"/>
+    <radialGradient id="lg1" cx="45%" cy="40%"><stop offset="0%" stop-color="#7fff50"/><stop offset="60%" stop-color="#39dd00"/><stop offset="100%" stop-color="#001a00"/></radialGradient>
+    <rect x="11.5" y="31.5" width="15" height="9" rx="2.5" fill="url(#lg1)" opacity="0.9"/>
+    <circle cx="16" cy="34" r="1.2" fill="white" opacity="0.8"/>
+    <!-- Right lens -->
+    <rect x="37.5" y="31.5" width="15" height="9" rx="2.5" fill="#011a00"/>
+    <radialGradient id="lg2" cx="45%" cy="40%"><stop offset="0%" stop-color="#7fff50"/><stop offset="60%" stop-color="#39dd00"/><stop offset="100%" stop-color="#001a00"/></radialGradient>
+    <rect x="37.5" y="31.5" width="15" height="9" rx="2.5" fill="url(#lg2)" opacity="0.9"/>
+    <circle cx="42" cy="34" r="1.2" fill="white" opacity="0.8"/>
+    <!-- Nose -->
+    <ellipse cx="32" cy="48" rx="2.5" ry="2" fill="#1a1a1a"/>
+    <!-- Smile -->
+    <path d="M 27 52 Q 32 56 37 52" stroke="#a0784a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
   </svg>`,
 
   'bassito-animator': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
@@ -127,29 +171,42 @@ export const AGENT_AVATARS: Record<string, string> = {
 
   'pino-cut': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="8" fill="#f7768e10" stroke="#f7768e40" stroke-width="1.5"/>
-    <circle cx="24" cy="27" r="9.5" fill="#0d1117" stroke="#f7768e" stroke-width="1.5"/>
-    <circle cx="24" cy="27" r="6.5" fill="#f7768e15"/>
-    <circle cx="24" cy="27" r="2.5" fill="#0d1117" stroke="#f7768e" stroke-width="1"/>
-    <circle cx="24" cy="18.5" r="1.8" fill="#f7768e"/>
-    <circle cx="31.5" cy="22" r="1.8" fill="#f7768e"/>
-    <circle cx="31.5" cy="32" r="1.8" fill="#f7768e"/>
-    <circle cx="24" cy="35.5" r="1.8" fill="#f7768e"/>
-    <circle cx="16.5" cy="32" r="1.8" fill="#f7768e"/>
-    <circle cx="16.5" cy="22" r="1.8" fill="#f7768e"/>
-    <rect x="35" y="20" width="16" height="13" rx="3" fill="#0d1117" stroke="#f7768e" stroke-width="1.5"/>
-    <polygon points="40,23 40,30.5 47,26.5" fill="#f7768e"/>
-    <rect x="14" y="41" width="36" height="5" rx="1.5" fill="#f7768e20"/>
-    <rect x="14" y="41" width="36" height="2.5" rx="1" fill="#f7768e50"/>
-    <line x1="19" y1="41" x2="17" y2="43.5" stroke="#0d1117" stroke-width="1.5"/>
-    <line x1="25" y1="41" x2="23" y2="43.5" stroke="#0d1117" stroke-width="1.5"/>
-    <line x1="31" y1="41" x2="29" y2="43.5" stroke="#0d1117" stroke-width="1.5"/>
-    <line x1="37" y1="41" x2="35" y2="43.5" stroke="#0d1117" stroke-width="1.5"/>
-    <line x1="43" y1="41" x2="41" y2="43.5" stroke="#0d1117" stroke-width="1.5"/>
-    <rect x="29" y="3" width="6" height="9" rx="0.5" fill="#f7768e" stroke="#0d1117" stroke-width="0.8"/>
-    <rect x="29" y="3" width="6" height="2" fill="#0d1117" opacity="0.5"/>
-    <rect x="29" y="6" width="6" height="2" fill="#0d1117" opacity="0.5"/>
-    <rect x="29" y="9" width="6" height="2" fill="#0d1117" opacity="0.5"/>
+    <!-- Cat ears -->
+    <polygon points="17,31 22,13 29,28" fill="#e8e8f0"/>
+    <polygon points="35,28 42,13 47,31" fill="#e8e8f0"/>
+    <polygon points="19.5,29 23,17 27.5,27" fill="#c4c4d4"/>
+    <polygon points="36.5,27 41,17 44.5,29" fill="#c4c4d4"/>
+    <!-- Face -->
+    <circle cx="32" cy="39" r="19" fill="#eceff4"/>
+    <!-- Headphone band -->
+    <path d="M 11 36 Q 32 12 53 36" stroke="#111827" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M 11 36 Q 32 12 53 36" stroke="#39ff14" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.9"/>
+    <!-- Left cup -->
+    <rect x="7" y="32" width="8" height="13" rx="4" fill="#111827"/>
+    <rect x="8.5" y="33.5" width="5" height="10" rx="2.5" fill="#0a0f1a"/>
+    <line x1="10" y1="36" x2="10" y2="42" stroke="#39ff14" stroke-width="1.3"/>
+    <line x1="12.5" y1="36" x2="12.5" y2="42" stroke="#39ff14" stroke-width="1.3"/>
+    <!-- Right cup -->
+    <rect x="49" y="32" width="8" height="13" rx="4" fill="#111827"/>
+    <rect x="50.5" y="33.5" width="5" height="10" rx="2.5" fill="#0a0f1a"/>
+    <line x1="51.5" y1="36" x2="51.5" y2="42" stroke="#39ff14" stroke-width="1.3"/>
+    <line x1="54" y1="36" x2="54" y2="42" stroke="#39ff14" stroke-width="1.3"/>
+    <!-- Left eye glow -->
+    <circle cx="22" cy="38" r="7.5" fill="#001500" opacity="0.95"/>
+    <circle cx="22" cy="38" r="5.5" fill="#003300"/>
+    <circle cx="22" cy="38" r="4" fill="#39ff14" opacity="0.9"/>
+    <circle cx="22" cy="38" r="2.5" fill="#90ff60"/>
+    <circle cx="20.5" cy="36.5" r="1.3" fill="white" opacity="0.9"/>
+    <!-- Right eye glow -->
+    <circle cx="42" cy="38" r="7.5" fill="#001500" opacity="0.95"/>
+    <circle cx="42" cy="38" r="5.5" fill="#003300"/>
+    <circle cx="42" cy="38" r="4" fill="#39ff14" opacity="0.9"/>
+    <circle cx="42" cy="38" r="2.5" fill="#90ff60"/>
+    <circle cx="40.5" cy="36.5" r="1.3" fill="white" opacity="0.9"/>
+    <!-- Nose -->
+    <ellipse cx="32" cy="47" rx="2.5" ry="1.8" fill="#6b7280"/>
+    <!-- Mouth -->
+    <path d="M 28 50 Q 32 54 36 50" stroke="#6b7280" stroke-width="1.5" fill="none" stroke-linecap="round"/>
   </svg>`,
 
   'orchestrator': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
