@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import AgentAvatar from '../components/AgentAvatar';
 import { AGENTS } from '../data/agents';
 import { useI18n } from '../context/I18nContext';
+import type { Agent } from '../types';
 
 // ---- Types ----
 type DocStatus = 'processing' | 'ready' | 'error';
@@ -16,6 +17,25 @@ interface KnowledgeDoc {
   uploadedAt: string;
 }
 
+// ---- localStorage helpers ----
+const DOCS_KEY = 'rfv_vault_docs';
+const AGENTS_KEY = 'rfv_vault_agents';
+
+function loadDocs(): KnowledgeDoc[] {
+  try { return JSON.parse(localStorage.getItem(DOCS_KEY) ?? 'null') ?? SEED_DOCS; }
+  catch { return SEED_DOCS; }
+}
+function saveDocs(docs: KnowledgeDoc[]) {
+  localStorage.setItem(DOCS_KEY, JSON.stringify(docs));
+}
+function loadConnectedAgents(): string[] {
+  try { return JSON.parse(localStorage.getItem(AGENTS_KEY) ?? 'null') ?? DEFAULT_CONNECTED; }
+  catch { return DEFAULT_CONNECTED; }
+}
+function saveConnectedAgents(ids: string[]) {
+  localStorage.setItem(AGENTS_KEY, JSON.stringify(ids));
+}
+
 // ---- Demo seed data ----
 const SEED_DOCS: KnowledgeDoc[] = [
   { id: 'd1', name: 'ISO_1302_Surface_Texture.pdf', size: '2.4 MB', type: 'PDF', status: 'ready', chunks: 84, uploadedAt: '14:20' },
@@ -23,18 +43,23 @@ const SEED_DOCS: KnowledgeDoc[] = [
   { id: 'd3', name: 'maintenance_log_q1_2025.csv', size: '320 KB', type: 'CSV', status: 'ready', chunks: 212, uploadedAt: '11:08' },
 ];
 
-// Demo search results keyed by query fragment
-const DEMO_RESULTS: Record<string, { docId: string; text: string; score: number }[]> = {
-  default: [
-    { docId: 'd1', text: '5.3 Surface roughness Ra shall not exceed 1.6 μm for class-B defects on category-I components. Measurement shall be performed with contact profilometer under standard illumination conditions (≥300 lx).', score: 0.94 },
-    { docId: 'd1', text: '5.4 Visual inspection criteria: scratches longer than 2 mm or deeper than 0.1 mm on visible surfaces are classified as class B defects per ISO 1302 Section 5.', score: 0.87 },
-    { docId: 'd2', text: 'Линейные размеры детали указываются в мм. Допуск на линейные размеры без указания — ±0.1 мм по ГОСТ 25347 для изделий 12 квалитета точности.', score: 0.72 },
-  ],
-};
+const DEFAULT_CONNECTED = ['robo-qc', 'romeo-phd', 'andrew-analytic'];
 
-function getResults(q: string) {
-  return DEMO_RESULTS.default.filter(r =>
-    q.length < 3 || r.text.toLowerCase().includes(q.toLowerCase().slice(0, 6))
+// Demo search results keyed by query fragment
+const DEMO_RESULTS: { docId: string; text: string; score: number }[] = [
+  { docId: 'd1', text: '5.3 Surface roughness Ra shall not exceed 1.6 μm for class-B defects on category-I components. Measurement shall be performed with contact profilometer under standard illumination conditions (≥300 lx).', score: 0.94 },
+  { docId: 'd1', text: '5.4 Visual inspection criteria: scratches longer than 2 mm or deeper than 0.1 mm on visible surfaces are classified as class B defects per ISO 1302 Section 5.', score: 0.87 },
+  { docId: 'd2', text: 'Линейные размеры детали указываются в мм. Допуск на линейные размеры без указания — ±0.1 мм по ГОСТ 25347 для изделий 12 квалитета точности.', score: 0.72 },
+];
+
+function getResults(q: string, docs: KnowledgeDoc[]) {
+  if (q.length < 3) return [];
+  const ql = q.toLowerCase();
+  // Filter by doc name match first
+  const matchingDocIds = new Set(docs.filter(d => d.name.toLowerCase().includes(ql) && d.status === 'ready').map(d => d.id));
+  // Show demo results that match query text or doc name
+  return DEMO_RESULTS.filter(r =>
+    r.text.toLowerCase().includes(ql.slice(0, 6)) || matchingDocIds.has(r.docId)
   );
 }
 
@@ -77,17 +102,45 @@ function RelevanceBar({ score }: { score: number }) {
   );
 }
 
+// ---- All agents (built-in + custom) ----
+function getAllAgents(): Agent[] {
+  try {
+    const custom: Agent[] = JSON.parse(localStorage.getItem('rfv_custom_agents') ?? '[]');
+    return [...AGENTS, ...custom.filter(ca => !AGENTS.some(a => a.id === ca.id))];
+  } catch { return AGENTS; }
+}
+
 // ---- Main component ----
 export default function KnowledgeVault() {
   const { t } = useI18n();
-  const [docs, setDocs] = useState<KnowledgeDoc[]>(SEED_DOCS);
+  const [docs, setDocsState] = useState<KnowledgeDoc[]>(loadDocs);
+  const [connectedAgentIds, setConnectedState] = useState<string[]>(loadConnectedAgents);
   const [query, setQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ReturnType<typeof getResults> | null>(null);
   const [searching, setSearching] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const allAgents = getAllAgents();
+
+  const setDocs = (fn: (prev: KnowledgeDoc[]) => KnowledgeDoc[]) => {
+    setDocsState(prev => {
+      const next = fn(prev);
+      saveDocs(next.filter(d => d.status !== 'processing')); // don't persist in-progress
+      return next;
+    });
+  };
+
+  const toggleAgent = (id: string) => {
+    setConnectedState(prev => {
+      const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+      saveConnectedAgents(next);
+      return next;
+    });
+  };
+
   const totalChunks = docs.reduce((s, d) => s + d.chunks, 0);
+  const readyDocs = docs.filter(d => d.status === 'ready');
 
   const simulateUpload = useCallback((file: File) => {
     const id = `d${Date.now()}`;
@@ -103,13 +156,16 @@ export default function KnowledgeVault() {
       chunks: 0,
       uploadedAt: new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' }),
     };
-    setDocs(d => [newDoc, ...d]);
-    // Simulate chunking
+    setDocsState(d => [newDoc, ...d]);
     const chunkCount = Math.floor(file.size / 800) + 10;
     setTimeout(() => {
-      setDocs(d => d.map(doc =>
-        doc.id === id ? { ...doc, status: 'ready', chunks: chunkCount } : doc
-      ));
+      setDocsState(prev => {
+        const next = prev.map(doc =>
+          doc.id === id ? { ...doc, status: 'ready' as DocStatus, chunks: chunkCount } : doc
+        );
+        saveDocs(next.filter(d => d.status !== 'processing'));
+        return next;
+      });
     }, 2000 + Math.random() * 1500);
   }, []);
 
@@ -128,13 +184,13 @@ export default function KnowledgeVault() {
     if (!query.trim()) return;
     setSearching(true);
     await new Promise(r => setTimeout(r, 900));
-    setSearchResults(getResults(query));
+    setSearchResults(getResults(query, docs));
     setSearching(false);
   };
 
-  const deleteDoc = (id: string) => setDocs(d => d.filter(doc => doc.id !== id));
-
-  const RAG_AGENTS = AGENTS.filter(a => ['robo-qc', 'romeo-phd', 'andrew-analytic'].includes(a.id));
+  const deleteDoc = (id: string) => {
+    setDocs(d => d.filter(doc => doc.id !== id));
+  };
 
   return (
     <div className="flex-1 flex overflow-hidden">
@@ -259,18 +315,31 @@ export default function KnowledgeVault() {
       <div className="w-64 border-l border-border-subtle flex flex-col overflow-hidden shrink-0 bg-bg-secondary">
         <div className="px-4 py-4 border-b border-border-subtle">
           <div className="text-xs uppercase tracking-widest text-text-muted">{t.vault.agentsUsing}</div>
+          <div className="text-xs text-text-muted mt-1">Нажмите, чтобы включить/отключить</div>
         </div>
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {RAG_AGENTS.map(agent => (
-            <div key={agent.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-bg-card">
-              <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-text-primary">{agent.name}</div>
-                <div className="text-xs text-text-muted">{docs.filter(d => d.status === 'ready').length} docs</div>
-              </div>
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan shrink-0" />
-            </div>
-          ))}
+        <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
+          {allAgents.map(agent => {
+            const connected = connectedAgentIds.includes(agent.id);
+            const docCount = connected ? readyDocs.length : 0;
+            return (
+              <button
+                key={agent.id}
+                onClick={() => toggleAgent(agent.id)}
+                className={`w-full flex items-center gap-3 p-2.5 rounded-lg transition-all text-left ${
+                  connected
+                    ? 'bg-accent-blue bg-opacity-10 border border-accent-blue border-opacity-30'
+                    : 'bg-bg-card border border-transparent hover:border-border-subtle'
+                }`}
+              >
+                <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={false} agentId={agent.id} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium text-text-primary truncate">{agent.name}</div>
+                  <div className="text-xs text-text-muted">{connected ? `${docCount} docs` : 'отключён'}</div>
+                </div>
+                <span className={`w-2 h-2 rounded-full shrink-0 transition-colors ${connected ? 'bg-accent-cyan' : 'bg-border-subtle'}`} />
+              </button>
+            );
+          })}
         </div>
 
         {/* Stats */}
@@ -284,10 +353,8 @@ export default function KnowledgeVault() {
             <span className="font-mono text-accent-blue">{totalChunks.toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-xs">
-            <span className="text-text-muted">Ready</span>
-            <span className="font-mono text-accent-cyan">
-              {docs.filter(d => d.status === 'ready').length}/{docs.length}
-            </span>
+            <span className="text-text-muted">Подключено агентов</span>
+            <span className="font-mono text-accent-cyan">{connectedAgentIds.length}/{allAgents.length}</span>
           </div>
           {/* Embed model badge */}
           <div className="mt-1 px-2 py-1.5 rounded-lg bg-bg-card border border-border-subtle text-xs text-text-muted flex items-center gap-2">

@@ -15,7 +15,7 @@ import SimulationSandbox from './views/SimulationSandbox';
 import Workspace from './views/Workspace';
 import Dashboard from './views/Dashboard';
 import Profile from './views/Profile';
-import type { View } from './types';
+import type { Agent, View } from './types';
 
 // ---- Language toggle button (cycles RU → EN → HE → RU) ----
 const LOCALE_CYCLE = ['ru', 'en', 'he'] as const;
@@ -47,6 +47,7 @@ function Shell() {
   const { t } = useI18n();
   const [currentView, setCurrentView] = useState<View>('landing');
   const [authModal, setAuthModal] = useState<{ open: boolean; tab: 'login' | 'register' }>({ open: false, tab: 'login' });
+  const [builderInitialAgent, setBuilderInitialAgent] = useState<Agent | null>(null);
 
   const isAuthenticated = Boolean(user);
 
@@ -121,9 +122,18 @@ function Shell() {
         {/* Views */}
         <div className="flex-1 flex overflow-hidden">
           {currentView === 'landing'    && <Landing onNavigate={navigate} onRegister={() => setAuthModal({ open: true, tab: 'register' })} />}
-          {currentView === 'catalog'    && <AgentCatalog />}
+          {currentView === 'catalog'    && (
+            <AgentCatalog
+              onEditAgent={(agent) => { setBuilderInitialAgent(agent); navigate('builder'); }}
+            />
+          )}
           {currentView === 'graph'      && <AgentGraph />}
-          {currentView === 'builder'    && <AgentBuilder />}
+          {currentView === 'builder'    && (
+            <AgentBuilder
+              initialAgent={builderInitialAgent}
+              onGoToCatalog={() => { setBuilderInitialAgent(null); navigate('catalog'); }}
+            />
+          )}
           {currentView === 'vault'      && <KnowledgeVault />}
           {currentView === 'finops'     && isAuthenticated && <FinOpsOptimizer />}
           {currentView === 'sandbox'    && isAuthenticated && <SimulationSandbox />}

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AgentAvatar from '../components/AgentAvatar';
 import { useI18n } from '../context/I18nContext';
 import { useToast } from '../context/ToastContext';
-import type { AgentCategory, AgentStatus } from '../types';
+import type { Agent, AgentCategory, AgentStatus } from '../types';
 
 // ---- Options ----
 const ICONS = ['◈', '◉', '◆', '◇', '⬡', '⬢', '◐', '▷', '▶', '⊕', '⊗', '◑', '◒', '◓'];
@@ -37,6 +37,18 @@ const INITIAL: AgentDraft = {
   subAgents: 0,
 };
 
+function agentToDraft(agent: Agent): AgentDraft {
+  return {
+    name: agent.name,
+    icon: agent.icon,
+    color: agent.color,
+    category: agent.category === 'orchestrator' ? 'analytic' : agent.category,
+    systemPrompt: agent.description,
+    tools: agent.dataSources,
+    subAgents: agent.subAgents,
+  };
+}
+
 function StepDot({ n, current }: { n: number; current: number }) {
   return (
     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-medium transition-all duration-200 ${
@@ -47,14 +59,55 @@ function StepDot({ n, current }: { n: number; current: number }) {
   );
 }
 
-export default function AgentBuilder() {
+// ---- Props ----
+interface BuilderProps {
+  initialAgent?: Agent | null;
+  onGoToCatalog?: () => void;
+}
+
+// ---- Save to localStorage ----
+function persistCustomAgent(draft: AgentDraft, existingId?: string) {
+  const id = existingId ?? `${draft.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+  const agent: Agent = {
+    id,
+    name: draft.name,
+    nameRu: draft.name,
+    category: draft.category,
+    status: 'ready',
+    description: draft.systemPrompt.slice(0, 200),
+    subAgents: draft.subAgents,
+    dataSources: draft.tools,
+    limitations: [],
+    icon: draft.icon,
+    color: draft.color,
+  };
+  const stored: Agent[] = JSON.parse(localStorage.getItem('rfv_custom_agents') ?? '[]');
+  const idx = stored.findIndex(a => a.id === id);
+  const updated = idx >= 0 ? stored.map((a, i) => (i === idx ? agent : a)) : [...stored, agent];
+  localStorage.setItem('rfv_custom_agents', JSON.stringify(updated));
+  return agent;
+}
+
+export default function AgentBuilder({ initialAgent, onGoToCatalog }: BuilderProps) {
   const { t } = useI18n();
   const { toast } = useToast();
   const [step, setStep] = useState(0);
-  const [draft, setDraft] = useState<AgentDraft>(INITIAL);
+  const [draft, setDraft] = useState<AgentDraft>(initialAgent ? agentToDraft(initialAgent) : INITIAL);
+  const [createdAgentId, setCreatedAgentId] = useState<string | null>(null);
   const [created, setCreated] = useState(false);
   const [creating, setCreating] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Re-populate draft when initialAgent changes (navigating back to edit)
+  useEffect(() => {
+    if (initialAgent) {
+      setDraft(agentToDraft(initialAgent));
+      setCreatedAgentId(initialAgent.id);
+      setStep(0);
+      setCreated(false);
+      setErrors({});
+    }
+  }, [initialAgent?.id]);
 
   const set = <K extends keyof AgentDraft>(k: K, v: AgentDraft[K]) =>
     setDraft(d => ({ ...d, [k]: v }));
@@ -77,6 +130,8 @@ export default function AgentBuilder() {
     if (!validate()) return;
     setCreating(true);
     await new Promise(r => setTimeout(r, 1200));
+    const saved = persistCustomAgent(draft, createdAgentId ?? undefined);
+    setCreatedAgentId(saved.id);
     setCreating(false);
     setCreated(true);
     toast(t.builder.created, 'success');
@@ -103,11 +158,10 @@ export default function AgentBuilder() {
     URL.revokeObjectURL(url);
   };
 
-  const handleReset = () => { setDraft(INITIAL); setStep(0); setCreated(false); setErrors({}); };
+  const handleReset = () => { setDraft(INITIAL); setStep(0); setCreated(false); setErrors({}); setCreatedAgentId(null); };
 
   const STEPS = [t.builder.step1, t.builder.step2, t.builder.step3];
 
-  // Simulated status for preview
   const previewStatus: AgentStatus = draft.tools.length > 0 ? 'ready' : 'idle';
 
   if (created) {
@@ -122,7 +176,12 @@ export default function AgentBuilder() {
             <div className="text-sm text-text-muted">{t.builder.createdDesc}</div>
           </div>
           <div className="flex flex-col gap-2">
-            <button onClick={handleExport} className="btn-primary w-full flex items-center justify-center gap-2">
+            {onGoToCatalog && (
+              <button onClick={onGoToCatalog} className="btn-primary w-full flex items-center justify-center gap-2">
+                ◈ Открыть в каталоге
+              </button>
+            )}
+            <button onClick={handleExport} className="btn-ghost w-full flex items-center justify-center gap-2 border border-border-subtle">
               <span>↓</span> {t.builder.exportJson}
             </button>
             <button onClick={handleReset} className="btn-ghost w-full border border-border-subtle">
@@ -142,7 +201,9 @@ export default function AgentBuilder() {
           {/* Header */}
           <div>
             <h1 className="text-xl font-semibold text-text-primary">{t.builder.title}</h1>
-            <p className="text-sm text-text-muted mt-0.5">{t.builder.subtitle}</p>
+            <p className="text-sm text-text-muted mt-0.5">
+              {initialAgent ? `Редактирование: ${initialAgent.name}` : t.builder.subtitle}
+            </p>
           </div>
 
           {/* Step indicator */}
@@ -320,7 +381,7 @@ export default function AgentBuilder() {
                   disabled={creating}
                   className="btn-primary flex-1 py-2.5 flex items-center justify-center gap-2 disabled:opacity-60">
                   {creating && <span className="w-3.5 h-3.5 border-2 border-bg-primary border-t-transparent rounded-full animate-spin" />}
-                  {creating ? t.builder.creating : t.builder.create}
+                  {creating ? t.builder.creating : (initialAgent ? 'Сохранить' : t.builder.create)}
                 </button>
               </div>
             </div>
