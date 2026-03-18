@@ -145,19 +145,44 @@ export const AGENT_AVATARS: Record<string, string> = {
 
   'bassito-animator': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
     <rect width="64" height="64" rx="16" fill="#0d1117"/>
-    <rect x="10" y="12" width="44" height="40" rx="16" fill="#ff9e6410" stroke="#ff9e6440" stroke-width="1.5"/>
-    <circle cx="24" cy="28" r="9" fill="#0d1117" stroke="#ff9e64" stroke-width="1.5"/>
-    <polygon points="24,20.5 25.8,26.2 31.5,28 25.8,29.8 24,35.5 22.2,29.8 16.5,28 22.2,26.2" fill="#ff9e6490"/>
-    <circle cx="24" cy="28" r="2.5" fill="#ff9e64"/>
-    <circle cx="42" cy="28" r="9" fill="#0d1117" stroke="#ff9e64" stroke-width="1.5"/>
-    <circle cx="42" cy="28" r="5.5" fill="#ff9e6425"/>
-    <circle cx="42" cy="28" r="3" fill="#ff9e64"/>
-    <circle cx="40" cy="26.5" r="1" fill="white" opacity="0.6"/>
-    <path d="M 18 40 Q 32 50 46 40" stroke="#ff9e64" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <line x1="32" y1="12" x2="36" y2="5" stroke="#ff9e64" stroke-width="1.5"/>
-    <ellipse cx="38.5" cy="3.5" rx="3.5" ry="2" fill="#ff9e64" transform="rotate(-25 38.5 3.5)"/>
-    <line x1="26" y1="20" x2="28" y2="18" stroke="#ff9e6460" stroke-width="1"/>
-    <line x1="42" y1="18" x2="44" y2="16" stroke="#ff9e6460" stroke-width="1"/>
+    <!-- Left ear -->
+    <ellipse cx="11" cy="38" rx="9" ry="13" fill="#e8960a" transform="rotate(-10 11 38)"/>
+    <ellipse cx="11" cy="38" rx="6" ry="10" fill="#ffb800" transform="rotate(-10 11 38)"/>
+    <!-- Right ear -->
+    <ellipse cx="53" cy="38" rx="9" ry="13" fill="#e8960a" transform="rotate(10 53 38)"/>
+    <ellipse cx="53" cy="38" rx="6" ry="10" fill="#ffb800" transform="rotate(10 53 38)"/>
+    <!-- Head -->
+    <ellipse cx="32" cy="34" rx="22" ry="20" fill="#ffb800"/>
+    <!-- Forehead highlight -->
+    <ellipse cx="30" cy="22" rx="10" ry="7" fill="#ffd040" opacity="0.5"/>
+    <!-- Cheeks -->
+    <ellipse cx="32" cy="42" rx="16" ry="12" fill="#ffca30"/>
+    <!-- Glasses frame left -->
+    <rect x="11" y="27" width="17" height="11" rx="3" fill="#1a1a1a" stroke="#111" stroke-width="0.5"/>
+    <!-- Glasses lens left (green) -->
+    <rect x="12" y="28" width="15" height="9" rx="2.5" fill="#22c55e" opacity="0.8"/>
+    <rect x="12" y="28" width="15" height="9" rx="2.5" fill="url(#gl)" opacity="0.5"/>
+    <!-- Glasses frame right -->
+    <rect x="36" y="27" width="17" height="11" rx="3" fill="#1a1a1a" stroke="#111" stroke-width="0.5"/>
+    <!-- Glasses lens right (green) -->
+    <rect x="37" y="28" width="15" height="9" rx="2.5" fill="#22c55e" opacity="0.8"/>
+    <rect x="37" y="28" width="15" height="9" rx="2.5" fill="url(#gr)" opacity="0.5"/>
+    <!-- Bridge -->
+    <line x1="28" y1="32" x2="36" y2="32" stroke="#1a1a1a" stroke-width="1.8"/>
+    <!-- Lens reflections -->
+    <circle cx="15" cy="30" r="2" fill="white" opacity="0.55"/>
+    <circle cx="40" cy="30" r="2" fill="white" opacity="0.55"/>
+    <!-- Nose -->
+    <ellipse cx="32" cy="44" rx="3.5" ry="2.5" fill="#1a1a1a"/>
+    <ellipse cx="31" cy="43.2" rx="1" ry="0.6" fill="#3a3a3a" opacity="0.6"/>
+    <!-- Smile -->
+    <path d="M 26 50 Q 32 55 38 50" stroke="#a07010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- Fur texture bottom -->
+    <path d="M 12 50 Q 18 58 32 60 Q 46 58 52 50" fill="#e8960a" opacity="0.5"/>
+    <defs>
+      <radialGradient id="gl" cx="30%" cy="30%"><stop offset="0%" stop-color="white" stop-opacity="0.6"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+      <radialGradient id="gr" cx="30%" cy="30%"><stop offset="0%" stop-color="white" stop-opacity="0.6"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+    </defs>
   </svg>`,
 
   'chertejnik': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
