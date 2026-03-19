@@ -36,26 +36,21 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Validate production secrets
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        run: |
-          test -n "$VITE_SUPABASE_URL" || { echo "Missing secret: VITE_SUPABASE_URL"; exit 1; }
-          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "Missing secret: VITE_SUPABASE_ANON_KEY"; exit 1; }
-
-      - name: Install dependencies
-        run: npm ci
-
       - name: Write production environment
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: |
           cat <<EOF > .env.production
-          VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-          VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+          VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
+          VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-}
           EOF
+          if [ -z "$VITE_SUPABASE_URL" ]; then
+            echo "::warning::VITE_SUPABASE_URL not set — auth features will be disabled"
+          fi
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build frontend
         run: npm run build
