@@ -40,13 +40,18 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SCENE_OPS_URL: ${{ secrets.VITE_SCENE_OPS_URL }}
         run: |
           cat <<EOF > .env.production
           VITE_SUPABASE_URL=${VITE_SUPABASE_URL:-}
           VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY:-}
+          VITE_SCENE_OPS_URL=${VITE_SCENE_OPS_URL:-}
           EOF
           if [ -z "$VITE_SUPABASE_URL" ]; then
             echo "::warning::VITE_SUPABASE_URL not set — auth features will be disabled"
+          fi
+          if [ -z "$VITE_SCENE_OPS_URL" ]; then
+            echo "::warning::VITE_SCENE_OPS_URL not set - SceneOps will use mock fallback in production"
           fi
 
       - name: Install dependencies
