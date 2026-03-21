@@ -47,7 +47,7 @@ export default function SceneOpsPanel({ snapshot }: SceneOpsPanelProps) {
             <span className="tag border border-border-subtle text-text-muted">{snapshot.source === 'api' ? 'API' : 'Mock'}</span>
           </div>
           <div className="text-xs text-text-muted mt-1">
-            PinoCut scene bundle -> Andrew review -> Bassito jobs
+            PinoCut scene bundle {'->'} Andrew review {'->'} Bassito jobs
           </div>
         </div>
       </div>
