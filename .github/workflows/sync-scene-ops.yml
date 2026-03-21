@@ -1,0 +1,49 @@
+name: Sync SceneOps Snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_url:
+        description: Optional URL to a SceneOps JSON snapshot
+        required: false
+        type: string
+  repository_dispatch:
+    types:
+      - scene_ops_snapshot
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Resolve and write SceneOps snapshot
+        env:
+          SCENE_OPS_SOURCE_URL: ${{ inputs.source_url || github.event.client_payload.source_url || vars.SCENE_OPS_SOURCE_URL || '' }}
+          SCENE_OPS_INLINE_JSON: ${{ github.event_name == 'repository_dispatch' && toJson(github.event.client_payload.snapshot) || '' }}
+        run: node scripts/sync-scene-ops.mjs
+
+      - name: Commit snapshot if changed
+        run: |
+          if git diff --quiet -- romeoflexvision/public/scene-ops.json; then
+            echo "No SceneOps changes to commit"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add romeoflexvision/public/scene-ops.json
+          git commit -m "chore: sync SceneOps snapshot"
+          git push origin HEAD:main

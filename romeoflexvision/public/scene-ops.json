@@ -7,8 +7,18 @@
     "editingTemplate": "cinematic_montage",
     "targetDurationSec": 35,
     "actualDurationSec": 32.8,
-    "usedClips": ["c04", "c02", "c07", "c01", "c05"],
-    "rejectedClips": ["c03", "c06", "c08"],
+    "usedClips": [
+      "c04",
+      "c02",
+      "c07",
+      "c01",
+      "c05"
+    ],
+    "rejectedClips": [
+      "c03",
+      "c06",
+      "c08"
+    ],
     "queueState": "waiting_bassito"
   },
   "clipScores": {
