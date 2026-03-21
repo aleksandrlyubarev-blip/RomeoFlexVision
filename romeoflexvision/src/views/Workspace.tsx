@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import AgentAvatar from '../components/AgentAvatar';
+import SceneOpsPanel from '../components/SceneOpsPanel';
 import { AGENTS } from '../data/agents';
-import type { Task, TraceStep } from '../types';
+import { loadSceneOpsSnapshot } from '../lib/sceneOps';
+import type { SceneOpsSnapshot, Task, TraceStep } from '../types';
 
 const ORCHESTRATOR = AGENTS.find(a => a.id === 'orchestrator')!;
 
@@ -70,6 +72,8 @@ export default function Workspace() {
   const [showTrace, setShowTrace] = useState(false);
   const [traceStep, setTraceStep] = useState(0);
   const [humanApproved, setHumanApproved] = useState(false);
+  const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
+  const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
 
   // Animate running task progress
   useEffect(() => {
@@ -81,6 +85,25 @@ export default function Workspace() {
       ));
     }, 300);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    loadSceneOpsSnapshot()
+      .then((snapshot) => {
+        if (cancelled) return;
+        setSceneOps(snapshot);
+        setSceneOpsError(null);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleApprove = () => {
@@ -193,6 +216,14 @@ export default function Workspace() {
               })}
             </div>
           </div>
+
+          {sceneOps ? (
+            <SceneOpsPanel snapshot={sceneOps} />
+          ) : (
+            <div className="glass-panel p-4 text-sm text-text-muted">
+              {sceneOpsError ?? 'Загрузка SceneOps...'}
+            </div>
+          )}
         </div>
 
         {/* Right: trace panel */}

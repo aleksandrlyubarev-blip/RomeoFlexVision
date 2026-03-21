@@ -3,6 +3,8 @@ import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts';
+import { loadSceneOpsSnapshot } from '../lib/sceneOps';
+import type { SceneOpsSnapshot } from '../types';
 
 // ---- ISA-101 color helpers ----
 function getSignalColor(value: number, warn: number, alert: number) {
@@ -75,6 +77,8 @@ export default function Dashboard() {
   const [gpuData, setGpuData] = useState(() => genTimeSeries(20, 72, 15));
   const [tokenData] = useState(() => genTokenData(7));
   const [server, setServer] = useState('all');
+  const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
+  const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
 
   // Live update
   useEffect(() => {
@@ -90,6 +94,25 @@ export default function Dashboard() {
       setGpuData(prev => addPoint(prev, 72, 15));
     }, 3000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    loadSceneOpsSnapshot()
+      .then((snapshot) => {
+        if (cancelled) return;
+        setSceneOps(snapshot);
+        setSceneOpsError(null);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const latestCpu = cpuData[cpuData.length - 1]?.v ?? 0;
@@ -132,6 +155,57 @@ export default function Dashboard() {
           <MetricCard label="GPU Utilization" value={latestGpu} unit="%" warn={85} alert={95} />
           <MetricCard label="Task Queue Depth" value={3} warn={10} alert={20} suffix=" задач" />
           <MetricCard label="HW Errors (24h)" value={0} warn={1} alert={5} suffix=" err" />
+        </div>
+
+        <div className="glass-panel p-5">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <div className="metric-label mb-1">SceneOps Control Loop</div>
+              <div className="text-xs text-text-muted">
+                PinoCut scene bundle -&gt; Andrew review -&gt; Bassito execution
+              </div>
+            </div>
+            <span className="tag border border-border-subtle text-text-muted">
+              {sceneOps?.source === 'api' ? 'API feed' : 'Mock feed'}
+            </span>
+          </div>
+
+          {sceneOps ? (
+            <div className="grid md:grid-cols-4 gap-3">
+              <div className="bg-bg-card rounded-lg p-3 border border-border-subtle">
+                <div className="metric-label mb-1">Scene</div>
+                <div className="text-sm font-medium text-text-primary">{sceneOps.scene.sceneId}</div>
+                <div className="text-xs text-text-muted mt-1">{sceneOps.scene.editingTemplate}</div>
+              </div>
+              <div className="bg-bg-card rounded-lg p-3 border border-border-subtle">
+                <div className="metric-label mb-1">Andrew</div>
+                <div className="text-sm font-medium text-text-primary">
+                  {Math.round(sceneOps.andrew.confidence * 100)}% confidence
+                </div>
+                <div className="text-xs text-text-muted mt-1">HITL: {sceneOps.andrew.hitlDecision}</div>
+              </div>
+              <div className="bg-bg-card rounded-lg p-3 border border-border-subtle">
+                <div className="metric-label mb-1">Bassito</div>
+                <div className="text-sm font-medium text-text-primary">{sceneOps.bassitoJobs.length} jobs</div>
+                <div className="text-xs text-text-muted mt-1">
+                  {sceneOps.bassitoJobs.filter((job) => job.status === 'queued' || job.status === 'running').length} active
+                </div>
+              </div>
+              <div className="bg-bg-card rounded-lg p-3 border border-border-subtle">
+                <div className="metric-label mb-1">Duration Drift</div>
+                <div className="text-sm font-medium text-text-primary">
+                  {(sceneOps.scene.actualDurationSec - sceneOps.scene.targetDurationSec).toFixed(1)}s
+                </div>
+                <div className="text-xs text-text-muted mt-1">
+                  target {sceneOps.scene.targetDurationSec.toFixed(1)}s
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm text-text-muted">
+              {sceneOpsError ?? 'Loading SceneOps control loop...'}
+            </div>
+          )}
         </div>
 
         {/* CPU + GPU charts */}

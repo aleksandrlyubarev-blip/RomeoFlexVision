@@ -38,3 +38,49 @@ export interface Task {
   progress: number;
   createdAt: string;
 }
+
+export interface SceneOpsClipScore {
+  visualQuality: number;
+  continuityFit: number;
+  promptMatch: number;
+  motionStability: number;
+  timelineUsefulness: number;
+  recommendedAction: string;
+}
+
+export interface SceneOpsSceneBundle {
+  sceneId: string;
+  sceneGoal: string;
+  editingTemplate: string;
+  targetDurationSec: number;
+  actualDurationSec: number;
+  usedClips: string[];
+  rejectedClips: string[];
+  queueState: 'ready' | 'reviewing' | 'waiting_bassito' | 'completed';
+}
+
+export interface SceneOpsAndrewReview {
+  confidence: number;
+  summary: string;
+  warnings: string[];
+  recommendedActions: string[];
+  qualityBreakdown: Record<string, number>;
+  hitlDecision: 'approve' | 'reject' | 'modify' | 'skipped';
+}
+
+export interface SceneOpsBassitoJob {
+  jobId: string;
+  jobType: 'bridge_shot' | 'extend' | 'restyle';
+  status: 'queued' | 'completed_stub' | 'running' | 'failed';
+  sourceClipId?: string;
+  artifactPath?: string;
+}
+
+export interface SceneOpsSnapshot {
+  scene: SceneOpsSceneBundle;
+  clipScores: Record<string, SceneOpsClipScore>;
+  andrew: SceneOpsAndrewReview;
+  bassitoJobs: SceneOpsBassitoJob[];
+  updatedAt: string;
+  source: 'mock' | 'api';
+}
