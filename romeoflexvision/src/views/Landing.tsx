@@ -22,6 +22,43 @@ const DEMO_RESULT = {
   type: 'Царапина поверхности',
 };
 
+// Heatmap grid: 16 cols × 6 rows, values 0-1 (higher = more defect heat)
+const COLS = 16;
+const ROWS = 6;
+const HEATMAP_DATA: number[][] = (() => {
+  const grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  // Three defect hotspots matching the demo result
+  const spots = [
+    { r: 3, c: 5, intensity: 1.0 },   // primary defect
+    { r: 2, c: 4, intensity: 0.75 },
+    { r: 4, c: 6, intensity: 0.6 },
+    { r: 1, c: 11, intensity: 0.85 },  // secondary defect
+    { r: 2, c: 12, intensity: 0.55 },
+    { r: 4, c: 13, intensity: 0.45 },  // third defect
+    { r: 3, c: 13, intensity: 0.9 },
+  ];
+  spots.forEach(({ r, c, intensity }) => {
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+          const dist = Math.sqrt(dr * dr + dc * dc);
+          grid[nr][nc] = Math.max(grid[nr][nc], intensity * (1 - dist * 0.45));
+        }
+      }
+    }
+  });
+  return grid;
+})();
+
+function heatColor(v: number): string {
+  if (v < 0.05) return 'rgba(255,255,255,0.04)';
+  const r = Math.round(v * 239 + (1 - v) * 251);
+  const g = Math.round((1 - v) * 191);
+  const b = Math.round((1 - v) * 36);
+  return `rgba(${r},${g},${b},${0.15 + v * 0.85})`;
+}
+
 export default function Landing({ onNavigate, onRegister }: LandingProps) {
   const [demoActive, setDemoActive] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
@@ -98,16 +135,43 @@ export default function Landing({ onNavigate, onRegister }: LandingProps) {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Heatmap placeholder */}
-                <div className="relative bg-bg-card rounded-lg overflow-hidden h-36 flex items-center justify-center">
-                  <div
-                    className="absolute inset-0 opacity-20"
-                    style={{ background: 'radial-gradient(ellipse at 35% 60%, #ef4444 0%, transparent 40%), radial-gradient(ellipse at 70% 30%, #d97706 0%, transparent 30%)' }}
-                  />
-                  <div className="relative text-center">
-                    <div className="text-text-muted text-xs mb-1">Тепловая карта дефектов</div>
-                    <div className="text-4xl font-mono font-bold text-signal-alert">{DEMO_RESULT.defects}</div>
-                    <div className="text-text-muted text-xs">обнаружено дефектов</div>
+                {/* Defect heatmap grid */}
+                <div className="relative bg-bg-card rounded-lg overflow-hidden">
+                  <div className="px-3 pt-3 pb-1 flex items-center justify-between">
+                    <span className="text-text-muted text-xs">Тепловая карта дефектов · Линия A3</span>
+                    <span className="text-signal-alert text-xs font-mono font-semibold">{DEMO_RESULT.defects} дефекта</span>
+                  </div>
+                  <div className="px-3 pb-3">
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${COLS}, 1fr)`,
+                        gap: '2px',
+                      }}
+                    >
+                      {HEATMAP_DATA.flatMap((row, ri) =>
+                        row.map((val, ci) => (
+                          <div
+                            key={`${ri}-${ci}`}
+                            style={{
+                              height: '18px',
+                              borderRadius: '2px',
+                              background: heatColor(val),
+                              transition: 'background 0.3s',
+                            }}
+                            title={val > 0.4 ? `Дефект · интенсивность ${Math.round(val * 100)}%` : undefined}
+                          />
+                        ))
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex gap-0.5">
+                        {[0, 0.25, 0.5, 0.75, 1].map(v => (
+                          <div key={v} style={{ width: 12, height: 6, borderRadius: 1, background: heatColor(v) }} />
+                        ))}
+                      </div>
+                      <span className="text-text-muted text-xs">низкий → высокий риск</span>
+                    </div>
                   </div>
                 </div>
 
