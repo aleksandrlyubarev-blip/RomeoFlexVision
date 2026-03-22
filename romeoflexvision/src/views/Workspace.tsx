@@ -72,6 +72,7 @@ export default function Workspace() {
   const [showTrace, setShowTrace] = useState(false);
   const [traceStep, setTraceStep] = useState(0);
   const [humanApproved, setHumanApproved] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
   const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
   const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
 
@@ -119,6 +120,16 @@ export default function Workspace() {
       t.status === 'waiting_human' ? { ...t, status: 'error', progress: 0 } : t
     ));
   };
+
+  useEffect(() => {
+    if (!autoPlay || !showTrace) return;
+    if (traceStep >= MOCK_TRACE.length - 1) {
+      setAutoPlay(false);
+      return;
+    }
+    const timer = setTimeout(() => setTraceStep(s => s + 1), 900);
+    return () => clearTimeout(timer);
+  }, [autoPlay, showTrace, traceStep]);
 
   const handleSubmit = () => {
     if (!prompt.trim()) return;
@@ -237,8 +248,18 @@ export default function Workspace() {
         <div className="w-80 border-l border-border-subtle flex flex-col overflow-hidden">
           <div className="px-4 py-3 border-b border-border-subtle flex items-center gap-2">
             <span className="text-xs uppercase tracking-widest text-text-muted flex-1">Трассировка вызовов</span>
+            {showTrace && (
+              <button
+                onClick={() => {
+                  if (traceStep >= MOCK_TRACE.length - 1) { setTraceStep(0); setAutoPlay(true); }
+                  else setAutoPlay(p => !p);
+                }}
+                className="text-xs text-text-muted hover:text-text-primary px-1">
+                {autoPlay ? '⏸' : '▶'}
+              </button>
+            )}
             <button
-              onClick={() => { setShowTrace(!showTrace); setTraceStep(0); }}
+              onClick={() => { setShowTrace(!showTrace); setTraceStep(0); setAutoPlay(false); }}
               className="text-xs text-accent-blue hover:underline">
               {showTrace ? 'Скрыть' : 'Показать демо'}
             </button>

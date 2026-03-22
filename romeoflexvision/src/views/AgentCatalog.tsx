@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AgentAvatar, { STATUS_LABELS, STATUS_COLORS } from '../components/AgentAvatar';
 import { AGENTS } from '../data/agents';
 import type { Agent, AgentCategory } from '../types';
@@ -14,9 +14,31 @@ interface AgentDetailProps {
   onClose: () => void;
 }
 
+type TestPhase = 'idle' | 'running' | 'passed' | 'failed';
+
 function AgentDetail({ agent, onClose }: AgentDetailProps) {
   const [tab, setTab] = useState<'overview' | 'explainability'>('overview');
+  const [testPhase, setTestPhase] = useState<TestPhase>('idle');
+  const [copied, setCopied] = useState(false);
+  const [editDesc, setEditDesc] = useState(agent.description);
+  const [editing, setEditing] = useState(false);
   const statusColor = STATUS_COLORS[agent.status];
+
+  const handleTest = () => {
+    setTestPhase('running');
+    setTimeout(() => {
+      setTestPhase(Math.random() > 0.15 ? 'passed' : 'failed');
+    }, 1400);
+  };
+
+  const handleDuplicate = () => {
+    const payload = JSON.stringify({ id: `${agent.id}-copy`, name: agent.name, nameRu: agent.nameRu }, null, 2);
+    navigator.clipboard.writeText(payload).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleEditSave = () => setEditing(false);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-end md:items-center justify-center z-50 p-0 md:p-6"
@@ -57,12 +79,51 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
 
         {tab === 'overview' && (
           <div className="space-y-4">
-            <p className="text-sm text-text-secondary leading-relaxed">{agent.description}</p>
+            {editing ? (
+              <div className="space-y-2">
+                <textarea
+                  value={editDesc}
+                  onChange={e => setEditDesc(e.target.value)}
+                  rows={4}
+                  className="w-full bg-bg-card border border-accent-blue rounded-lg px-3 py-2 text-sm text-text-primary outline-none resize-none"
+                />
+                <div className="flex gap-2">
+                  <button onClick={handleEditSave} className="btn-primary text-xs py-1.5 px-3">Сохранить</button>
+                  <button onClick={() => { setEditing(false); setEditDesc(agent.description); }}
+                    className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">Отмена</button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-text-secondary leading-relaxed">{editDesc}</p>
+            )}
+
             <div className="flex gap-2 flex-wrap">
-              <button className="btn-primary text-xs py-1.5 px-3">Тестировать</button>
-              <button className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">Дублировать</button>
-              <button className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">Редактировать</button>
+              <button
+                onClick={handleTest}
+                disabled={testPhase === 'running'}
+                className="btn-primary text-xs py-1.5 px-3 disabled:opacity-60">
+                {testPhase === 'running' ? '⟳ Тестируется...' : testPhase === 'passed' ? '✓ Тест пройден' : testPhase === 'failed' ? '✕ Тест не пройден' : 'Тестировать'}
+              </button>
+              <button onClick={handleDuplicate}
+                className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">
+                {copied ? '✓ Скопировано' : 'Дублировать'}
+              </button>
+              <button onClick={() => setEditing(true)}
+                className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">
+                Редактировать
+              </button>
             </div>
+
+            {testPhase === 'passed' && (
+              <div className="rounded-lg bg-accent-cyan bg-opacity-5 border border-accent-cyan border-opacity-30 px-3 py-2 text-xs text-accent-cyan">
+                Агент отвечает корректно · latency 142ms · статус 200
+              </div>
+            )}
+            {testPhase === 'failed' && (
+              <div className="rounded-lg bg-signal-alert bg-opacity-5 border border-signal-alert border-opacity-30 px-3 py-2 text-xs text-signal-alert">
+                Агент не ответил в срок · timeout 5000ms
+              </div>
+            )}
           </div>
         )}
 
@@ -97,10 +158,47 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
   );
 }
 
+function ContextMenu({ agent, onSelect, onClose }: { agent: Agent; onSelect: (agent: Agent) => void; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  const handleDuplicate = () => {
+    const payload = JSON.stringify({ id: `${agent.id}-copy`, name: agent.name, nameRu: agent.nameRu }, null, 2);
+    navigator.clipboard.writeText(payload).catch(() => {});
+    onClose();
+  };
+
+  return (
+    <div ref={ref}
+      className="absolute right-0 top-full mt-1 w-40 bg-bg-card border border-border-subtle rounded-lg shadow-lg z-20 py-1 text-sm">
+      <button onClick={() => { onSelect(agent); onClose(); }}
+        className="w-full text-left px-3 py-1.5 text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors">
+        Открыть
+      </button>
+      <button onClick={handleDuplicate}
+        className="w-full text-left px-3 py-1.5 text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors">
+        Дублировать
+      </button>
+      <button onClick={() => { onSelect(agent); onClose(); }}
+        className="w-full text-left px-3 py-1.5 text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors">
+        Тестировать
+      </button>
+    </div>
+  );
+}
+
 export default function AgentCatalog() {
   const [filter, setFilter] = useState<AgentCategory | 'all'>('all');
   const [selected, setSelected] = useState<Agent | null>(null);
   const [search, setSearch] = useState('');
+  const [menuAgent, setMenuAgent] = useState<string | null>(null);
 
   const filtered = AGENTS.filter(a => {
     if (filter !== 'all' && a.category !== filter) return false;
@@ -173,15 +271,24 @@ export default function AgentCatalog() {
                   {agent.subAgents > 0 && (
                     <span className="text-xs text-text-muted">{agent.subAgents} субагентов</span>
                   )}
-                  <div className="ml-auto flex gap-1.5">
+                  <div className="ml-auto flex gap-1.5 relative">
                     <button className="text-xs text-text-muted hover:text-accent-blue transition-colors px-2 py-1 rounded hover:bg-bg-hover"
                       onClick={e => { e.stopPropagation(); setSelected(agent); }}>
                       Тест
                     </button>
-                    <button className="text-xs text-text-muted hover:text-text-primary transition-colors px-2 py-1 rounded hover:bg-bg-hover"
-                      onClick={e => { e.stopPropagation(); }}>
-                      ⋯
-                    </button>
+                    <div className="relative">
+                      <button className="text-xs text-text-muted hover:text-text-primary transition-colors px-2 py-1 rounded hover:bg-bg-hover"
+                        onClick={e => { e.stopPropagation(); setMenuAgent(menuAgent === agent.id ? null : agent.id); }}>
+                        ⋯
+                      </button>
+                      {menuAgent === agent.id && (
+                        <ContextMenu
+                          agent={agent}
+                          onSelect={setSelected}
+                          onClose={() => setMenuAgent(null)}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

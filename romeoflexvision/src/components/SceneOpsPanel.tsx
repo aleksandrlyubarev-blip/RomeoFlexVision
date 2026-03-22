@@ -17,16 +17,16 @@ function queueStateLabel(state: SceneOpsSnapshot['scene']['queueState']) {
   }
 }
 
-function bassitoStatusLabel(status: SceneOpsSnapshot['bassitoJobs'][number]['status']) {
+function bassitoStatusBadge(status: SceneOpsSnapshot['bassitoJobs'][number]['status']) {
   switch (status) {
     case 'queued':
-      return 'Queued';
+      return { label: 'Queued', className: 'text-text-muted' };
     case 'running':
-      return 'Running';
+      return { label: 'Running', className: 'text-accent-blue' };
+    case 'completed_stub':
+      return { label: 'Done (stub)', className: 'text-accent-cyan' };
     case 'failed':
-      return 'Failed';
-    default:
-      return 'Stub done';
+      return { label: 'Failed', className: 'text-signal-alert' };
   }
 }
 
@@ -121,18 +121,21 @@ export default function SceneOpsPanel({ snapshot }: SceneOpsPanelProps) {
           <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
             <div className="metric-label mb-2">Bassito Jobs</div>
             <div className="space-y-2">
-              {snapshot.bassitoJobs.map((job) => (
-                <div key={job.jobId} className="rounded-lg bg-bg-panel px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-text-primary">{job.jobType}</span>
-                    <span className="ml-auto text-xs text-text-muted">{bassitoStatusLabel(job.status)}</span>
+              {snapshot.bassitoJobs.map((job) => {
+                const badge = bassitoStatusBadge(job.status);
+                return (
+                  <div key={job.jobId} className="rounded-lg bg-bg-panel px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-text-primary">{job.jobType}</span>
+                      <span className={`ml-auto text-xs font-medium ${badge.className}`}>{badge.label}</span>
+                    </div>
+                    <div className="text-xs text-text-muted mt-1 font-mono break-all">{job.jobId}</div>
+                    {job.sourceClipId && (
+                      <div className="text-xs text-text-secondary mt-1">clip: {job.sourceClipId}</div>
+                    )}
                   </div>
-                  <div className="text-xs text-text-muted mt-1 font-mono break-all">{job.jobId}</div>
-                  {job.sourceClipId && (
-                    <div className="text-xs text-text-secondary mt-1">clip: {job.sourceClipId}</div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

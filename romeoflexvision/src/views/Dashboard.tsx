@@ -13,6 +13,14 @@ function getSignalColor(value: number, warn: number, alert: number) {
   return '#6b7280';
 }
 
+// ---- Per-server metric profiles ----
+const SERVER_PROFILES = {
+  all:   { cpuBase: 45, cpuVar: 20, gpuBase: 72, gpuVar: 15 },
+  gpu01: { cpuBase: 28, cpuVar:  8, gpuBase: 91, gpuVar:  6 },
+  gpu02: { cpuBase: 33, cpuVar: 11, gpuBase: 68, gpuVar: 18 },
+  cpu01: { cpuBase: 79, cpuVar: 12, gpuBase: 14, gpuVar:  4 },
+} as const;
+
 // ---- Mock data generators ----
 function genTimeSeries(points = 20, base = 40, variance = 15) {
   const now = Date.now();
@@ -73,28 +81,36 @@ function MetricCard({ label, value, unit, warn, alert, suffix = '' }: {
 }
 
 export default function Dashboard() {
-  const [cpuData, setCpuData] = useState(() => genTimeSeries(20, 45, 20));
-  const [gpuData, setGpuData] = useState(() => genTimeSeries(20, 72, 15));
+  const [server, setServer] = useState<keyof typeof SERVER_PROFILES>('all');
+  const [cpuData, setCpuData] = useState(() => {
+    const p = SERVER_PROFILES.all;
+    return genTimeSeries(20, p.cpuBase, p.cpuVar);
+  });
+  const [gpuData, setGpuData] = useState(() => {
+    const p = SERVER_PROFILES.all;
+    return genTimeSeries(20, p.gpuBase, p.gpuVar);
+  });
   const [tokenData] = useState(() => genTokenData(7));
-  const [server, setServer] = useState('all');
   const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
   const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
 
-  // Live update
+  // Reset + live update when server changes
   useEffect(() => {
+    const p = SERVER_PROFILES[server];
+    setCpuData(genTimeSeries(20, p.cpuBase, p.cpuVar));
+    setGpuData(genTimeSeries(20, p.gpuBase, p.gpuVar));
+
     const interval = setInterval(() => {
-      const addPoint = (prev: typeof cpuData, base: number, variance: number) => {
-        const newPoint = {
-          t: new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' }),
-          v: Math.max(0, Math.min(100, base + (Math.random() - 0.5) * variance * 2)),
-        };
-        return [...prev.slice(-19), newPoint];
-      };
-      setCpuData(prev => addPoint(prev, 45, 20));
-      setGpuData(prev => addPoint(prev, 72, 15));
+      const t = new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
+      setCpuData(prev => [...prev.slice(-19), {
+        t, v: Math.max(0, Math.min(100, p.cpuBase + (Math.random() - 0.5) * p.cpuVar * 2)),
+      }]);
+      setGpuData(prev => [...prev.slice(-19), {
+        t, v: Math.max(0, Math.min(100, p.gpuBase + (Math.random() - 0.5) * p.gpuVar * 2)),
+      }]);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [server]);
 
   useEffect(() => {
     let cancelled = false;
@@ -135,7 +151,7 @@ export default function Dashboard() {
             <p className="text-xs text-text-muted mt-0.5">Методология USE · ISA-101 HMI · Обновление каждые 3с</p>
           </div>
           <div className="flex items-center gap-3">
-            <select value={server} onChange={e => setServer(e.target.value)}
+            <select value={server} onChange={e => setServer(e.target.value as keyof typeof SERVER_PROFILES)}
               className="bg-bg-card border border-border-subtle rounded-lg px-3 py-1.5 text-sm text-text-secondary outline-none focus:border-accent-blue transition-colors">
               <option value="all">Все серверы</option>
               <option value="gpu01">GPU-01</option>
