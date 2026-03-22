@@ -24,7 +24,7 @@ export const AGENTS: Agent[] = [
     subAgents: 3,
     dataSources: ['Arxiv', 'Google Scholar', 'Внутренняя база знаний', 'ISO-стандарты'],
     limitations: ['Данные актуальны до 2025-08', 'Не верифицирует экспериментальные данные'],
-    icon: 'cat',
+    icon: 'romeo-phd',
     color: '#9d7cd8',
   },
   {

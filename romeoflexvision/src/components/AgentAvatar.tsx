@@ -11,6 +11,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { AgentStatus } from '../types';
+import RomeoPhdIcon from './icons/RomeoPhdIcon';
 
 interface AgentAvatarProps {
   color: string;
@@ -53,10 +54,17 @@ const ICON_COMPONENTS: Record<string, LucideIcon> = {
   turtle: Turtle,
 };
 
+type CustomIcon = React.FC<{ size: number }>;
+
+const CUSTOM_ICON_COMPONENTS: Record<string, CustomIcon> = {
+  'romeo-phd': RomeoPhdIcon,
+};
+
 export default function AgentAvatar({ color, icon, status, size = 'md', animate = true }: AgentAvatarProps) {
   const sz = SIZE_MAP[size];
   const statusColor = STATUS_COLORS[status];
   const isActive = status === 'computing';
+  const CustomSvgIcon = CUSTOM_ICON_COMPONENTS[icon];
   const AnimalIcon = ICON_COMPONENTS[icon] ?? HelpCircle;
 
   return (
@@ -89,13 +97,19 @@ export default function AgentAvatar({ color, icon, status, size = 'md', animate 
         />
 
         {/* Icon */}
-        <AnimalIcon
-          className="relative z-10"
-          size={sz.iconPx}
-          strokeWidth={1.75}
-          aria-hidden="true"
-          style={{ color, filter: 'drop-shadow(0 0 6px currentColor)' }}
-        />
+        {CustomSvgIcon ? (
+          <div className="relative z-10" style={{ filter: 'drop-shadow(0 0 6px #44cc11)' }}>
+            <CustomSvgIcon size={sz.iconPx} />
+          </div>
+        ) : (
+          <AnimalIcon
+            className="relative z-10"
+            size={sz.iconPx}
+            strokeWidth={1.75}
+            aria-hidden="true"
+            style={{ color, filter: 'drop-shadow(0 0 6px currentColor)' }}
+          />
+        )}
       </div>
 
       {/* Status dot */}
