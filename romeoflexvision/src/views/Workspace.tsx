@@ -90,19 +90,25 @@ export default function Workspace() {
   useEffect(() => {
     let cancelled = false;
 
-    loadSceneOpsSnapshot()
-      .then((snapshot) => {
-        if (cancelled) return;
-        setSceneOps(snapshot);
-        setSceneOpsError(null);
-      })
-      .catch((error) => {
-        if (cancelled) return;
-        setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
-      });
+    const fetchSceneOps = () => {
+      loadSceneOpsSnapshot()
+        .then((snapshot) => {
+          if (cancelled) return;
+          setSceneOps(snapshot);
+          setSceneOpsError(null);
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
+        });
+    };
+
+    fetchSceneOps();
+    const interval = setInterval(fetchSceneOps, 30000);
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
     };
   }, []);
 

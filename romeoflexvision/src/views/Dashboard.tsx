@@ -72,13 +72,29 @@ function MetricCard({ label, value, unit, warn, alert, suffix = '' }: {
   );
 }
 
+// Per-server baseline load profiles
+const SERVER_PROFILES: Record<string, { cpuBase: number; cpuVar: number; gpuBase: number; gpuVar: number }> = {
+  all:   { cpuBase: 45, cpuVar: 20, gpuBase: 72, gpuVar: 15 },
+  gpu01: { cpuBase: 30, cpuVar: 12, gpuBase: 88, gpuVar: 8  },
+  gpu02: { cpuBase: 25, cpuVar: 10, gpuBase: 91, gpuVar: 6  },
+  cpu01: { cpuBase: 78, cpuVar: 14, gpuBase: 18, gpuVar: 10 },
+};
+
 export default function Dashboard() {
-  const [cpuData, setCpuData] = useState(() => genTimeSeries(20, 45, 20));
-  const [gpuData, setGpuData] = useState(() => genTimeSeries(20, 72, 15));
-  const [tokenData] = useState(() => genTokenData(7));
   const [server, setServer] = useState('all');
+  const profile = SERVER_PROFILES[server] ?? SERVER_PROFILES.all;
+
+  const [cpuData, setCpuData] = useState(() => genTimeSeries(20, profile.cpuBase, profile.cpuVar));
+  const [gpuData, setGpuData] = useState(() => genTimeSeries(20, profile.gpuBase, profile.gpuVar));
+  const [tokenData] = useState(() => genTokenData(7));
   const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
   const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
+
+  // Reset charts when server selection changes
+  useEffect(() => {
+    setCpuData(genTimeSeries(20, profile.cpuBase, profile.cpuVar));
+    setGpuData(genTimeSeries(20, profile.gpuBase, profile.gpuVar));
+  }, [server]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Live update
   useEffect(() => {
@@ -90,28 +106,34 @@ export default function Dashboard() {
         };
         return [...prev.slice(-19), newPoint];
       };
-      setCpuData(prev => addPoint(prev, 45, 20));
-      setGpuData(prev => addPoint(prev, 72, 15));
+      setCpuData(prev => addPoint(prev, profile.cpuBase, profile.cpuVar));
+      setGpuData(prev => addPoint(prev, profile.gpuBase, profile.gpuVar));
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [server]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     let cancelled = false;
 
-    loadSceneOpsSnapshot()
-      .then((snapshot) => {
-        if (cancelled) return;
-        setSceneOps(snapshot);
-        setSceneOpsError(null);
-      })
-      .catch((error) => {
-        if (cancelled) return;
-        setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
-      });
+    const fetchSceneOps = () => {
+      loadSceneOpsSnapshot()
+        .then((snapshot) => {
+          if (cancelled) return;
+          setSceneOps(snapshot);
+          setSceneOpsError(null);
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          setSceneOpsError(error instanceof Error ? error.message : 'SceneOps unavailable');
+        });
+    };
+
+    fetchSceneOps();
+    const interval = setInterval(fetchSceneOps, 30000);
 
     return () => {
       cancelled = true;
+      clearInterval(interval);
     };
   }, []);
 

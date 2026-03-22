@@ -91,7 +91,7 @@ function Shell() {
           {currentView === 'landing' && (
             <Landing onNavigate={navigate} onRegister={openRegister} />
           )}
-          {currentView === 'catalog' && <AgentCatalog />}
+          {currentView === 'catalog' && <AgentCatalog onNavigate={navigate} />}
           {currentView === 'workspace' && isAuthenticated && <Workspace />}
           {currentView === 'dashboard' && isAuthenticated && <Dashboard />}
         </div>
