@@ -21,7 +21,7 @@ interface AuthContextValue {
 // ---- Context ----
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function formatError(err: AuthError | Error | unknown): string {
+export function formatError(err: AuthError | Error | unknown): string {
   if (!err) return 'Неизвестная ошибка';
   const msg = (err as AuthError).message || String(err);
   // Translate common Supabase messages to Russian
