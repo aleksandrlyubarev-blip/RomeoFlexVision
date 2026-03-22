@@ -15,6 +15,7 @@ import RomeoPhdIcon from './icons/RomeoPhdIcon';
 import BassitoDogIcon from './icons/BassitoDogIcon';
 import PolingoParrotIcon from './icons/PolingoParrotIcon';
 import BuxterDrafterIcon from './icons/BuxterDrafterIcon';
+import AndrewFoxIcon from './icons/AndrewFoxIcon';
 
 interface AgentAvatarProps {
   color: string;
@@ -64,6 +65,7 @@ const CUSTOM_ICON_COMPONENTS: Record<string, CustomIcon> = {
   'bassito': BassitoDogIcon,
   'polingo': PolingoParrotIcon,
   'buxter': BuxterDrafterIcon,
+  'andrew': AndrewFoxIcon,
 };
 
 export default function AgentAvatar({ color, icon, status, size = 'md', animate = true }: AgentAvatarProps) {

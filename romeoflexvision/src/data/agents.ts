@@ -37,7 +37,7 @@ export const AGENTS: Agent[] = [
     subAgents: 5,
     dataSources: ['ClickHouse', 'InfluxDB', 'SAP ERP', 'IoT-сенсоры'],
     limitations: ['Прогноз до 72 часов', 'Требует >30 дней исторических данных'],
-    icon: 'dog',
+    icon: 'andrew',
     color: '#73daca',
   },
   {
