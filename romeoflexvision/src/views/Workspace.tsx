@@ -113,6 +113,13 @@ export default function Workspace() {
     ));
   };
 
+  const handleReject = () => {
+    setHumanApproved(true);
+    setTasks(prev => prev.map(t =>
+      t.status === 'waiting_human' ? { ...t, status: 'error', progress: 0 } : t
+    ));
+  };
+
   const handleSubmit = () => {
     if (!prompt.trim()) return;
     const newTask: Task = {
@@ -169,7 +176,7 @@ export default function Workspace() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={handleApprove} className="btn-primary text-xs py-1.5 px-3">Подтвердить и продолжить</button>
-                    <button className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">Отклонить задачу</button>
+                    <button onClick={handleReject} className="btn-ghost text-xs py-1.5 px-3 border border-border-subtle">Отклонить задачу</button>
                   </div>
                 </div>
               </div>
