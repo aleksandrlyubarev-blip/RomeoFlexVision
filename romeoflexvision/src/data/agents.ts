@@ -63,7 +63,7 @@ export const AGENTS: Agent[] = [
     subAgents: 2,
     dataSources: ['ГОСТ-библиотека', 'Каталог деталей', 'DXF/STEP шаблоны'],
     limitations: ['В разработке: нет экспорта в SOLIDWORKS', 'Точность ±0.1мм'],
-    icon: 'turtle',
+    icon: 'buxter',
     color: '#e0af68',
   },
   {
