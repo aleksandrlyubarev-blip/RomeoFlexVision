@@ -11,7 +11,7 @@ export const AGENTS: Agent[] = [
     subAgents: 4,
     dataSources: ['Камеры линии A1–A8', 'БД дефектов', 'CAD-чертежи', 'SCADA-система'],
     limitations: ['Точность 94% при освещённости >300 лк', 'Размер дефекта >0.5мм', 'Не работает при запылённости >70%'],
-    icon: '◈',
+    icon: 'bird',
     color: '#7aa2f7',
   },
   {
@@ -24,7 +24,7 @@ export const AGENTS: Agent[] = [
     subAgents: 3,
     dataSources: ['Arxiv', 'Google Scholar', 'Внутренняя база знаний', 'ISO-стандарты'],
     limitations: ['Данные актуальны до 2025-08', 'Не верифицирует экспериментальные данные'],
-    icon: '◉',
+    icon: 'cat',
     color: '#9d7cd8',
   },
   {
@@ -37,7 +37,7 @@ export const AGENTS: Agent[] = [
     subAgents: 5,
     dataSources: ['ClickHouse', 'InfluxDB', 'SAP ERP', 'IoT-сенсоры'],
     limitations: ['Прогноз до 72 часов', 'Требует >30 дней исторических данных'],
-    icon: '◆',
+    icon: 'dog',
     color: '#73daca',
   },
   {
@@ -50,7 +50,7 @@ export const AGENTS: Agent[] = [
     subAgents: 2,
     dataSources: ['Asset-библиотека', 'Промпт-шаблоны', 'Brand-kit'],
     limitations: ['Выход: MP4/WebM до 4K', 'Длительность до 5 минут за сессию'],
-    icon: '◇',
+    icon: 'rabbit',
     color: '#ff9e64',
   },
   {
@@ -63,7 +63,7 @@ export const AGENTS: Agent[] = [
     subAgents: 2,
     dataSources: ['ГОСТ-библиотека', 'Каталог деталей', 'DXF/STEP шаблоны'],
     limitations: ['В разработке: нет экспорта в SOLIDWORKS', 'Точность ±0.1мм'],
-    icon: '⬡',
+    icon: 'turtle',
     color: '#e0af68',
   },
   {
@@ -76,7 +76,7 @@ export const AGENTS: Agent[] = [
     subAgents: 1,
     dataSources: ['Технический глоссарий', 'Memoria TM', 'ISO-терминология'],
     limitations: ['25 языков', 'Специализация: машиностроение, электроника, химия'],
-    icon: '◐',
+    icon: 'fish',
     color: '#b4f9f8',
   },
   {
@@ -89,7 +89,7 @@ export const AGENTS: Agent[] = [
     subAgents: 3,
     dataSources: ['Медиа-хранилище', 'Библиотека переходов', 'Asset-библиотека Bassito', 'TTS-движок Озвучки'],
     limitations: ['В разработке: нет экспорта для Adobe Premiere', 'Максимум 30 мин исходника за сессию', 'Поддержка кодеков: H.264, H.265, VP9'],
-    icon: '▷',
+    icon: 'squirrel',
     color: '#f7768e',
   },
   {
@@ -102,7 +102,7 @@ export const AGENTS: Agent[] = [
     subAgents: 0,
     dataSources: ['Реестр агентов', 'Очередь задач', 'Context Window'],
     limitations: ['Human-in-the-loop при неопределённости >40%'],
-    icon: '⬢',
+    icon: 'shell',
     color: '#7aa2f7',
   },
 ];

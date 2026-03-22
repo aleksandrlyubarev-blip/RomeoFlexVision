@@ -1,3 +1,15 @@
+import {
+  Bird,
+  Cat,
+  Dog,
+  Fish,
+  HelpCircle,
+  Rabbit,
+  Shell,
+  Squirrel,
+  Turtle,
+  type LucideIcon,
+} from 'lucide-react';
 import type { AgentStatus } from '../types';
 
 interface AgentAvatarProps {
@@ -25,15 +37,27 @@ const STATUS_LABELS: Record<AgentStatus, string> = {
 };
 
 const SIZE_MAP = {
-  sm: { wrapper: 'w-10 h-10', icon: 'text-lg', ring: 'w-14 h-14', dot: 'w-2 h-2' },
-  md: { wrapper: 'w-16 h-16', icon: 'text-2xl', ring: 'w-20 h-20', dot: 'w-2.5 h-2.5' },
-  lg: { wrapper: 'w-24 h-24', icon: 'text-4xl', ring: 'w-32 h-32', dot: 'w-3 h-3' },
+  sm: { wrapper: 'w-10 h-10', iconPx: 18, ring: 'w-14 h-14', dot: 'w-2 h-2' },
+  md: { wrapper: 'w-16 h-16', iconPx: 28, ring: 'w-20 h-20', dot: 'w-2.5 h-2.5' },
+  lg: { wrapper: 'w-24 h-24', iconPx: 42, ring: 'w-32 h-32', dot: 'w-3 h-3' },
+};
+
+const ICON_COMPONENTS: Record<string, LucideIcon> = {
+  bird: Bird,
+  cat: Cat,
+  dog: Dog,
+  fish: Fish,
+  rabbit: Rabbit,
+  shell: Shell,
+  squirrel: Squirrel,
+  turtle: Turtle,
 };
 
 export default function AgentAvatar({ color, icon, status, size = 'md', animate = true }: AgentAvatarProps) {
   const sz = SIZE_MAP[size];
   const statusColor = STATUS_COLORS[status];
   const isActive = status === 'computing';
+  const AnimalIcon = ICON_COMPONENTS[icon] ?? HelpCircle;
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -65,9 +89,13 @@ export default function AgentAvatar({ color, icon, status, size = 'md', animate 
         />
 
         {/* Icon */}
-        <span className={`${sz.icon} relative z-10 select-none`} style={{ color, filter: 'drop-shadow(0 0 6px currentColor)' }}>
-          {icon}
-        </span>
+        <AnimalIcon
+          className="relative z-10"
+          size={sz.iconPx}
+          strokeWidth={1.75}
+          aria-hidden="true"
+          style={{ color, filter: 'drop-shadow(0 0 6px currentColor)' }}
+        />
       </div>
 
       {/* Status dot */}
