@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import type { AgentStatus } from '../types';
 import RomeoPhdIcon from './icons/RomeoPhdIcon';
+import BassitoDogIcon from './icons/BassitoDogIcon';
+import PolingoParrotIcon from './icons/PolingoParrotIcon';
 
 interface AgentAvatarProps {
   color: string;
@@ -58,6 +60,8 @@ type CustomIcon = React.FC<{ size: number }>;
 
 const CUSTOM_ICON_COMPONENTS: Record<string, CustomIcon> = {
   'romeo-phd': RomeoPhdIcon,
+  'bassito': BassitoDogIcon,
+  'polingo': PolingoParrotIcon,
 };
 
 export default function AgentAvatar({ color, icon, status, size = 'md', animate = true }: AgentAvatarProps) {

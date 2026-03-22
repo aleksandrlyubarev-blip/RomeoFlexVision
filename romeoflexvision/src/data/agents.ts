@@ -50,7 +50,7 @@ export const AGENTS: Agent[] = [
     subAgents: 2,
     dataSources: ['Asset-библиотека', 'Промпт-шаблоны', 'Brand-kit'],
     limitations: ['Выход: MP4/WebM до 4K', 'Длительность до 5 минут за сессию'],
-    icon: 'rabbit',
+    icon: 'bassito',
     color: '#ff9e64',
   },
   {
@@ -76,7 +76,7 @@ export const AGENTS: Agent[] = [
     subAgents: 1,
     dataSources: ['Технический глоссарий', 'Memoria TM', 'ISO-терминология'],
     limitations: ['25 языков', 'Специализация: машиностроение, электроника, химия'],
-    icon: 'fish',
+    icon: 'polingo',
     color: '#b4f9f8',
   },
   {
