@@ -22,6 +22,14 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
   const [copied, setCopied] = useState(false);
   const [editDesc, setEditDesc] = useState(agent.description);
   const [editing, setEditing] = useState(false);
+
+  // Reset local state whenever a different agent is shown
+  useEffect(() => {
+    setTestPhase('idle');
+    setCopied(false);
+    setEditDesc(agent.description);
+    setEditing(false);
+  }, [agent.id, agent.description]);
   const statusColor = STATUS_COLORS[agent.status];
 
   const handleTest = () => {
@@ -238,16 +246,28 @@ export default function AgentCatalog() {
         {/* Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map(agent => {
+            const isDev = agent.status === 'dev';
             const statusColor = STATUS_COLORS[agent.status];
             return (
               <div key={agent.id}
-                className="glass-panel p-5 flex flex-col gap-4 hover:border-border-DEFAULT cursor-pointer transition-all duration-200 group"
-                onClick={() => setSelected(agent)}>
+                className={`glass-panel p-5 flex flex-col gap-4 transition-all duration-200 group relative overflow-hidden ${
+                  isDev ? 'opacity-60 cursor-default' : 'hover:border-border-DEFAULT cursor-pointer'
+                }`}
+                onClick={() => !isDev && setSelected(agent)}>
+                {/* Coming-soon overlay for dev agents */}
+                {isDev && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                    <span className="bg-bg-panel border border-signal-warning border-opacity-40 text-signal-warning text-xs font-medium px-3 py-1 rounded-full">
+                      В разработке
+                    </span>
+                  </div>
+                )}
+
                 {/* Top row */}
                 <div className="flex items-start gap-3">
                   <AgentAvatar color={agent.color} icon={agent.icon} status={agent.status} size="sm" animate={agent.status === 'computing'} />
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-text-primary text-sm group-hover:text-accent-blue transition-colors">{agent.name}</div>
+                    <div className={`font-medium text-sm ${isDev ? 'text-text-muted' : 'text-text-primary group-hover:text-accent-blue transition-colors'}`}>{agent.name}</div>
                     <div className="text-xs text-text-muted">{agent.nameRu}</div>
                     <div className="flex items-center gap-1.5 mt-1.5">
                       <span className="status-dot" style={{ backgroundColor: statusColor }} />
@@ -255,7 +275,7 @@ export default function AgentCatalog() {
                     </div>
                   </div>
                   <span className={`tag border text-xs ${
-                    agent.status === 'dev'
+                    isDev
                       ? 'bg-signal-warning bg-opacity-10 text-signal-warning border-signal-warning border-opacity-30'
                       : 'bg-bg-card text-text-muted border-border-subtle'
                   }`}>
@@ -272,12 +292,16 @@ export default function AgentCatalog() {
                     <span className="text-xs text-text-muted">{agent.subAgents} субагентов</span>
                   )}
                   <div className="ml-auto flex gap-1.5 relative">
-                    <button className="text-xs text-text-muted hover:text-accent-blue transition-colors px-2 py-1 rounded hover:bg-bg-hover"
+                    <button
+                      disabled={isDev}
+                      className="text-xs text-text-muted hover:text-accent-blue transition-colors px-2 py-1 rounded hover:bg-bg-hover disabled:pointer-events-none"
                       onClick={e => { e.stopPropagation(); setSelected(agent); }}>
                       Тест
                     </button>
                     <div className="relative">
-                      <button className="text-xs text-text-muted hover:text-text-primary transition-colors px-2 py-1 rounded hover:bg-bg-hover"
+                      <button
+                        disabled={isDev}
+                        className="text-xs text-text-muted hover:text-text-primary transition-colors px-2 py-1 rounded hover:bg-bg-hover disabled:pointer-events-none"
                         onClick={e => { e.stopPropagation(); setMenuAgent(menuAgent === agent.id ? null : agent.id); }}>
                         ⋯
                       </button>

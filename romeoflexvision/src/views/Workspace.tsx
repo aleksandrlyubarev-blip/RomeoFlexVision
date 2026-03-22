@@ -7,41 +7,54 @@ import type { SceneOpsSnapshot, Task, TraceStep } from '../types';
 
 const ORCHESTRATOR = AGENTS.find(a => a.id === 'orchestrator')!;
 
-const MOCK_TRACE: TraceStep[] = [
-  {
-    id: 't1', step: 1, type: 'prompt', label: 'User Prompt',
-    content: 'Проанализировать производственный дефект на линии A3, создать отчёт и подготовить анимацию для обучения',
-    latencyMs: 12, tokens: { input: 87, output: 0, cached: 0 }, status: 'ok',
-    timestamp: '14:32:01.012',
-  },
-  {
-    id: 't2', step: 2, type: 'tool_call', label: 'Orchestrator → Robo QC',
-    content: 'route_task({ agent: "robo-qc", task: "defect_analysis", data: { line: "A3", pos: 142 } })',
-    latencyMs: 8, status: 'ok', timestamp: '14:32:01.024',
-  },
-  {
-    id: 't3', step: 3, type: 'tool_response', label: 'Robo QC → Result',
-    content: '{ defects: 3, type: "surface_scratch", confidence: 0.942, heatmap: "base64..." }',
-    latencyMs: 2340, tokens: { input: 312, output: 89, cached: 180 }, status: 'ok',
-    timestamp: '14:32:03.364',
-  },
-  {
-    id: 't4', step: 4, type: 'tool_call', label: 'Orchestrator → Romeo PhD',
-    content: 'route_task({ agent: "romeo-phd", task: "generate_report", context: prev_results })',
-    latencyMs: 11, status: 'ok', timestamp: '14:32:03.375',
-  },
-  {
-    id: 't5', step: 5, type: 'llm_response', label: 'Romeo PhD → Report Draft',
-    content: '## Отчёт о дефекте\n\nОбнаружены царапины класса B согласно ISO 1302...',
-    latencyMs: 4120, tokens: { input: 445, output: 634, cached: 312 }, status: 'ok',
-    timestamp: '14:32:07.495',
-  },
-  {
-    id: 't6', step: 6, type: 'tool_call', label: 'Human-in-the-loop',
-    content: 'AWAIT_APPROVAL: Неопределённость классификации >40%. Требуется подтверждение оператора.',
-    latencyMs: 0, status: 'ok', timestamp: '14:32:07.500',
-  },
-];
+function buildTrace(promptText: string): TraceStep[] {
+  const base = new Date();
+  const ts = (offsetMs: number) => {
+    const d = new Date(base.getTime() + offsetMs);
+    return d.toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) +
+      '.' + String(d.getMilliseconds()).padStart(3, '0');
+  };
+  const inputTokens = Math.round(60 + promptText.length * 0.4);
+  return [
+    {
+      id: 't1', step: 1, type: 'prompt', label: 'User Prompt',
+      content: promptText,
+      latencyMs: 12, tokens: { input: inputTokens, output: 0, cached: 0 }, status: 'ok',
+      timestamp: ts(0),
+    },
+    {
+      id: 't2', step: 2, type: 'tool_call', label: 'Orchestrator → decompose',
+      content: `decompose_task({ prompt: ${JSON.stringify(promptText.slice(0, 60))}, agents: ["robo-qc","romeo-phd","bassito-animator"] })`,
+      latencyMs: 9, status: 'ok', timestamp: ts(21),
+    },
+    {
+      id: 't3', step: 3, type: 'tool_response', label: 'Orchestrator plan',
+      content: `{ subtasks: 3, assigned: ["robo-qc","romeo-phd","bassito-animator"], estimated_tokens: ${inputTokens * 8} }`,
+      latencyMs: 1840, tokens: { input: inputTokens * 2, output: 94, cached: 120 }, status: 'ok',
+      timestamp: ts(1870),
+    },
+    {
+      id: 't4', step: 4, type: 'tool_call', label: 'Orchestrator → Robo QC',
+      content: 'route_task({ agent: "robo-qc", task: "analysis", data: { source: "user_prompt" } })',
+      latencyMs: 11, status: 'ok', timestamp: ts(1881),
+    },
+    {
+      id: 't5', step: 5, type: 'llm_response', label: 'Robo QC → Result',
+      content: '{ status: "ok", confidence: 0.931, result: "analysis complete" }',
+      latencyMs: 2210, tokens: { input: 290, output: 74, cached: 180 }, status: 'ok',
+      timestamp: ts(4091),
+    },
+    {
+      id: 't6', step: 6, type: 'tool_call', label: 'Human-in-the-loop',
+      content: 'AWAIT_APPROVAL: Неопределённость >40%. Требуется подтверждение оператора.',
+      latencyMs: 0, status: 'ok', timestamp: ts(4095),
+    },
+  ];
+}
+
+const DEFAULT_TRACE = buildTrace(
+  'Проанализировать производственный дефект на линии A3, создать отчёт и подготовить анимацию для обучения'
+);
 
 const INIT_TASKS: Task[] = [
   { id: '1', title: 'Анализ дефекта линия A3', assignedTo: 'robo-qc', status: 'completed', progress: 100, createdAt: '14:32:01' },
@@ -71,6 +84,7 @@ export default function Workspace() {
   const [prompt, setPrompt] = useState('');
   const [showTrace, setShowTrace] = useState(false);
   const [traceStep, setTraceStep] = useState(0);
+  const [trace, setTrace] = useState<TraceStep[]>(DEFAULT_TRACE);
   const [humanApproved, setHumanApproved] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
@@ -123,13 +137,13 @@ export default function Workspace() {
 
   useEffect(() => {
     if (!autoPlay || !showTrace) return;
-    if (traceStep >= MOCK_TRACE.length - 1) {
+    if (traceStep >= trace.length - 1) {
       setAutoPlay(false);
       return;
     }
     const timer = setTimeout(() => setTraceStep(s => s + 1), 900);
     return () => clearTimeout(timer);
-  }, [autoPlay, showTrace, traceStep]);
+  }, [autoPlay, showTrace, traceStep, trace.length]);
 
   const handleSubmit = () => {
     if (!prompt.trim()) return;
@@ -142,9 +156,11 @@ export default function Workspace() {
       createdAt: new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
     };
     setTasks(prev => [newTask, ...prev]);
+    setTrace(buildTrace(prompt.trim()));
     setPrompt('');
-    setShowTrace(false);
+    setShowTrace(true);
     setTraceStep(0);
+    setAutoPlay(true);
   };
 
   return (
@@ -251,7 +267,7 @@ export default function Workspace() {
             {showTrace && (
               <button
                 onClick={() => {
-                  if (traceStep >= MOCK_TRACE.length - 1) { setTraceStep(0); setAutoPlay(true); }
+                  if (traceStep >= trace.length - 1) { setTraceStep(0); setAutoPlay(true); }
                   else setAutoPlay(p => !p);
                 }}
                 className="text-xs text-text-muted hover:text-text-primary px-1">
@@ -267,7 +283,7 @@ export default function Workspace() {
 
           {showTrace ? (
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
-              {MOCK_TRACE.slice(0, traceStep + 1).map(step => {
+              {trace.slice(0, traceStep + 1).map(step => {
                 return (
                   <div key={step.id} className={`bg-bg-card rounded-lg p-3 border-l-2 border-l-accent-blue`}
                     style={{ borderLeftColor: step.type === 'tool_call' ? '#9d7cd8' : step.type === 'tool_response' ? '#73daca' : step.type === 'prompt' ? '#7aa2f7' : '#6c7086' }}>
@@ -292,7 +308,7 @@ export default function Workspace() {
                   </div>
                 );
               })}
-              {traceStep < MOCK_TRACE.length - 1 && (
+              {traceStep < trace.length - 1 && (
                 <button onClick={() => setTraceStep(s => s + 1)}
                   className="w-full text-xs text-accent-blue hover:underline py-2">
                   Следующий шаг ↓

@@ -4,6 +4,7 @@ import {
   XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts';
 import { loadSceneOpsSnapshot } from '../lib/sceneOps';
+import { AGENTS } from '../data/agents';
 import type { SceneOpsSnapshot } from '../types';
 
 // ---- ISA-101 color helpers ----
@@ -326,26 +327,31 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Agent cost breakdown */}
+        {/* Agent cost breakdown — derived from AGENTS registry + token totals */}
         <div className="glass-panel p-5">
           <div className="metric-label mb-4">Затраты по агентам</div>
           <div className="space-y-2">
-            {[
-              { name: 'Andrew Analytic', cost: 12.40, pct: 38, color: '#73daca' },
-              { name: 'Romeo PhD', cost: 9.80, pct: 30, color: '#9d7cd8' },
-              { name: 'Robo QC', cost: 6.20, pct: 19, color: '#7aa2f7' },
-              { name: 'Bassito Animator', cost: 2.60, pct: 8, color: '#ff9e64' },
-              { name: 'Переводчик', cost: 1.60, pct: 5, color: '#b4f9f8' },
-            ].map(a => (
-              <div key={a.name} className="flex items-center gap-3">
-                <div className="w-28 text-xs text-text-secondary truncate">{a.name}</div>
-                <div className="flex-1 h-2 bg-bg-card rounded-full overflow-hidden">
-                  <div className="h-full rounded-full" style={{ width: `${a.pct}%`, backgroundColor: a.color, opacity: 0.7 }} />
-                </div>
-                <div className="font-mono text-xs text-text-primary w-14 text-right">${a.cost.toFixed(2)}</div>
-                <div className="text-xs text-text-muted w-8 text-right">{a.pct}%</div>
-              </div>
-            ))}
+            {(() => {
+              // Weight by subAgents count (proxy for compute intensity); orchestrator excluded
+              const active = AGENTS.filter(a => a.id !== 'orchestrator' && a.status !== 'dev');
+              const weights = active.map(a => Math.max(1, a.subAgents));
+              const totalWeight = weights.reduce((s, w) => s + w, 0);
+              const totalTokenCost = parseFloat(totalCost);
+              return active.map((agent, i) => {
+                const pct = Math.round((weights[i] / totalWeight) * 100);
+                const cost = (weights[i] / totalWeight) * totalTokenCost;
+                return (
+                  <div key={agent.id} className="flex items-center gap-3">
+                    <div className="w-28 text-xs text-text-secondary truncate">{agent.name}</div>
+                    <div className="flex-1 h-2 bg-bg-card rounded-full overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: agent.color, opacity: 0.7 }} />
+                    </div>
+                    <div className="font-mono text-xs text-text-primary w-14 text-right">${cost.toFixed(2)}</div>
+                    <div className="text-xs text-text-muted w-8 text-right">{pct}%</div>
+                  </div>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
