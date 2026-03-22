@@ -22,15 +22,14 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function formatError(err: AuthError | Error | unknown): string {
-  if (!err) return 'Неизвестная ошибка';
+  if (!err) return 'unknown';
   const msg = (err as AuthError).message || String(err);
-  // Translate common Supabase messages to Russian
-  if (msg.includes('Invalid login credentials')) return 'Неверный email или пароль';
-  if (msg.includes('Email not confirmed')) return 'Подтвердите email перед входом';
-  if (msg.includes('User already registered')) return 'Пользователь с таким email уже существует';
-  if (msg.includes('Password should be at least')) return 'Пароль должен содержать минимум 6 символов';
-  if (msg.includes('Unable to validate email address')) return 'Некорректный email';
-  if (msg.includes('fetch')) return 'Нет соединения с сервером. Проверьте VITE_SUPABASE_URL';
+  if (msg.includes('Invalid login credentials')) return 'invalidCredentials';
+  if (msg.includes('Email not confirmed')) return 'emailNotConfirmed';
+  if (msg.includes('User already registered')) return 'userExists';
+  if (msg.includes('Password should be at least')) return 'passwordLength';
+  if (msg.includes('Unable to validate email address')) return 'invalidEmail';
+  if (msg.includes('fetch')) return 'connection';
   return msg;
 }
 
@@ -75,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     if (!isSupabaseConfigured) {
       // Demo mode — any non-empty credentials work
-      if (!email || !password) return { error: 'Введите email и пароль' };
+      if (!email || !password) return { error: 'demoCredentials' };
       setUser({ id: 'demo', email, app_metadata: {}, user_metadata: {}, aud: 'authenticated', created_at: new Date().toISOString() } as User);
       return { error: null };
     }
@@ -93,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signInWithGoogle = useCallback(async (): Promise<AuthResult> => {
-    if (!isSupabaseConfigured) return { error: 'Supabase не настроен' };
+    if (!isSupabaseConfigured) return { error: 'supabaseMissing' };
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin },

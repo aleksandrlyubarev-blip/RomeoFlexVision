@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import { type Language, useLanguage } from '../context/LanguageContext';
 import type { View } from '../types';
 
 interface SidebarProps {
@@ -7,17 +8,61 @@ interface SidebarProps {
   isAuthenticated: boolean;
 }
 
-const NAV_ITEMS: { view: View; label: string; icon: string; requiresAuth: boolean }[] = [
-  { view: 'landing', label: 'Главная', icon: '⬡', requiresAuth: false },
-  { view: 'catalog', label: 'Агенты', icon: '◈', requiresAuth: false },
-  { view: 'workspace', label: 'Рабочее пространство', icon: '◆', requiresAuth: true },
-  { view: 'dashboard', label: 'Мониторинг', icon: '◉', requiresAuth: true },
+const NAV_LABELS: Record<
+  Language,
+  { guest: string; unauthorized: string; operator: string; authorizationRequired: string; items: Record<View, string> }
+> = {
+  en: {
+    guest: 'Guest',
+    unauthorized: 'Not signed in',
+    operator: 'Operator',
+    authorizationRequired: 'Authorization required',
+    items: {
+      landing: 'Home',
+      catalog: 'Agents',
+      workspace: 'Workspace',
+      dashboard: 'Monitoring',
+    },
+  },
+  ru: {
+    guest: 'Гость',
+    unauthorized: 'Не авторизован',
+    operator: 'Оператор',
+    authorizationRequired: 'Требуется авторизация',
+    items: {
+      landing: 'Главная',
+      catalog: 'Агенты',
+      workspace: 'Рабочее пространство',
+      dashboard: 'Мониторинг',
+    },
+  },
+  he: {
+    guest: 'אורח',
+    unauthorized: 'לא מחובר',
+    operator: 'מפעיל',
+    authorizationRequired: 'נדרש אימות',
+    items: {
+      landing: 'דף הבית',
+      catalog: 'סוכנים',
+      workspace: 'מרחב עבודה',
+      dashboard: 'ניטור',
+    },
+  },
+};
+
+const NAV_ITEMS: { view: View; icon: string; requiresAuth: boolean }[] = [
+  { view: 'landing', icon: '⬡', requiresAuth: false },
+  { view: 'catalog', icon: '◈', requiresAuth: false },
+  { view: 'workspace', icon: '◆', requiresAuth: true },
+  { view: 'dashboard', icon: '◉', requiresAuth: true },
 ];
 
 export default function Sidebar({ currentView, onNavigate, isAuthenticated }: SidebarProps) {
   const { user } = useAuth();
+  const { language } = useLanguage();
   const initials = user?.email?.[0]?.toUpperCase() ?? '?';
-  const emailShort = user?.email ?? 'Гость';
+  const emailShort = user?.email ?? NAV_LABELS[language].guest;
+  const copy = NAV_LABELS[language];
 
   return (
     <aside className="w-14 lg:w-56 bg-bg-secondary border-r border-border-subtle flex flex-col h-screen sticky top-0 shrink-0">
@@ -51,10 +96,10 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
                     ? 'text-text-muted opacity-50 hover:opacity-70'
                     : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'}
               `}
-              title={locked ? 'Требуется авторизация' : item.label}
+              title={locked ? copy.authorizationRequired : copy.items[item.view]}
             >
               <span className="text-base w-5 text-center shrink-0">{item.icon}</span>
-              <span className="hidden lg:block truncate">{item.label}</span>
+              <span className="hidden lg:block truncate">{copy.items[item.view]}</span>
               {locked && <span className="hidden lg:block ml-auto text-xs opacity-40">🔒</span>}
             </button>
           );
@@ -75,10 +120,10 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
           </div>
           <div className="hidden lg:block min-w-0">
             <div className="text-xs text-text-secondary truncate" title={emailShort}>
-              {isAuthenticated ? emailShort : 'Не авторизован'}
+              {isAuthenticated ? emailShort : copy.unauthorized}
             </div>
             {isAuthenticated && (
-              <div className="text-xs text-text-muted">Оператор</div>
+              <div className="text-xs text-text-muted">{copy.operator}</div>
             )}
           </div>
         </div>
