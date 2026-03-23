@@ -4,7 +4,7 @@ export const SITE_LINKS = {
   github: 'https://github.com/aleksandrlyubarev-blip',
   telegram: 'https://t.me/RomeoFlexVision_bot',
   telegramHandle: '@RomeoFlexVision_bot',
-  linkedin: 'https://www.linkedin.com/company/112507945/',
+  linkedin: 'https://www.linkedin.com/company/romeoflexvision',
   products: {
     andrew: 'https://github.com/aleksandrlyubarev-blip/Andrew-Analitic',
     romeo: 'https://github.com/aleksandrlyubarev-blip/Romeo_PHD',
