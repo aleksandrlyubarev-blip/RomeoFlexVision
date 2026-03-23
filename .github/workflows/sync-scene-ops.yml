@@ -10,6 +10,8 @@ on:
   repository_dispatch:
     types:
       - scene_ops_snapshot
+  schedule:
+    - cron: '0 */6 * * *'
 
 permissions:
   contents: write
@@ -31,7 +33,7 @@ jobs:
 
       - name: Resolve and write SceneOps snapshot
         env:
-          SCENE_OPS_SOURCE_URL: ${{ inputs.source_url || github.event.client_payload.source_url || vars.SCENE_OPS_SOURCE_URL || '' }}
+          SCENE_OPS_SOURCE_URL: ${{ inputs.source_url || github.event.client_payload.source_url || vars.SCENE_OPS_SOURCE_URL || 'https://raw.githubusercontent.com/aleksandrlyubarev-blip/Pino_cut/main/docs/pinnocat-scene-ops-v1.example.json' }}
           SCENE_OPS_INLINE_JSON: ${{ github.event_name == 'repository_dispatch' && toJson(github.event.client_payload.snapshot) || '' }}
         run: node scripts/sync-scene-ops.mjs
 
