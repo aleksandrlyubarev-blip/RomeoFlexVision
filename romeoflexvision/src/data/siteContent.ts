@@ -70,6 +70,7 @@ interface SiteNavCopy {
   contact: string;
   github: string;
   telegram: string;
+  linkedin: string;
   openPlatform: string;
   signIn: string;
   signOut: string;
@@ -334,6 +335,7 @@ const LOCALIZED_COPY: Record<
       contact: 'Contact',
       github: 'GitHub',
       telegram: 'Telegram',
+      linkedin: 'LinkedIn',
       openPlatform: 'Open Platform',
       signIn: 'Sign in',
       signOut: 'Sign out',
@@ -455,6 +457,7 @@ const LOCALIZED_COPY: Record<
       contact: 'Контакты',
       github: 'GitHub',
       telegram: 'Telegram',
+      linkedin: 'LinkedIn',
       openPlatform: 'Открыть платформу',
       signIn: 'Войти',
       signOut: 'Выйти',
@@ -576,6 +579,7 @@ const LOCALIZED_COPY: Record<
       contact: 'יצירת קשר',
       github: 'GitHub',
       telegram: 'Telegram',
+      linkedin: 'LinkedIn',
       openPlatform: 'פתח פלטפורמה',
       signIn: 'התחבר',
       signOut: 'התנתק',

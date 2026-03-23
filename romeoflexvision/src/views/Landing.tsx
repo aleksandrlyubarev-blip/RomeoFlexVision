@@ -378,6 +378,14 @@ export default function Landing({
             >
               {copy.nav.telegram}
             </a>
+            <a
+              href={SITE_LINKS.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-ghost px-4 py-2 text-sm"
+            >
+              {copy.nav.linkedin}
+            </a>
             {isAuthenticated ? (
               <>
                 <button onClick={() => onNavigate('catalog')} className="btn-primary px-4 py-2 text-sm">
@@ -423,7 +431,7 @@ export default function Landing({
                   {item.label}
                 </a>
               ))}
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="grid grid-cols-3 gap-3 pt-2">
                 <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="btn-ghost text-center text-sm">
                   {copy.nav.github}
                 </a>
@@ -434,6 +442,14 @@ export default function Landing({
                   className="btn-ghost text-center text-sm"
                 >
                   {copy.nav.telegram}
+                </a>
+                <a
+                  href={SITE_LINKS.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-ghost text-center text-sm"
+                >
+                  {copy.nav.linkedin}
                 </a>
               </div>
               <button
@@ -500,6 +516,15 @@ export default function Landing({
                   className="inline-flex items-center gap-2 font-medium text-accent-blue transition-colors hover:text-white"
                 >
                   {SITE_LINKS.telegramHandle}
+                  <ArrowRight size={15} />
+                </a>
+                <a
+                  href={SITE_LINKS.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 font-medium text-text-secondary transition-colors hover:text-white"
+                >
+                  {copy.nav.linkedin}
                   <ArrowRight size={15} />
                 </a>
               </div>
