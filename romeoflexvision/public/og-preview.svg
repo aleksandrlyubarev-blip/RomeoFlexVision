@@ -1,0 +1,109 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="98" y1="62" x2="1120" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111E"/>
+      <stop offset="0.54" stop-color="#0A0A1A"/>
+      <stop offset="1" stop-color="#151533"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="175" y1="120" x2="860" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00D4FF"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(272 154) rotate(43.7995) scale(336.03 271.034)">
+      <stop stop-color="#00D4FF" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#00D4FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(987 424) rotate(145.812) scale(289.829 203.142)">
+      <stop stop-color="#7C3AED" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowA)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#glowB)"/>
+
+  <g opacity="0.16">
+    <path d="M80 86H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 146H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 206H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 266H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 326H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 386H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 446H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 506H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 566H1120" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M140 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M260 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M380 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M500 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M620 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M740 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M860 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M980 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M1100 60V570" stroke="#E8EEFF" stroke-width="1"/>
+  </g>
+
+  <g>
+    <rect x="86" y="84" width="182" height="30" rx="15" fill="rgba(0,212,255,0.12)" stroke="rgba(0,212,255,0.28)"/>
+    <text x="111" y="104" fill="#00D4FF" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.26em">
+      AGENTIC AI ECOSYSTEM
+    </text>
+  </g>
+
+  <text x="92" y="198" fill="#F0F4FF" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">
+    RomeoFlexVision
+  </text>
+  <text x="92" y="265" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
+    Building the control plane for data science,
+  </text>
+  <text x="92" y="308" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
+    media production, and AI workflow orchestration.
+  </text>
+
+  <g>
+    <rect x="92" y="392" width="294" height="70" rx="24" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="124" y="422" fill="#8CA8FF" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700">
+      ROMA / LANGGRAPH / MOLTIS
+    </text>
+    <text x="124" y="448" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600">
+      One ecosystem. Four agents.
+    </text>
+  </g>
+
+  <g>
+    <path d="M760 204L904 158" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M760 204L956 296" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M760 204L874 432" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M760 204L1012 442" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <g>
+    <circle cx="760" cy="204" r="76" fill="rgba(12,24,44,0.86)" stroke="rgba(255,255,255,0.14)"/>
+    <circle cx="760" cy="204" r="74" fill="url(#accent)" fill-opacity="0.08"/>
+    <text x="720" y="194" fill="#9ECFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="0.24em">
+      CORE
+    </text>
+    <text x="706" y="228" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">
+      ROMA
+    </text>
+  </g>
+
+  <g>
+    <rect x="874" y="114" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="908" y="148" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Andrew</text>
+    <text x="908" y="173" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Data orchestration</text>
+
+    <rect x="928" y="254" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="963" y="288" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Romeo PhD</text>
+    <text x="963" y="313" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Education layer</text>
+
+    <rect x="820" y="388" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="856" y="422" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Bassito</text>
+    <text x="856" y="447" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Media pipeline</text>
+
+    <rect x="978" y="426" width="170" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+    <text x="1011" y="460" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">PinoCut</text>
+    <text x="1011" y="485" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Scene stitching</text>
+  </g>
+</svg>

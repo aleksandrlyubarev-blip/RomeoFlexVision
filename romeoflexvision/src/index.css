@@ -3,94 +3,199 @@
 @tailwind utilities;
 
 @layer base {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
   html {
     font-family: 'Inter', system-ui, sans-serif;
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   body {
     margin: 0;
-    background-color: #1a1d23;
-    color: #cdd6f4;
+    min-width: 320px;
+    background:
+      radial-gradient(circle at top, rgba(0, 212, 255, 0.08), transparent 32%),
+      radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.12), transparent 28%),
+      #0a0a1a;
+    color: #f0f4ff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  body,
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 
   #root {
     min-height: 100vh;
   }
 
+  ::selection {
+    background: rgba(0, 212, 255, 0.22);
+    color: #ffffff;
+  }
+
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #1a1d23;
+    background: rgba(10, 10, 26, 0.9);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #404968;
-    border-radius: 3px;
+    background: rgba(122, 162, 247, 0.38);
+    border-radius: 999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #7aa2f7;
-  }
-
-  /* Selection */
-  ::selection {
-    background: rgba(122, 162, 247, 0.3);
-    color: #cdd6f4;
+    background: rgba(122, 162, 247, 0.56);
   }
 }
 
 @layer components {
   .glass-panel {
-    @apply bg-bg-panel border border-border-subtle rounded-xl;
+    @apply rounded-xl border border-border-subtle bg-bg-panel;
   }
 
   .metric-value {
-    @apply font-mono text-4xl font-semibold text-text-primary tracking-tight;
+    @apply font-mono text-4xl font-semibold tracking-tight text-text-primary;
   }
 
   .metric-label {
-    @apply text-xs font-medium text-text-muted uppercase tracking-widest;
+    @apply text-xs font-medium uppercase tracking-widest text-text-muted;
   }
 
   .status-dot {
-    @apply w-2 h-2 rounded-full inline-block;
+    @apply inline-block h-2 w-2 rounded-full;
   }
 
   .btn-primary {
-    @apply px-4 py-2 bg-accent-blue text-bg-primary rounded-lg font-medium text-sm
-           hover:bg-opacity-90 transition-all duration-150 active:scale-95;
+    @apply rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-slate-950 transition-all duration-200 active:scale-[0.98];
+    background: linear-gradient(135deg, #00d4ff 0%, #7aa2f7 52%, #9d7cd8 100%);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 16px 40px rgba(0, 212, 255, 0.28);
+    transform: translateY(-1px);
   }
 
   .btn-ghost {
-    @apply px-4 py-2 text-text-secondary rounded-lg text-sm
-           hover:bg-bg-hover hover:text-text-primary transition-all duration-150;
+    @apply rounded-xl border border-white/10 px-4 py-2 text-sm text-text-secondary transition-all duration-200;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(14px);
+  }
+
+  .btn-ghost:hover {
+    @apply text-text-primary;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(122, 162, 247, 0.26);
   }
 
   .tag {
-    @apply px-2 py-0.5 rounded text-xs font-medium;
+    @apply rounded text-xs font-medium;
   }
 
-  /* ISA-101 signal colors */
-  .signal-normal { @apply text-text-muted; }
-  .signal-ok { @apply text-signal-normal; }
-  .signal-warning { @apply text-signal-warning; }
-  .signal-alert { @apply text-signal-alert; }
+  .rfv-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at center, black 48%, transparent 92%);
+  }
 
-  .bg-signal-warning { background-color: rgba(217, 119, 6, 0.15); border-color: rgba(217, 119, 6, 0.4); }
-  .bg-signal-alert { background-color: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); }
+  .rfv-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 20px 50px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(18px);
+  }
+
+  .rfv-pill {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-text-secondary;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .rfv-kicker {
+    @apply inline-flex rounded-full border border-accent-blue/25 bg-accent-blue/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.26em] text-accent-blue;
+  }
+
+  .rfv-section-title {
+    @apply text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl lg:text-5xl;
+    text-wrap: balance;
+  }
+
+  .signal-normal {
+    @apply text-text-muted;
+  }
+
+  .signal-ok {
+    @apply text-signal-normal;
+  }
+
+  .signal-warning {
+    @apply text-signal-warning;
+  }
+
+  .signal-alert {
+    @apply text-signal-alert;
+  }
+
+  .bg-signal-warning {
+    background-color: rgba(217, 119, 6, 0.15);
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+
+  .bg-signal-alert {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+  }
 }
 
 @layer utilities {
-  .text-balance { text-wrap: balance; }
-  .perspective { perspective: 1000px; }
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .perspective {
+    perspective: 1000px;
+  }
+
+  .rfv-marquee {
+    animation: rfv-marquee 38s linear infinite;
+    will-change: transform;
+  }
+
+  .rfv-marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes rfv-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
