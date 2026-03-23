@@ -491,6 +491,19 @@ export default function Landing({
                 </button>
               </div>
 
+              <div className="flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+                <span className="rfv-pill">Bot entry point</span>
+                <a
+                  href={SITE_LINKS.telegram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 font-medium text-accent-blue transition-colors hover:text-white"
+                >
+                  {SITE_LINKS.telegramHandle}
+                  <ArrowRight size={15} />
+                </a>
+              </div>
+
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {copy.metrics.map((metric) => (
                   <MetricCard key={metric.label} {...metric} />
@@ -781,7 +794,7 @@ export default function Landing({
                 </a>
                 <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
                   <MessageCircle size={16} />
-                  Telegram
+                  {SITE_LINKS.telegramHandle}
                 </a>
                 <a href={SITE_LINKS.linkedin} target="_blank" rel="noreferrer" className="rfv-pill">
                   <Linkedin size={16} />

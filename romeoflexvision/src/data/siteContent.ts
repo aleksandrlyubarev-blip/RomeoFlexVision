@@ -3,6 +3,7 @@ import type { Language } from '../context/LanguageContext';
 export const SITE_LINKS = {
   github: 'https://github.com/aleksandrlyubarev-blip',
   telegram: 'https://t.me/RomeoFlexVision_bot',
+  telegramHandle: '@RomeoFlexVision_bot',
   linkedin: 'https://www.linkedin.com/company/112507945/',
   products: {
     andrew: 'https://github.com/aleksandrlyubarev-blip/Andrew-Analitic',
@@ -250,10 +251,11 @@ const SHARED_COMMUNITY: SiteLinkCard[] = [
     action: 'View repositories',
   },
   {
-    title: 'Telegram',
-    description: 'The fastest public entry point into the RomeoFlexVision ecosystem.',
+    title: 'Telegram Bot',
+    description:
+      'Public entry point: @RomeoFlexVision_bot. Use it for product navigation, demo onboarding, and contact handoff.',
     href: SITE_LINKS.telegram,
-    action: 'Open Telegram',
+    action: 'Open bot',
   },
   {
     title: 'LinkedIn',
@@ -283,6 +285,11 @@ const SHARED_FAQ: SiteFaqItem[] = [
     question: 'Why combine data science and media production?',
     answer:
       'Because the platform goal is one orchestrated operating layer that can inspect, explain, and generate operational assets in the same workflow.',
+  },
+  {
+    question: 'How should the Telegram bot be used?',
+    answer:
+      'As the fastest public entry point: launch demos, route visitors to GitHub and product pages, collect inbound requests, and hand off qualified conversations into Telegram or email.',
   },
 ];
 
