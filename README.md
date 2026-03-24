@@ -1,6 +1,23 @@
 # RomeoFlexVision
 My web page
 
+## Telegram Bot Backend
+
+The repository now also includes an isolated Telegram backend service at:
+
+- [telegram-bot](telegram-bot)
+
+It is a small Node.js + TypeScript service built with Telegraf and Express.
+The bot is meant to work as the public entry point for RomeoFlexVision:
+
+- `/start` for navigation
+- `/demo` for the live site
+- `/products` for ecosystem repos
+- `/github` for the org and repos
+- `/contact` for public company routes
+
+The service supports both long polling for development and HTTPS webhook mode for deployment.
+
 ## SceneOps Integration
 
 The frontend now exposes a single SceneOps seam for the multi-agent video workflow:
