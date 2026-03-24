@@ -1,6 +1,7 @@
 import { Telegraf } from 'telegraf';
 import type { Context } from 'telegraf';
 import type { AppConfig } from './config.js';
+import { registerAboutCommand, registerSelfAnswerHandler } from './commands/about.js';
 import { registerContactCommand } from './commands/contact.js';
 import { registerDemoCommand } from './commands/demo.js';
 import { registerGithubCommand } from './commands/github.js';
@@ -18,11 +19,13 @@ export function createBot(config: AppConfig): RomeoBot {
   });
 
   registerStartCommand(bot, config);
+  registerAboutCommand(bot, config);
   registerHelpCommand(bot, config);
   registerDemoCommand(bot, config);
   registerProductsCommand(bot, config);
   registerGithubCommand(bot, config);
   registerContactCommand(bot, config);
+  registerSelfAnswerHandler(bot, config);
 
   return bot;
 }
@@ -30,6 +33,7 @@ export function createBot(config: AppConfig): RomeoBot {
 export async function syncBotMetadata(bot: RomeoBot, config: AppConfig): Promise<void> {
   await bot.telegram.setMyCommands([
     { command: 'start', description: 'Open the main navigation and public links' },
+    { command: 'about', description: 'Explain what this bot is and what it can do' },
     { command: 'help', description: 'Show available commands' },
     { command: 'demo', description: 'Open the live RomeoFlexVision demo' },
     { command: 'products', description: 'List ecosystem products and repos' },
@@ -50,4 +54,3 @@ export async function syncBotMetadata(bot: RomeoBot, config: AppConfig): Promise
 
   await bot.telegram.deleteWebhook().catch(() => undefined);
 }
-

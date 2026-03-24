@@ -18,6 +18,13 @@ export interface ProjectLinks {
   products: ProductLink[];
 }
 
+export interface BotProfile {
+  name: string;
+  oneLiner: string;
+  summary: string;
+  capabilities: string[];
+}
+
 export interface AppConfig {
   port: number;
   telegramBotToken: string;
@@ -26,6 +33,7 @@ export interface AppConfig {
   webhookDomain: string | null;
   telegramWebhookPath: string;
   telegramWebhookSecret: string | null;
+  botProfile: BotProfile;
   links: ProjectLinks;
 }
 
@@ -76,6 +84,18 @@ export function loadConfig(): AppConfig {
     webhookDomain: webhookDomain ? normalizeBaseUrl(webhookDomain) : null,
     telegramWebhookPath: normalizePath(process.env.TELEGRAM_WEBHOOK_PATH),
     telegramWebhookSecret: optionalEnv('TELEGRAM_WEBHOOK_SECRET'),
+    botProfile: {
+      name: 'RomeoFlexVision Bot',
+      oneLiner: 'Public entrypoint for the RomeoFlexVision ecosystem.',
+      summary:
+        'I help visitors understand what RomeoFlexVision is, open the live site, navigate products, and jump to GitHub or LinkedIn.',
+      capabilities: [
+        'Introduce the project and explain what the bot does',
+        'Open the live demo and website',
+        'List Andrew Swarm, Romeo PhD, Bassito, and PinoCut',
+        'Route users to GitHub, LinkedIn, and public contact surfaces',
+      ],
+    },
     links: {
       site: publicBaseUrl,
       telegramBot: 'https://t.me/RomeoFlexVision_bot',
@@ -111,4 +131,3 @@ export function loadConfig(): AppConfig {
     },
   };
 }
-

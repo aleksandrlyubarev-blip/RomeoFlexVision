@@ -5,11 +5,19 @@ Public Telegram entrypoint for the RomeoFlexVision ecosystem.
 The bot is intentionally lightweight:
 
 - `/start` introduces the project and presents inline navigation
+- `/about` explains what the bot is and what it can do
 - `/help` explains the available commands
 - `/demo` routes users to the live site
 - `/products` lists the four ecosystem products
 - `/github` opens the GitHub org and repos
 - `/contact` routes users to public contact surfaces
+
+It also answers simple free-form questions about itself such as:
+
+- `who are you?`
+- `what do you do?`
+- `кто ты?`
+- `что ты умеешь?`
 
 ## Modes
 
@@ -51,4 +59,3 @@ Optional production variables:
 Do not commit Telegram tokens.
 
 The token previously shared in chat should be treated as compromised and rotated in `@BotFather` before this service is deployed.
-
