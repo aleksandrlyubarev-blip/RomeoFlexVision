@@ -15,7 +15,15 @@ import {
 } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useLanguage } from '../context/LanguageContext';
-import { getSiteContent, SITE_LINKS, type SiteFaqItem, type SiteProduct } from '../data/siteContent';
+import {
+  getSiteContent,
+  SITE_LINKS,
+  type SiteFaqItem,
+  type SiteFlowStep,
+  type SiteProduct,
+  type SiteRoadmapItem,
+  type SiteTechGroup,
+} from '../data/siteContent';
 import type { View } from '../types';
 
 interface LandingProps {
@@ -190,6 +198,43 @@ function ProductCard({ product, openLabel }: { product: SiteProduct; openLabel: 
   );
 }
 
+function TechGroupCard({ group }: { group: SiteTechGroup }) {
+  return (
+    <article className="rfv-card rounded-[2rem] p-6">
+      <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{group.title}</div>
+      <p className="mt-3 text-sm leading-7 text-text-secondary">{group.description}</p>
+      <div className="mt-5 flex flex-wrap gap-2">
+        {group.items.map((item) => (
+          <span key={item} className="rfv-pill">
+            {item}
+          </span>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function FlowStepCard({ step, icon }: { step: SiteFlowStep; icon: ReactNode }) {
+  return (
+    <article className="rfv-card relative overflow-hidden rounded-[2rem] p-6">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-blue/70 to-transparent" />
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-accent-blue">{step.eyebrow}</div>
+          <h3 className="mt-3 text-xl font-semibold text-text-primary">{step.title}</h3>
+        </div>
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
+          {icon}
+        </div>
+      </div>
+      <p className="mt-4 text-sm leading-7 text-text-secondary">{step.description}</p>
+      <div className="mt-5 rounded-[1.25rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-xs leading-6 text-text-muted">
+        {step.note}
+      </div>
+    </article>
+  );
+}
+
 function comparisonToneClass(tone: 'strong' | 'mid' | 'weak') {
   if (tone === 'strong') {
     return 'border-blue-300/25 bg-blue-400/10 text-blue-50';
@@ -200,6 +245,39 @@ function comparisonToneClass(tone: 'strong' | 'mid' | 'weak') {
   }
 
   return 'border-white/10 bg-transparent text-text-muted';
+}
+
+function roadmapToneClass(tone: SiteRoadmapItem['tone']) {
+  if (tone === 'success') {
+    return 'border-blue-300/25 bg-blue-400/10 text-blue-100';
+  }
+
+  if (tone === 'warning') {
+    return 'border-slate-200/12 bg-white/[0.05] text-slate-100';
+  }
+
+  return 'border-sky-300/25 bg-sky-400/10 text-sky-100';
+}
+
+function RoadmapCard({ item, isLast }: { item: SiteRoadmapItem; isLast: boolean }) {
+  return (
+    <div className="relative pl-10">
+      {!isLast && (
+        <div className="absolute left-[11px] top-8 h-[calc(100%+1.5rem)] w-px bg-gradient-to-b from-accent-blue/50 to-white/0" />
+      )}
+      <div className="absolute left-0 top-6 h-[22px] w-[22px] rounded-full border border-accent-blue/30 bg-accent-blue/10 shadow-[0_0_20px_rgba(38,92,209,0.24)]" />
+      <article className="rfv-card rounded-[2rem] p-6">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs uppercase tracking-[0.24em] text-accent-blue">{item.phase}</span>
+          <span className={`rounded-full border px-3 py-1 text-[11px] font-medium ${roadmapToneClass(item.tone)}`}>
+            {item.status}
+          </span>
+        </div>
+        <h3 className="mt-4 text-xl font-semibold text-text-primary">{item.title}</h3>
+        <p className="mt-3 text-sm leading-7 text-text-secondary">{item.description}</p>
+      </article>
+    </div>
+  );
 }
 
 export default function Landing({ onNavigate, onRegister, isAuthenticated }: LandingProps) {
@@ -220,6 +298,8 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
     { label: copy.nav.pains, href: '#pains' },
     { label: copy.nav.comparison, href: '#comparison' },
     { label: copy.nav.products, href: '#products' },
+    { label: copy.nav.stack, href: '#stack' },
+    { label: copy.nav.roadmap, href: '#roadmap' },
     { label: copy.nav.contact, href: '#contact' },
   ];
 
@@ -239,6 +319,12 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
   const brandGuideLabel = 'Brand guide';
   const brandGuideHref = `${import.meta.env.BASE_URL}brand/`;
+  const flowIcons = [
+    <Camera key="capture" size={20} />,
+    <Radar key="score" size={20} />,
+    <ShieldCheck key="package" size={20} />,
+    <MessageCircle key="act" size={20} />,
+  ];
 
   const handlePilotLaunch = () => {
     if (isAuthenticated) {
@@ -497,19 +583,19 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                 <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
                 <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{storyQuote}</div>
                 <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
-                  <Github size={16} />
-                  GitHub
-                </a>
-                <a href={brandGuideHref} className="rfv-pill">
-                  <ShieldCheck size={16} />
-                  {brandGuideLabel}
-                </a>
-                <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
-                  <MessageCircle size={16} />
-                  {SITE_LINKS.telegramHandle}
-                </a>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
+                    <Github size={16} />
+                    GitHub
+                  </a>
+                  <a href={brandGuideHref} className="rfv-pill">
+                    <ShieldCheck size={16} />
+                    {brandGuideLabel}
+                  </a>
+                  <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
+                    <MessageCircle size={16} />
+                    {SITE_LINKS.telegramHandle}
+                  </a>
                 </div>
               </div>
             </div>
@@ -598,6 +684,89 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
               {copy.products.map((product) => (
                 <ProductCard key={product.title} product={product} openLabel={copy.labels.openRepo} />
               ))}
+            </div>
+          </div>
+        </RevealBlock>
+
+        <RevealBlock id="stack" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.nav.stack}
+              title={copy.sections.stack}
+              description={copy.sections.stackDescription}
+            />
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {copy.techGroups.map((group) => (
+                <TechGroupCard key={group.title} group={group} />
+              ))}
+            </div>
+          </div>
+        </RevealBlock>
+
+        <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.labels.poweredBy}
+              title={copy.sections.flow}
+              description={copy.sections.flowDescription}
+            />
+
+            <div className="grid gap-5 lg:grid-cols-2">
+              {copy.flowSteps.map((step, index) => (
+                <FlowStepCard
+                  key={step.title}
+                  step={step}
+                  icon={flowIcons[index] ?? <Radar size={20} />}
+                />
+              ))}
+            </div>
+          </div>
+        </RevealBlock>
+
+        <RevealBlock id="roadmap" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.nav.roadmap}
+              title={copy.sections.roadmap}
+              description={copy.sections.roadmapDescription}
+            />
+
+            <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
+              <div className="rfv-card rounded-[2rem] p-7">
+                <div className="rfv-kicker">{copy.labels.poweredBy}</div>
+                <div className="mt-5 text-3xl font-semibold leading-tight text-text-primary">
+                  {copy.labels.footerNote}
+                </div>
+                <p className="mt-4 text-base leading-7 text-text-secondary">
+                  {copy.sections.roadmapDescription}
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {copy.hero.badges.map((badge) => (
+                    <span key={badge} className="rfv-pill">
+                      <CheckCircle2 size={14} className="text-accent-blue" />
+                      {badge}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  onClick={handlePilotLaunch}
+                  className="btn-primary mt-8 inline-flex items-center gap-2 px-5 py-3 text-sm"
+                >
+                  <ArrowRight size={16} />
+                  {copy.nav.pilot}
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {copy.roadmap.map((item, index) => (
+                  <RoadmapCard
+                    key={`${item.phase}-${item.title}`}
+                    item={item}
+                    isLast={index === copy.roadmap.length - 1}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </RevealBlock>

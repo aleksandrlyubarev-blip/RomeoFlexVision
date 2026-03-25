@@ -62,6 +62,27 @@ export interface SiteFaqItem {
   answer: string;
 }
 
+export interface SiteTechGroup {
+  title: string;
+  description: string;
+  items: string[];
+}
+
+export interface SiteFlowStep {
+  eyebrow: string;
+  title: string;
+  description: string;
+  note: string;
+}
+
+export interface SiteRoadmapItem {
+  phase: string;
+  title: string;
+  description: string;
+  status: string;
+  tone: 'success' | 'warning' | 'info';
+}
+
 interface SiteMetaCopy {
   title: string;
   description: string;
@@ -74,6 +95,8 @@ interface SiteNavCopy {
   pains: string;
   comparison: string;
   products: string;
+  stack?: string;
+  roadmap?: string;
   contact: string;
   github: string;
   telegram: string;
@@ -104,6 +127,12 @@ interface SiteSectionCopy {
   comparisonDescription: string;
   products: string;
   productsDescription: string;
+  stack?: string;
+  stackDescription?: string;
+  flow?: string;
+  flowDescription?: string;
+  roadmap?: string;
+  roadmapDescription?: string;
   community: string;
   communityDescription: string;
   faq: string;
@@ -130,8 +159,32 @@ export interface SiteCopy {
   pains: SitePain[];
   comparisonRows: SiteComparisonRow[];
   products: SiteProduct[];
+  techGroups?: SiteTechGroup[];
+  flowSteps?: SiteFlowStep[];
+  roadmap?: SiteRoadmapItem[];
   communityCards: SiteLinkCard[];
   faq: SiteFaqItem[];
+}
+
+interface SiteCopyExtras {
+  nav: Required<Pick<SiteNavCopy, 'stack' | 'roadmap'>>;
+  sections: Required<
+    Pick<
+      SiteSectionCopy,
+      'stack' | 'stackDescription' | 'flow' | 'flowDescription' | 'roadmap' | 'roadmapDescription'
+    >
+  >;
+  techGroups: SiteTechGroup[];
+  flowSteps: SiteFlowStep[];
+  roadmap: SiteRoadmapItem[];
+}
+
+export interface ResolvedSiteCopy extends Omit<SiteCopy, 'nav' | 'sections' | 'techGroups' | 'flowSteps' | 'roadmap'> {
+  nav: SiteNavCopy & SiteCopyExtras['nav'];
+  sections: SiteSectionCopy & SiteCopyExtras['sections'];
+  techGroups: SiteTechGroup[];
+  flowSteps: SiteFlowStep[];
+  roadmap: SiteRoadmapItem[];
 }
 
 const EN_COPY: SiteCopy = {
@@ -147,6 +200,8 @@ const EN_COPY: SiteCopy = {
     pains: '5 Pain Points',
     comparison: 'Comparison',
     products: 'RoboQC Line',
+    stack: 'Tech Stack',
+    roadmap: 'Roadmap',
     contact: 'Contact',
     github: 'GitHub',
     telegram: 'Telegram',
@@ -179,6 +234,15 @@ const EN_COPY: SiteCopy = {
     products: 'The RoboQC line',
     productsDescription:
       'The landing keeps the broader AI toolset, but reframes it as one practical RoboQC operating layer around the inspection robot.',
+    stack: 'Built for the station, not for slides',
+    stackDescription:
+      'RoboQC combines camera capture, Romeo FlexVision scoring, operator alerts, and reporting into one production-facing loop.',
+    flow: 'How the evidence loop works',
+    flowDescription:
+      'From first frame to operator action, RoboQC keeps the defect context intact so the line can react immediately.',
+    roadmap: 'Rollout roadmap',
+    roadmapDescription:
+      'A practical path from one-station pilot to multi-station inline quality coverage without redesigning the whole plant.',
     community: 'Pilot launch, repositories, and public touchpoints',
     communityDescription:
       'Use Telegram for a fast pilot intro, GitHub for the build surface, and LinkedIn for positioning updates.',
@@ -341,6 +405,92 @@ const EN_COPY: SiteCopy = {
       statusTone: 'info',
       tags: ['Training', 'Media', 'Onboarding'],
       repoUrl: SITE_LINKS.products.bassito,
+    },
+  ],
+  techGroups: [
+    {
+      title: 'Vision layer',
+      description: 'Everything needed to detect defects where they are born on the line.',
+      items: ['Industrial cameras', 'Romeo FlexVision', 'Confidence scoring', 'Station thresholds'],
+    },
+    {
+      title: 'Operator control loop',
+      description: 'The operator sees the same evidence package the model used to escalate.',
+      items: ['Inline alerts', 'QC review', 'Human approval', 'Escalation rules'],
+    },
+    {
+      title: 'Evidence and reporting',
+      description: 'Each event stays traceable from the frame to the shift-level report.',
+      items: ['Trace IDs', 'Evidence packs', 'Shift reports', 'Root-cause review'],
+    },
+    {
+      title: 'Deployment surface',
+      description: 'A compact stack that is realistic to pilot and easy to maintain.',
+      items: ['FastAPI', 'LangGraph', 'Telegram bot', 'GitHub Actions'],
+    },
+  ],
+  flowSteps: [
+    {
+      eyebrow: '01 Capture',
+      title: 'The station camera flags the anomaly',
+      description:
+        'RoboQC watches the station continuously and isolates the frame where the process starts drifting.',
+      note: 'Station #2 trigger in the live demo loop',
+    },
+    {
+      eyebrow: '02 Score',
+      title: 'Romeo FlexVision scores the defect',
+      description:
+        'The vision stack classifies the issue, attaches confidence, and checks whether the alert passes the station threshold.',
+      note: 'Scoring and confidence stay tied to the same evidence package',
+    },
+    {
+      eyebrow: '03 Package',
+      title: 'Evidence, trace, and report are bundled together',
+      description:
+        'Instead of a naked alarm, the line receives a frame, a trace, and a human-readable explanation for fast review.',
+      note: 'Frame + confidence + traceability in one operator packet',
+    },
+    {
+      eyebrow: '04 Act',
+      title: 'The operator decides while the part is still on the line',
+      description:
+        'RoboQC turns the model output into an actionable moment, not a delayed QA meeting after the shift has ended.',
+      note: 'Designed to stop late discovery at test #5',
+    },
+  ],
+  roadmap: [
+    {
+      phase: 'Now',
+      title: 'Single-station pilot',
+      description:
+        'Connect one camera, one defect family, and one operator lane so the team can prove real-time catch rate fast.',
+      status: 'Pilot ready',
+      tone: 'success',
+    },
+    {
+      phase: 'Next',
+      title: 'Evidence pack and report loop',
+      description:
+        'Ship frame capture, confidence, trace, and escalation notes as one operator-facing report for every critical alert.',
+      status: 'In rollout',
+      tone: 'info',
+    },
+    {
+      phase: 'Next',
+      title: 'Root-cause feedback by station',
+      description:
+        'Trend repeated defects by station, shift, and part family so engineering can see where the process actually slips.',
+      status: 'Analytics active',
+      tone: 'info',
+    },
+    {
+      phase: 'Later',
+      title: 'Multi-station orchestration',
+      description:
+        'Coordinate alerts, approvals, and evidence flow across several stations without expanding manual inspection headcount.',
+      status: 'Expansion path',
+      tone: 'warning',
     },
   ],
   communityCards: [
@@ -649,14 +799,152 @@ const HE_COPY: SiteCopy = {
   },
 };
 
-export function getSiteContent(language: Language): SiteCopy {
-  if (language === 'ru') {
-    return RU_COPY;
-  }
+const EN_EXTRAS: SiteCopyExtras = {
+  nav: {
+    stack: EN_COPY.nav.stack ?? 'Tech Stack',
+    roadmap: EN_COPY.nav.roadmap ?? 'Roadmap',
+  },
+  sections: {
+    stack: EN_COPY.sections.stack ?? 'Built for the station, not for slides',
+    stackDescription:
+      EN_COPY.sections.stackDescription ??
+      'RoboQC combines camera capture, Romeo FlexVision scoring, operator alerts, and reporting into one production-facing loop.',
+    flow: EN_COPY.sections.flow ?? 'How the evidence loop works',
+    flowDescription:
+      EN_COPY.sections.flowDescription ??
+      'From first frame to operator action, RoboQC keeps the defect context intact so the line can react immediately.',
+    roadmap: EN_COPY.sections.roadmap ?? 'Rollout roadmap',
+    roadmapDescription:
+      EN_COPY.sections.roadmapDescription ??
+      'A practical path from one-station pilot to multi-station inline quality coverage without redesigning the whole plant.',
+  },
+  techGroups: EN_COPY.techGroups ?? [],
+  flowSteps: EN_COPY.flowSteps ?? [],
+  roadmap: EN_COPY.roadmap ?? [],
+};
 
-  if (language === 'he') {
-    return HE_COPY;
-  }
+const RU_EXTRAS: SiteCopyExtras = {
+  nav: {
+    stack: 'Техстек',
+    roadmap: 'Роадмап',
+  },
+  sections: {
+    stack: 'Техстек для реального цеха, а не для красивого слайда',
+    stackDescription:
+      'RoboQC соединяет камеру, scoring Romeo FlexVision, операторские алерты и отчётный контур в один production-ready цикл.',
+    flow: 'Как работает контур доказательств',
+    flowDescription:
+      'От первого кадра до решения оператора RoboQC не теряет контекст дефекта, поэтому линия может реагировать сразу.',
+    roadmap: 'Роадмап запуска',
+    roadmapDescription:
+      'Практический путь от пилота на одной станции к покрытию нескольких станций без перестройки всего производства.',
+  },
+  techGroups: [
+    {
+      title: 'Vision layer',
+      description: 'Слой, который позволяет ловить дефект там, где он рождается на станции.',
+      items: ['Промышленные камеры', 'Romeo FlexVision', 'Confidence scoring', 'Пороги станции'],
+    },
+    {
+      title: 'Операторский контур',
+      description: 'Оператор видит тот же пакет доказательств, по которому модель подняла алерт.',
+      items: ['Inline alerts', 'QC review', 'Подтверждение человека', 'Правила эскалации'],
+    },
+    {
+      title: 'Доказательства и отчёты',
+      description: 'Каждое событие остаётся прослеживаемым от кадра до сменного отчёта.',
+      items: ['Trace ID', 'Evidence packs', 'Сменные отчёты', 'Root-cause review'],
+    },
+    {
+      title: 'Поверхность деплоя',
+      description: 'Компактный стек, который реально поднять в пилоте и удерживать в эксплуатации.',
+      items: ['FastAPI', 'LangGraph', 'Telegram bot', 'GitHub Actions'],
+    },
+  ],
+  flowSteps: [
+    {
+      eyebrow: '01 Capture',
+      title: 'Камера станции замечает аномалию',
+      description:
+        'RoboQC постоянно смотрит на процесс и выделяет тот кадр, в котором линия начинает уходить от нормы.',
+      note: 'Триггер со станции №2 в живом контуре',
+    },
+    {
+      eyebrow: '02 Score',
+      title: 'Romeo FlexVision классифицирует дефект',
+      description:
+        'Vision-стек присваивает тип дефекта, confidence и проверяет, пересёк ли алерт рабочий порог станции.',
+      note: 'Скоринг и confidence остаются привязанными к тому же evidence pack',
+    },
+    {
+      eyebrow: '03 Package',
+      title: 'Кадр, trace и отчёт собираются в один пакет',
+      description:
+        'Линия получает не голый alarm, а frame, trace и понятное объяснение, почему алерт нужно проверить сейчас.',
+      note: 'Кадр + confidence + traceability в одном пакете для оператора',
+    },
+    {
+      eyebrow: '04 Act',
+      title: 'Оператор принимает решение, пока деталь ещё на линии',
+      description:
+        'RoboQC превращает вывод модели в действие здесь и сейчас, а не в позднее обсуждение качества после смены.',
+      note: 'Именно так мы уводим поиск дефекта с теста №5 на станцию №2',
+    },
+  ],
+  roadmap: [
+    {
+      phase: 'Сейчас',
+      title: 'Пилот на одной станции',
+      description:
+        'Подключаем одну камеру, один класс дефекта и один операторский контур, чтобы быстро доказать real-time catch rate.',
+      status: 'Готово к пилоту',
+      tone: 'success',
+    },
+    {
+      phase: 'Следом',
+      title: 'Evidence pack и отчётный цикл',
+      description:
+        'Закрываем frame capture, confidence, trace и escalation notes в единый отчётный пакет для каждого критичного алерта.',
+      status: 'Идёт развёртывание',
+      tone: 'info',
+    },
+    {
+      phase: 'Следом',
+      title: 'Root-cause аналитика по станциям',
+      description:
+        'Собираем повторяемые дефекты по станциям, сменам и семействам деталей, чтобы инженерия видела реальную точку срыва.',
+      status: 'Активная аналитика',
+      tone: 'info',
+    },
+    {
+      phase: 'Дальше',
+      title: 'Оркестрация нескольких станций',
+      description:
+        'Сводим алерты, подтверждения и evidence flow по нескольким станциям без наращивания ручного инспекционного контура.',
+      status: 'Следующий этап',
+      tone: 'warning',
+    },
+  ],
+};
 
-  return EN_COPY;
+const HE_EXTRAS: SiteCopyExtras = EN_EXTRAS;
+
+export function getSiteContent(language: Language): ResolvedSiteCopy {
+  const baseCopy = language === 'ru' ? RU_COPY : language === 'he' ? HE_COPY : EN_COPY;
+  const extras = language === 'ru' ? RU_EXTRAS : language === 'he' ? HE_EXTRAS : EN_EXTRAS;
+
+  return {
+    ...baseCopy,
+    nav: {
+      ...baseCopy.nav,
+      ...extras.nav,
+    },
+    sections: {
+      ...baseCopy.sections,
+      ...extras.sections,
+    },
+    techGroups: extras.techGroups,
+    flowSteps: extras.flowSteps,
+    roadmap: extras.roadmap,
+  };
 }
