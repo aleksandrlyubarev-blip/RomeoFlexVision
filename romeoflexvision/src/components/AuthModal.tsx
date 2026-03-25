@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { type Language, useLanguage } from '../context/LanguageContext';
 
@@ -138,13 +138,13 @@ function formatTemplate(template: string, values: Record<string, string>) {
   return template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? '');
 }
 
-export default function AuthModal({
+function AuthModalContent({
   initialTab = 'login',
   onClose,
   onSuccess,
-}: AuthModalProps) {
+  language,
+}: AuthModalProps & { language: Language }) {
   const { signIn, signUp, signInWithGoogle, isConfigured } = useAuth();
-  const { language } = useLanguage();
   const copy = COPY[language];
   const [tab, setTab] = useState<'login' | 'register'>(initialTab);
   const [email, setEmail] = useState('');
@@ -154,12 +154,17 @@ export default function AuthModal({
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const resetMessages = () => {
     setError(null);
     setInfo(null);
     setPassword('');
     setConfirmPassword('');
-  }, [tab, language]);
+  };
+
+  const handleTabChange = (nextTab: 'login' | 'register') => {
+    setTab(nextTab);
+    resetMessages();
+  };
 
   const resolveError = (code: string | null) => {
     if (!code) return null;
@@ -245,7 +250,7 @@ export default function AuthModal({
           {(['login', 'register'] as const).map((currentTab) => (
             <button
               key={currentTab}
-              onClick={() => setTab(currentTab)}
+              onClick={() => handleTabChange(currentTab)}
               className={`flex-1 py-2 text-sm transition-colors border-b-2 -mb-px ${
                 tab === currentTab
                   ? 'border-accent-blue text-accent-blue'
@@ -353,7 +358,7 @@ export default function AuthModal({
             <>
               {copy.noAccount}{' '}
               <button
-                onClick={() => setTab('register')}
+                onClick={() => handleTabChange('register')}
                 className="text-accent-blue hover:underline"
               >
                 {copy.registerLink}
@@ -363,7 +368,7 @@ export default function AuthModal({
             <>
               {copy.haveAccount}{' '}
               <button
-                onClick={() => setTab('login')}
+                onClick={() => handleTabChange('login')}
                 className="text-accent-blue hover:underline"
               >
                 {copy.loginLink}
@@ -374,4 +379,10 @@ export default function AuthModal({
       </div>
     </div>
   );
+}
+
+export default function AuthModal(props: AuthModalProps) {
+  const { language } = useLanguage();
+
+  return <AuthModalContent key={language} {...props} language={language} />;
 }

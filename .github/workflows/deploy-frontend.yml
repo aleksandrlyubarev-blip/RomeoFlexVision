@@ -1,4 +1,4 @@
-name: Deploy frontend
+name: Deploy RoboQC Landing
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build frontend
+      - name: Build RoboQC landing
         run: npm run build
 
       - name: Upload Pages artifact

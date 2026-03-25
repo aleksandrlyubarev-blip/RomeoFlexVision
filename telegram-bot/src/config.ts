@@ -72,6 +72,7 @@ export function loadConfig(): AppConfig {
     process.env.PUBLIC_BASE_URL?.trim() || 'https://romeoflexvision.com',
   );
   const webhookDomain = optionalEnv('WEBHOOK_DOMAIN');
+
   if (webhookDomain && !/^https:\/\//.test(webhookDomain)) {
     throw new Error('WEBHOOK_DOMAIN must start with https://');
   }
@@ -85,15 +86,15 @@ export function loadConfig(): AppConfig {
     telegramWebhookPath: normalizePath(process.env.TELEGRAM_WEBHOOK_PATH),
     telegramWebhookSecret: optionalEnv('TELEGRAM_WEBHOOK_SECRET'),
     botProfile: {
-      name: 'RomeoFlexVision Bot',
-      oneLiner: 'Public entrypoint for the RomeoFlexVision ecosystem.',
+      name: 'RoboQC Bot',
+      oneLiner: 'Public Telegram entrypoint for the RoboQC landing.',
       summary:
-        'I help visitors understand what RomeoFlexVision is, open the live site, navigate products, and jump to GitHub or LinkedIn.',
+        'I help visitors understand what RoboQC is, open the live landing, review the product line, and jump to GitHub or LinkedIn.',
       capabilities: [
-        'Introduce the project and explain what the bot does',
-        'Open the live demo and website',
-        'List Andrew Swarm, Romeo PhD, Bassito, and PinoCut',
-        'Route users to GitHub, LinkedIn, and public contact surfaces',
+        'Explain the RoboQC positioning and pilot story',
+        'Open the live landing and demo surface',
+        'List RoboQC Inspector, Andrew Analytic, Romeo PhD, and Bassito',
+        'Route visitors to GitHub, LinkedIn, and public contact surfaces',
       ],
     },
     links: {
@@ -104,28 +105,28 @@ export function loadConfig(): AppConfig {
       linkedin: 'https://www.linkedin.com/company/romeoflexvision',
       products: [
         {
+          slug: 'roboqc',
+          title: 'RoboQC Inspector',
+          description: 'The camera-robot for inline quality control and station-level defect capture.',
+          url: 'https://github.com/aleksandrlyubarev-blip/RomeoFlexVision',
+        },
+        {
           slug: 'andrew',
-          title: 'Andrew Swarm',
-          description: 'Data science orchestration, routing, validation, and agent workflows.',
+          title: 'Andrew Analytic',
+          description: 'Station analytics, routing, validation, and root-cause review.',
           url: 'https://github.com/aleksandrlyubarev-blip/Andrew-Analitic',
         },
         {
           slug: 'romeo',
           title: 'Romeo PhD',
-          description: 'Educational AI companion for explanation, tutoring, and technical reasoning.',
+          description: 'Readable reports, operator handoff, and technical explanation.',
           url: 'https://github.com/aleksandrlyubarev-blip/Romeo_PHD',
         },
         {
           slug: 'bassito',
           title: 'Bassito',
-          description: 'Automated video production pipeline with Telegram-first control.',
+          description: 'Training media and pilot enablement for repeated defect scenarios.',
           url: 'https://github.com/aleksandrlyubarev-blip/Bassito',
-        },
-        {
-          slug: 'pinocut',
-          title: 'PinoCut',
-          description: 'Scene assembly and rough-cut tooling for the wider ecosystem.',
-          url: 'https://github.com/aleksandrlyubarev-blip/Pino_cut',
         },
       ],
     },

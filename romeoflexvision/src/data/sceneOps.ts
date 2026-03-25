@@ -4,17 +4,17 @@ export const MOCK_SCENE_OPS: SceneOpsSnapshot = {
   source: 'mock',
   updatedAt: '2026-03-22T09:40:00+02:00',
   scene: {
-    sceneId: 'scene_03',
-    sceneGoal: 'arrival at abandoned spaceport',
-    editingTemplate: 'cinematic_montage',
+    sceneId: 'station02_case_03',
+    sceneGoal: 'surface-scratch escalation pack for station #2',
+    editingTemplate: 'qc_evidence_pack',
     targetDurationSec: 35,
     actualDurationSec: 32.8,
-    usedClips: ['c04', 'c02', 'c07', 'c01', 'c05'],
-    rejectedClips: ['c03', 'c06', 'c08'],
+    usedClips: ['f04', 'f02', 'f07', 'f01', 'f05'],
+    rejectedClips: ['f03', 'f06', 'f08'],
     queueState: 'waiting_bassito',
   },
   clipScores: {
-    c04: {
+    f04: {
       visualQuality: 4,
       continuityFit: 5,
       promptMatch: 4,
@@ -22,7 +22,7 @@ export const MOCK_SCENE_OPS: SceneOpsSnapshot = {
       timelineUsefulness: 5,
       recommendedAction: 'keep',
     },
-    c02: {
+    f02: {
       visualQuality: 4,
       continuityFit: 4,
       promptMatch: 4,
@@ -30,29 +30,29 @@ export const MOCK_SCENE_OPS: SceneOpsSnapshot = {
       timelineUsefulness: 4,
       recommendedAction: 'request_restyle',
     },
-    c07: {
+    f07: {
       visualQuality: 5,
       continuityFit: 4,
       promptMatch: 5,
       motionStability: 4,
       timelineUsefulness: 4,
-      recommendedAction: 'trim_for_pacing',
+      recommendedAction: 'request_annotation',
     },
   },
   andrew: {
     confidence: 0.74,
     summary:
-      'Scene scene_03 uses 5 approved clips across 5 timeline segments, lands slightly under target duration, and remains usable for rough-cut review.',
+      'Evidence pack station02_case_03 uses 5 approved frames, lands slightly under target duration, and is ready for operator review.',
     warnings: [
-      'Average motion stability is below the preferred rough-cut threshold.',
-      '1 bridge shot request is still queued.',
-      '2 regeneration jobs are queued.',
+      'Average frame stability is below the preferred escalation threshold.',
+      '1 macro-capture request is still queued.',
+      '2 evidence enhancement jobs are queued.',
     ],
     recommendedActions: [
-      'c02: request_restyle',
-      'c07: trim_for_pacing',
-      'Review bridge-shot output before final export.',
-      'Run queued Bassito regeneration jobs and rebuild the rough cut.',
+      'f02: request_restyle',
+      'f07: request_annotation',
+      'Review macro-capture output before final escalation.',
+      'Run queued RoboQC Academy enhancement jobs and rebuild the evidence pack.',
     ],
     qualityBreakdown: {
       visual_quality: 4.33,
@@ -65,24 +65,24 @@ export const MOCK_SCENE_OPS: SceneOpsSnapshot = {
   },
   bassitoJobs: [
     {
-      jobId: 'pinocut_98d2af04c1',
+      jobId: 'roboqc_98d2af04c1',
       jobType: 'bridge_shot',
       status: 'queued',
-      artifactPath: 'output/pinocut_jobs/queued/pinocut_98d2af04c1.request.json',
+      artifactPath: 'output/roboqc_jobs/queued/roboqc_98d2af04c1.request.json',
     },
     {
-      jobId: 'pinocut_b7a4e2f019',
+      jobId: 'roboqc_b7a4e2f019',
       jobType: 'restyle',
       status: 'completed_stub',
-      sourceClipId: 'c02',
-      artifactPath: 'output/pinocut_jobs/pinocut_b7a4e2f019/restyle.artifact.json',
+      sourceClipId: 'f02',
+      artifactPath: 'output/roboqc_jobs/roboqc_b7a4e2f019/restyle.artifact.json',
     },
     {
-      jobId: 'pinocut_c31fb66780',
+      jobId: 'roboqc_c31fb66780',
       jobType: 'extend',
       status: 'queued',
-      sourceClipId: 'c05',
-      artifactPath: 'output/pinocut_jobs/queued/pinocut_c31fb66780.request.json',
+      sourceClipId: 'f05',
+      artifactPath: 'output/roboqc_jobs/queued/roboqc_c31fb66780.request.json',
     },
   ],
 };

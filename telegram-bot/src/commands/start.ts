@@ -5,11 +5,11 @@ import type { RomeoBot } from '../bot.js';
 export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
   bot.start(async (ctx) => {
     const message = [
-      'RomeoFlexVision is the public entry point into the agentic AI ecosystem.',
+      'RoboQC is the public entry point into the new inline quality-control product surface.',
       '',
       'Use this bot to:',
-      '- open the live site and demo',
-      '- navigate products and repositories',
+      '- open the live landing and pilot page',
+      '- review the RoboQC product line and repositories',
       '- jump to GitHub, LinkedIn, and public contact routes',
       '',
       'Available commands: /help /demo /products /github /contact',
@@ -19,7 +19,7 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
       message,
       Markup.inlineKeyboard([
         [
-          Markup.button.url('Open site', config.links.site),
+          Markup.button.url('Open landing', config.links.site),
           Markup.button.url('GitHub', config.links.githubOrg),
         ],
         [
@@ -38,15 +38,15 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
       .join('\n');
 
     await ctx.reply(
-      `RomeoFlexVision products:\n${summary}`,
+      `RoboQC product line:\n${summary}`,
       Markup.inlineKeyboard([
         [
-          Markup.button.url('Andrew', config.links.products[0].url),
-          Markup.button.url('Romeo PhD', config.links.products[1].url),
+          Markup.button.url('RoboQC', config.links.products[0].url),
+          Markup.button.url('Andrew', config.links.products[1].url),
         ],
         [
-          Markup.button.url('Bassito', config.links.products[2].url),
-          Markup.button.url('PinoCut', config.links.products[3].url),
+          Markup.button.url('Romeo PhD', config.links.products[2].url),
+          Markup.button.url('Bassito', config.links.products[3].url),
         ],
       ]),
     );
@@ -54,9 +54,6 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
 
   bot.action('help_menu', async (ctx) => {
     await ctx.answerCbQuery();
-    await ctx.reply(
-      'Quick commands:\n/start\n/help\n/demo\n/products\n/github\n/contact',
-    );
+    await ctx.reply('Quick commands:\n/start\n/help\n/demo\n/products\n/github\n/contact');
   });
 }
-

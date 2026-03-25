@@ -39,16 +39,16 @@ if (-not $Token) {
   throw "TELEGRAM_BOT_TOKEN is required"
 }
 
-$BotName = "RomeoFlexVision Bot"
+$BotName = "RoboQC Bot"
 $SiteUrl = "https://romeoflexvision.com"
 $GithubUrl = "https://github.com/aleksandrlyubarev-blip"
 $LinkedInUrl = "https://www.linkedin.com/company/romeoflexvision"
 $TelegramUrl = "https://t.me/RomeoFlexVision_bot"
 $Products = @(
-  @{ name = "Andrew Swarm"; url = "https://github.com/aleksandrlyubarev-blip/Andrew-Analitic"; description = "Data science orchestration and routing." },
-  @{ name = "Romeo PhD"; url = "https://github.com/aleksandrlyubarev-blip/Romeo_PHD"; description = "Educational AI companion." },
-  @{ name = "Bassito"; url = "https://github.com/aleksandrlyubarev-blip/Bassito"; description = "Automated video production pipeline." },
-  @{ name = "PinoCut"; url = "https://github.com/aleksandrlyubarev-blip/Pino_cut"; description = "Scene assembly and rough-cut tooling." }
+  @{ name = "RoboQC Inspector"; url = "https://github.com/aleksandrlyubarev-blip/RomeoFlexVision"; description = "Inline quality-control robot and station-level defect capture." },
+  @{ name = "Andrew Analytic"; url = "https://github.com/aleksandrlyubarev-blip/Andrew-Analitic"; description = "Station analytics, routing, and root-cause review." },
+  @{ name = "Romeo PhD"; url = "https://github.com/aleksandrlyubarev-blip/Romeo_PHD"; description = "Readable reports and technical explanation." },
+  @{ name = "Bassito"; url = "https://github.com/aleksandrlyubarev-blip/Bassito"; description = "Training media and pilot enablement." }
 )
 
 $StatePath = Join-Path $PSScriptRoot $StateDir
@@ -138,18 +138,18 @@ function Build-MainKeyboard {
 
 function Get-AboutText {
   return @"
-$BotName is the public entrypoint for the RomeoFlexVision ecosystem.
+$BotName is the public entrypoint for the RoboQC landing.
 
 I can:
-- explain what RomeoFlexVision is
-- show the live site and demo
-- list the ecosystem products
+- explain what RoboQC is
+- show the live landing and pilot surface
+- list the RoboQC product line
 - route you to GitHub, LinkedIn, and public contact surfaces
 "@
 }
 
 function Get-ProductsText {
-  $lines = @("RomeoFlexVision products:")
+  $lines = @("RoboQC product line:")
   foreach ($product in $Products) {
     $lines += "- $($product.name): $($product.description)"
     $lines += "  $($product.url)"
@@ -202,7 +202,7 @@ function Handle-TextMessage {
 
   switch -Regex ($trimmed) {
     '^/start(@\w+)?$' {
-      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the site, inspect products, and ask what I do." -ReplyMarkup (Build-MainKeyboard)
+      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the RoboQC landing, inspect products, and ask what I do." -ReplyMarkup (Build-MainKeyboard)
       return
     }
     '^/help(@\w+)?$' {
@@ -214,7 +214,7 @@ function Handle-TextMessage {
       return
     }
     '^/demo(@\w+)?$' {
-      Send-Message -ChatId $ChatId -Text "Live site: $SiteUrl" -ReplyMarkup (Build-MainKeyboard)
+      Send-Message -ChatId $ChatId -Text "Live landing: $SiteUrl" -ReplyMarkup (Build-MainKeyboard)
       return
     }
     '^/products(@\w+)?$' {
@@ -248,10 +248,10 @@ Invoke-TelegramMethod -Method "deleteWebhook" -Body @{} | Out-Null
 Invoke-TelegramMethod -Method "setMyCommands" -Body @{
   commands = @(
     @{ command = "start"; description = "Open the main navigation" },
-    @{ command = "about"; description = "Explain what this bot does" },
+    @{ command = "about"; description = "Explain what RoboQC is" },
     @{ command = "help"; description = "Show available commands" },
-    @{ command = "demo"; description = "Open the live demo" },
-    @{ command = "products"; description = "List ecosystem products" },
+    @{ command = "demo"; description = "Open the live landing" },
+    @{ command = "products"; description = "List RoboQC products" },
     @{ command = "github"; description = "Open GitHub surfaces" },
     @{ command = "contact"; description = "Show public contact routes" }
   )

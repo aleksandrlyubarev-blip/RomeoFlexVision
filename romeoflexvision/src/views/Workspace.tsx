@@ -59,8 +59,8 @@ const COPY: Record<
     },
     tasks: [
       { title: 'Analyze defect on line A3', assignedTo: 'robo-qc', status: 'completed', progress: 100, createdAt: '14:32:01' },
-      { title: 'Generate technical report draft', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
-      { title: 'Create training animation', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
+      { title: 'Generate operator report pack', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
+      { title: 'Create operator training clips', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
       { title: 'Translate report (EN/DE)', assignedTo: 'perevodchik', status: 'queued', progress: 0, createdAt: '14:32:08' },
       { title: 'Operator confirmation', assignedTo: 'orchestrator', status: 'waiting_human', progress: 0, createdAt: '14:32:07' },
     ],
@@ -96,7 +96,7 @@ const COPY: Record<
       },
       {
         type: 'tool_call',
-        label: 'Orchestrator -> Romeo PhD',
+        label: 'Orchestrator -> RoboQC Reports',
         content:
           'route_task({ agent: "romeo-phd", task: "generate_report", context: prev_results })',
         latencyMs: 11,
@@ -105,7 +105,7 @@ const COPY: Record<
       },
       {
         type: 'llm_response',
-        label: 'Romeo PhD -> Report draft',
+        label: 'RoboQC Reports -> Report draft',
         content:
           '## Defect report\n\nSurface scratches were detected and classified as class B according to ISO 1302...',
         latencyMs: 4120,
@@ -158,8 +158,8 @@ const COPY: Record<
     },
     tasks: [
       { title: 'Анализ дефекта на линии A3', assignedTo: 'robo-qc', status: 'completed', progress: 100, createdAt: '14:32:01' },
-      { title: 'Генерация черновика технического отчёта', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
-      { title: 'Создание обучающей анимации', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
+      { title: 'Сборка операторского отчётного пакета', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
+      { title: 'Сборка обучающих клипов для оператора', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
       { title: 'Перевод отчёта (EN/DE)', assignedTo: 'perevodchik', status: 'queued', progress: 0, createdAt: '14:32:08' },
       { title: 'Подтверждение оператора', assignedTo: 'orchestrator', status: 'waiting_human', progress: 0, createdAt: '14:32:07' },
     ],
@@ -195,7 +195,7 @@ const COPY: Record<
       },
       {
         type: 'tool_call',
-        label: 'Orchestrator -> Romeo PhD',
+        label: 'Orchestrator -> RoboQC Reports',
         content:
           'route_task({ agent: "romeo-phd", task: "generate_report", context: prev_results })',
         latencyMs: 11,
@@ -204,7 +204,7 @@ const COPY: Record<
       },
       {
         type: 'llm_response',
-        label: 'Romeo PhD -> Черновик отчёта',
+        label: 'RoboQC Reports -> Черновик отчёта',
         content:
           '## Отчёт о дефекте\n\nОбнаружены поверхностные царапины, классифицированные как класс B согласно ISO 1302...',
         latencyMs: 4120,
@@ -257,8 +257,8 @@ const COPY: Record<
     },
     tasks: [
       { title: 'ניתוח פגם בקו A3', assignedTo: 'robo-qc', status: 'completed', progress: 100, createdAt: '14:32:01' },
-      { title: 'יצירת טיוטת דו"ח טכני', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
-      { title: 'יצירת אנימציית הדרכה', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
+      { title: 'יצירת חבילת דו"ח למפעיל', assignedTo: 'romeo-phd', status: 'completed', progress: 100, createdAt: '14:32:03' },
+      { title: 'יצירת קליפי הדרכה למפעיל', assignedTo: 'bassito-animator', status: 'running', progress: 62, createdAt: '14:32:08' },
       { title: 'תרגום דו"ח (EN/DE)', assignedTo: 'perevodchik', status: 'queued', progress: 0, createdAt: '14:32:08' },
       { title: 'אישור מפעיל', assignedTo: 'orchestrator', status: 'waiting_human', progress: 0, createdAt: '14:32:07' },
     ],
@@ -294,7 +294,7 @@ const COPY: Record<
       },
       {
         type: 'tool_call',
-        label: 'Orchestrator -> Romeo PhD',
+        label: 'Orchestrator -> RoboQC Reports',
         content:
           'route_task({ agent: "romeo-phd", task: "generate_report", context: prev_results })',
         latencyMs: 11,
@@ -303,7 +303,7 @@ const COPY: Record<
       },
       {
         type: 'llm_response',
-        label: 'Romeo PhD -> טיוטת דו"ח',
+        label: 'RoboQC Reports -> טיוטת דו"ח',
         content:
           '## דו"ח פגם\n\nזוהו שריטות שטח שסווגו כדרגה B לפי ISO 1302...',
         latencyMs: 4120,
@@ -346,8 +346,7 @@ function buildTrace(language: Language): TraceStep[] {
   }));
 }
 
-export default function Workspace() {
-  const { language, locale } = useLanguage();
+function WorkspaceContent({ language, locale }: { language: Language; locale: string }) {
   const copy = COPY[language];
   const agents = useMemo(() => getAgents(language), [language]);
   const orchestrator = agents.find((agent) => agent.id === 'orchestrator');
@@ -359,14 +358,6 @@ export default function Workspace() {
   const [humanApproved, setHumanApproved] = useState(false);
   const [sceneOps, setSceneOps] = useState<SceneOpsSnapshot | null>(null);
   const [sceneOpsError, setSceneOpsError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setTasks(buildTasks(language));
-    setPrompt('');
-    setShowTrace(false);
-    setTraceStep(0);
-    setHumanApproved(false);
-  }, [language]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -677,4 +668,10 @@ export default function Workspace() {
       </div>
     </div>
   );
+}
+
+export default function Workspace() {
+  const { language, locale } = useLanguage();
+
+  return <WorkspaceContent key={language} language={language} locale={locale} />;
 }

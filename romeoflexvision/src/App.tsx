@@ -23,7 +23,7 @@ const APP_COPY: Record<
   }
 > = {
   en: {
-    loading: 'Initializing platform...',
+    loading: 'Initializing RoboQC...',
     healthy: 'System healthy',
     signOut: 'Sign out',
     signIn: 'Sign in',
@@ -31,7 +31,7 @@ const APP_COPY: Record<
     anonymousAvatar: '?',
   },
   ru: {
-    loading: 'Инициализация платформы...',
+    loading: 'Инициализация RoboQC...',
     healthy: 'Система в норме',
     signOut: 'Выйти',
     signIn: 'Войти',
@@ -39,7 +39,7 @@ const APP_COPY: Record<
     anonymousAvatar: '?',
   },
   he: {
-    loading: 'מאתחל את הפלטפורמה...',
+    loading: 'Initializing RoboQC...',
     healthy: 'המערכת תקינה',
     signOut: 'התנתק',
     signIn: 'התחבר',
@@ -99,7 +99,7 @@ function useSiteMeta(language: Language) {
       'https://romeoflexvision.com/og-preview.svg'
     );
     upsertMetaTag('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
-    upsertMetaTag('meta[name="theme-color"]', 'name', 'theme-color', '#0a0a1a');
+    upsertMetaTag('meta[name="theme-color"]', 'name', 'theme-color', '#0b1220');
     upsertCanonical(canonicalUrl);
   }, [language, site.meta.description, site.meta.ogDescription, site.meta.ogTitle, site.meta.title]);
 }
@@ -161,7 +161,7 @@ function ProductShell({
                 <button onClick={openLogin} className="btn-ghost text-xs">
                   {copy.signIn}
                 </button>
-                <button onClick={openRegister} className="btn-primary text-xs py-1.5">
+                <button onClick={openRegister} className="btn-primary py-1.5 text-xs">
                   {copy.createAccount}
                 </button>
               </>
@@ -211,11 +211,11 @@ function Shell() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0a0a1a]">
+      <div className="flex min-h-screen items-center justify-center bg-bg-primary">
         <div className="flex flex-col items-center gap-4">
           <img
-            src={`${import.meta.env.BASE_URL}favicon.svg`}
-            alt="RomeoFlexVision"
+            src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
+            alt="RoboQC"
             className="h-12 w-12 animate-pulse"
           />
           <span className="text-sm text-text-muted">{copy.loading}</span>

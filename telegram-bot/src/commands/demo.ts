@@ -5,11 +5,8 @@ import type { RomeoBot } from '../bot.js';
 export function registerDemoCommand(bot: RomeoBot, config: AppConfig): void {
   bot.command('demo', async (ctx) => {
     await ctx.reply(
-      'Live demo and product surface:',
-      Markup.inlineKeyboard([
-        [Markup.button.url('Open romeoflexvision.com', config.links.site)],
-      ]),
+      'Live landing and pilot surface:',
+      Markup.inlineKeyboard([[Markup.button.url('Open RoboQC landing', config.links.site)]]),
     );
   });
 }
-

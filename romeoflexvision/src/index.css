@@ -10,7 +10,7 @@
   }
 
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     color-scheme: dark;
     scroll-behavior: smooth;
   }
@@ -19,10 +19,10 @@
     margin: 0;
     min-width: 320px;
     background:
-      radial-gradient(circle at top, rgba(0, 212, 255, 0.08), transparent 32%),
-      radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.12), transparent 28%),
-      #0a0a1a;
-    color: #f0f4ff;
+      radial-gradient(circle at top, rgba(38, 92, 209, 0.18), transparent 34%),
+      radial-gradient(circle at 80% 18%, rgba(143, 179, 255, 0.12), transparent 30%),
+      linear-gradient(180deg, #0b1220 0%, #111827 48%, #0b1220 100%);
+    color: #f8fbff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -45,7 +45,7 @@
   }
 
   ::selection {
-    background: rgba(0, 212, 255, 0.22);
+    background: rgba(38, 92, 209, 0.28);
     color: #ffffff;
   }
 
@@ -55,16 +55,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: rgba(10, 10, 26, 0.9);
+    background: rgba(11, 18, 32, 0.92);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(122, 162, 247, 0.38);
+    background: rgba(38, 92, 209, 0.42);
     border-radius: 999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(122, 162, 247, 0.56);
+    background: rgba(38, 92, 209, 0.62);
   }
 }
 
@@ -86,26 +86,26 @@
   }
 
   .btn-primary {
-    @apply rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-slate-950 transition-all duration-200 active:scale-[0.98];
-    background: linear-gradient(135deg, #00d4ff 0%, #7aa2f7 52%, #9d7cd8 100%);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    @apply rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-white transition-all duration-200 active:scale-[0.98];
+    background: linear-gradient(135deg, #3b78f2 0%, #265cd1 68%, #1e40af 100%);
+    box-shadow: 0 12px 30px rgba(38, 92, 209, 0.24);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 16px 40px rgba(0, 212, 255, 0.28);
+    box-shadow: 0 18px 40px rgba(38, 92, 209, 0.32);
     transform: translateY(-1px);
   }
 
   .btn-ghost {
     @apply rounded-xl border border-white/10 px-4 py-2 text-sm text-text-secondary transition-all duration-200;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(14px);
   }
 
   .btn-ghost:hover {
     @apply text-text-primary;
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(122, 162, 247, 0.26);
+    border-color: rgba(38, 92, 209, 0.26);
   }
 
   .tag {
@@ -121,11 +121,11 @@
   }
 
   .rfv-card {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 20px 50px rgba(0, 0, 0, 0.25);
+      0 20px 50px rgba(0, 0, 0, 0.28);
     backdrop-filter: blur(18px);
   }
 
@@ -169,6 +169,33 @@
     background-color: rgba(239, 68, 68, 0.15);
     border-color: rgba(239, 68, 68, 0.4);
   }
+
+  .rfv-hero-frame {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 30px 70px rgba(6, 12, 24, 0.45),
+      0 0 0 1px rgba(38, 92, 209, 0.08);
+  }
+
+  .rfv-hero-shell {
+    animation: rfv-hero-intro 900ms cubic-bezier(0.18, 0.9, 0.24, 1) both;
+    will-change: transform, opacity;
+  }
+
+  .rfv-hero-photo {
+    animation: rfv-hero-float 8s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .rfv-hero-chip {
+    animation: rfv-chip-drift 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .rfv-hero-glow {
+    animation: rfv-glow-pulse 7s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
 }
 
 @layer utilities {
@@ -197,5 +224,52 @@
 
   100% {
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes rfv-hero-intro {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes rfv-hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 0) scale(1.012);
+  }
+}
+
+@keyframes rfv-chip-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+@keyframes rfv-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.82;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.035);
   }
 }

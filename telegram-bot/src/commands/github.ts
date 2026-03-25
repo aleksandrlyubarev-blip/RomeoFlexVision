@@ -6,14 +6,11 @@ export function registerGithubCommand(bot: RomeoBot, config: AppConfig): void {
   bot.command('github', async (ctx) => {
     await ctx.reply(
       [
-        'GitHub surfaces for RomeoFlexVision:',
+        'GitHub surfaces for RoboQC:',
         `- Org: ${config.links.githubOrg}`,
         ...config.links.products.map((product) => `- ${product.title}: ${product.url}`),
       ].join('\n'),
-      Markup.inlineKeyboard([
-        [Markup.button.url('Open GitHub org', config.links.githubOrg)],
-      ]),
+      Markup.inlineKeyboard([[Markup.button.url('Open GitHub org', config.links.githubOrg)]]),
     );
   });
 }
-

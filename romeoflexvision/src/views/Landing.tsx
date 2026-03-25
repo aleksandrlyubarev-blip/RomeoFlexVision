@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ArrowRight,
+  Camera,
+  CheckCircle2,
   ChevronDown,
   ChevronUp,
   Github,
   Linkedin,
   Menu,
   MessageCircle,
-  Sparkles,
-  Workflow,
+  Radar,
+  ShieldCheck,
   X,
 } from 'lucide-react';
-import AgentAvatar from '../components/AgentAvatar';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useLanguage } from '../context/LanguageContext';
-import { getAgents } from '../data/agents';
 import { getSiteContent, SITE_LINKS, type SiteFaqItem, type SiteProduct } from '../data/siteContent';
 import type { View } from '../types';
 
@@ -26,21 +26,17 @@ interface LandingProps {
   isAuthenticated: boolean;
 }
 
-function useCountUp(target: number, duration = 1400) {
+function useCountUp(target: number, duration = 1200) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
     let animationId = 0;
-    let frame = 0;
     const started = performance.now();
 
     const tick = (now: number) => {
       const progress = Math.min((now - started) / duration, 1);
-      const next = Math.round(target * progress);
-      if (next !== frame) {
-        frame = next;
-        setValue(next);
-      }
+      setValue(Math.round(target * progress));
+
       if (progress < 1) {
         animationId = requestAnimationFrame(tick);
       }
@@ -66,7 +62,9 @@ function RevealBlock({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -75,7 +73,7 @@ function RevealBlock({
           observer.disconnect();
         }
       },
-      { threshold: 0.16 }
+      { threshold: 0.14 }
     );
 
     observer.observe(ref.current);
@@ -117,54 +115,59 @@ function MetricCard({ label, value, suffix }: { label: string; value: number; su
   const count = useCountUp(value);
 
   return (
-    <div className="rfv-card rounded-2xl p-4 sm:p-5">
+    <div className="rfv-card rounded-3xl p-5">
       <div className="font-mono text-3xl font-semibold text-text-primary sm:text-4xl">
         {count.toLocaleString()}
         <span className="text-accent-blue">{suffix}</span>
       </div>
-      <div className="mt-2 text-sm text-text-secondary">{label}</div>
+      <div className="mt-2 text-sm leading-6 text-text-secondary">{label}</div>
     </div>
   );
 }
 
-function ProductCard({
-  product,
-  icon,
-  color,
-  subtitle,
-  openLabel,
-}: {
-  product: SiteProduct;
-  icon: string;
-  color: string;
-  subtitle: string;
-  openLabel: string;
-}) {
-  const statusTone =
-    product.statusTone === 'success'
-      ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200'
-      : product.statusTone === 'warning'
-        ? 'border-amber-400/30 bg-amber-400/10 text-amber-200'
-        : 'border-sky-400/30 bg-sky-400/10 text-sky-200';
+function FaqItem({ item }: { item: SiteFaqItem }) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <article className="rfv-card group relative overflow-hidden rounded-3xl p-6">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-blue/80 to-transparent opacity-70" />
+    <div className="rfv-card rounded-3xl p-5">
+      <button
+        onClick={() => setOpen((current) => !current)}
+        className="flex w-full items-start justify-between gap-4 text-left"
+      >
+        <span className="text-base font-medium text-text-primary">{item.question}</span>
+        {open ? (
+          <ChevronUp size={18} className="mt-0.5 text-accent-blue" />
+        ) : (
+          <ChevronDown size={18} className="mt-0.5 text-text-muted" />
+        )}
+      </button>
+      {open && <p className="mt-4 text-sm leading-7 text-text-secondary">{item.answer}</p>}
+    </div>
+  );
+}
+
+function ProductCard({ product, openLabel }: { product: SiteProduct; openLabel: string }) {
+  const statusTone =
+    product.statusTone === 'success'
+      ? 'border-blue-300/30 bg-blue-400/10 text-blue-100'
+      : product.statusTone === 'warning'
+        ? 'border-slate-200/15 bg-white/5 text-slate-100'
+        : 'border-sky-300/25 bg-sky-400/10 text-sky-100';
+
+  return (
+    <article className="rfv-card group relative overflow-hidden rounded-[2rem] p-6">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-blue/80 to-transparent opacity-80" />
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <AgentAvatar color={color} icon={icon} status="ready" size="sm" animate={false} />
-          <div>
-            <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{product.eyebrow}</div>
-            <h3 className="mt-1 text-xl font-semibold text-text-primary">{product.title}</h3>
-            <div className="text-sm text-text-secondary">{subtitle}</div>
-          </div>
+        <div>
+          <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{product.eyebrow}</div>
+          <h3 className="mt-2 text-2xl font-semibold text-text-primary">{product.title}</h3>
         </div>
         <span className={`rounded-full border px-3 py-1 text-[11px] font-medium ${statusTone}`}>
           {product.status}
         </span>
       </div>
 
-      <p className="mt-5 text-sm leading-7 text-text-secondary">{product.description}</p>
+      <p className="mt-4 text-sm leading-7 text-text-secondary">{product.description}</p>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {product.tags.map((tag) => (
@@ -187,111 +190,21 @@ function ProductCard({
   );
 }
 
-function TechMarquee({ groups }: { groups: Array<{ title: string; items: string[] }> }) {
-  const rows = [...groups, ...groups];
+function comparisonToneClass(tone: 'strong' | 'mid' | 'weak') {
+  if (tone === 'strong') {
+    return 'border-blue-300/25 bg-blue-400/10 text-blue-50';
+  }
 
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02]">
-      <div className="rfv-marquee flex w-max gap-4 py-4">
-        {rows.map((group, index) => (
-          <div key={`${group.title}-${index}`} className="rfv-card min-w-[240px] rounded-2xl p-4">
-            <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-              <Workflow size={16} className="text-accent-blue" />
-              {group.title}
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {group.items.map((item) => (
-                <span key={item} className="rfv-pill">
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  if (tone === 'mid') {
+    return 'border-white/10 bg-white/5 text-text-secondary';
+  }
+
+  return 'border-white/10 bg-transparent text-text-muted';
 }
 
-function FaqItem({ item }: { item: SiteFaqItem }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="rfv-card rounded-2xl p-5">
-      <button
-        onClick={() => setOpen((current) => !current)}
-        className="flex w-full items-start justify-between gap-4 text-left"
-      >
-        <span className="text-base font-medium text-text-primary">{item.question}</span>
-        {open ? (
-          <ChevronUp size={18} className="mt-0.5 text-accent-blue" />
-        ) : (
-          <ChevronDown size={18} className="mt-0.5 text-text-muted" />
-        )}
-      </button>
-      {open && <p className="mt-4 text-sm leading-7 text-text-secondary">{item.answer}</p>}
-    </div>
-  );
-}
-
-function LandingVisual({
-  products,
-  orbitTitle,
-  orbitCaption,
-  centralNode,
-}: {
-  products: Array<{ id: string; title: string; icon: string; color: string; subtitle: string }>;
-  orbitTitle: string;
-  orbitCaption: string;
-  centralNode: string;
-}) {
-  const positions = ['left-0 top-10', 'right-0 top-14', 'left-10 bottom-0', 'right-8 bottom-6'];
-
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-[520px]">
-      <div className="absolute inset-6 rounded-full border border-accent-blue/20" />
-      <div className="absolute inset-16 rounded-full border border-accent-purple/20" />
-      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,212,255,0.16),transparent_62%)]" />
-
-      <div className="absolute left-1/2 top-1/2 z-20 flex w-44 -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-3xl border border-white/10 bg-[#0f1326]/85 px-5 py-5 text-center shadow-[0_0_80px_rgba(0,212,255,0.12)] backdrop-blur-xl">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-blue/30 to-accent-purple/30 text-accent-blue">
-          <Sparkles size={22} />
-        </div>
-        <div className="mt-4 text-sm uppercase tracking-[0.24em] text-text-muted">{centralNode}</div>
-        <div className="mt-1 text-lg font-semibold text-text-primary">{orbitTitle}</div>
-        <p className="mt-2 text-xs leading-6 text-text-secondary">{orbitCaption}</p>
-      </div>
-
-      {products.map((product, index) => (
-        <div key={product.id} className={`absolute z-10 ${positions[index]}`}>
-          <div className="rfv-card flex w-44 items-center gap-3 rounded-2xl px-4 py-3">
-            <AgentAvatar color={product.color} icon={product.icon} status="ready" size="sm" />
-            <div className="min-w-0">
-              <div className="truncate text-sm font-medium text-text-primary">{product.title}</div>
-              <div className="truncate text-xs text-text-muted">{product.subtitle}</div>
-            </div>
-          </div>
-        </div>
-      ))}
-
-      <div className="absolute left-[22%] top-[28%] h-px w-[28%] bg-gradient-to-r from-accent-blue/0 via-accent-blue/70 to-accent-blue/0" />
-      <div className="absolute right-[22%] top-[30%] h-px w-[24%] bg-gradient-to-r from-accent-purple/0 via-accent-purple/70 to-accent-purple/0" />
-      <div className="absolute bottom-[24%] left-[26%] h-px w-[24%] rotate-[25deg] bg-gradient-to-r from-accent-blue/0 via-accent-blue/70 to-accent-blue/0" />
-      <div className="absolute bottom-[26%] right-[24%] h-px w-[22%] -rotate-[25deg] bg-gradient-to-r from-accent-purple/0 via-accent-purple/70 to-accent-purple/0" />
-    </div>
-  );
-}
-
-export default function Landing({
-  onNavigate,
-  onLogin,
-  onRegister,
-  onSignOut,
-  isAuthenticated,
-}: LandingProps) {
+export default function Landing({ onNavigate, onRegister, isAuthenticated }: LandingProps) {
   const { language } = useLanguage();
   const copy = getSiteContent(language);
-  const agents = useMemo(() => getAgents(language), [language]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -302,53 +215,67 @@ export default function Landing({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const featuredAgents = useMemo(
-    () =>
-      copy.products.map((product) => {
-        const agent = agents.find((item) => item.id === product.id);
-        return {
-          ...product,
-          icon: agent?.icon ?? 'shell',
-          color: agent?.color ?? '#00d4ff',
-          subtitle: product.eyebrow,
-        };
-      }),
-    [agents, copy.products]
-  );
-
   const navItems = [
-    { label: copy.nav.ecosystem, href: '#ecosystem' },
+    { label: copy.nav.story, href: '#story' },
+    { label: copy.nav.pains, href: '#pains' },
+    { label: copy.nav.comparison, href: '#comparison' },
     { label: copy.nav.products, href: '#products' },
-    { label: copy.nav.stack, href: '#stack' },
-    { label: copy.nav.roadmap, href: '#roadmap' },
     { label: copy.nav.contact, href: '#contact' },
   ];
 
+  const liveLabel = language === 'ru' ? 'RoboQC в линии' : 'RoboQC live';
+  const proofLabel = language === 'ru' ? 'Inline-доказательство' : 'Inline proof';
+  const proofTitle = language === 'ru' ? 'Кадр, trace, решение' : 'Frame, trace, decision';
+  const proofDescription =
+    language === 'ru'
+      ? 'Ловим дефект там, где он появляется, и сразу даём линии доказательство для действия.'
+      : 'Catch the defect where it starts, with evidence the line can act on immediately.';
+  const storyQuote =
+    language === 'ru'
+      ? '«Робот-камера, которая никогда не спит.»'
+      : '“The robot-camera that never sleeps.”';
+  const capabilityLabel = language === 'ru' ? 'Возможность' : 'Capability';
+  const socialLabel = language === 'ru' ? 'Соцсети' : 'Social';
+
+  const brandGuideLabel = 'Brand guide';
+  const brandGuideHref = `${import.meta.env.BASE_URL}brand/`;
+
+  const handlePilotLaunch = () => {
+    if (isAuthenticated) {
+      onNavigate('catalog');
+      return;
+    }
+
+    onRegister();
+  };
+
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[#0a0a1a] text-text-primary">
-      <div className="pointer-events-none absolute inset-0 rfv-grid opacity-50" />
-      <div className="absolute left-1/2 top-0 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,212,255,0.18),transparent_58%)] blur-3xl" />
-      <div className="absolute right-[-8rem] top-[16rem] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.18),transparent_60%)] blur-3xl" />
+    <div className="relative min-h-screen overflow-x-hidden bg-bg-primary text-text-primary">
+      <div className="pointer-events-none absolute inset-0 rfv-grid opacity-40" />
+      <div className="absolute left-[-12rem] top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(38,92,209,0.25),transparent_62%)] blur-3xl" />
+      <div className="absolute right-[-8rem] top-[18rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(143,179,255,0.16),transparent_62%)] blur-3xl" />
 
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled ? 'border-b border-white/10 bg-[#0a0a1a]/80 backdrop-blur-xl' : 'bg-transparent'
+          scrolled ? 'border-b border-white/10 bg-bg-primary/80 backdrop-blur-xl' : 'bg-transparent'
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4 sm:px-6 lg:px-8">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 text-left"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/30 bg-accent-blue/10 shadow-[0_0_24px_rgba(0,212,255,0.16)]">
-              <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="RomeoFlexVision" className="h-6 w-6" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-blue/25 bg-accent-blue/10 shadow-[0_0_24px_rgba(38,92,209,0.18)]">
+              <img
+                src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
+                alt="RoboQC"
+                className="h-9 w-9"
+              />
             </div>
-            <div className="text-left">
-              <div className="text-sm font-semibold tracking-wide text-text-primary">
-                Romeo<span className="text-accent-blue">Flex</span>Vision
-              </div>
-              <div className="text-[11px] uppercase tracking-[0.22em] text-text-muted">
-                Agentic AI ecosystem
+            <div>
+              <div className="text-sm font-semibold tracking-wide text-text-primary">RoboQC</div>
+              <div className="text-[11px] uppercase tracking-[0.24em] text-text-muted">
+                {copy.labels.poweredBy}
               </div>
             </div>
           </button>
@@ -386,25 +313,9 @@ export default function Landing({
             >
               {copy.nav.linkedin}
             </a>
-            {isAuthenticated ? (
-              <>
-                <button onClick={() => onNavigate('catalog')} className="btn-primary px-4 py-2 text-sm">
-                  {copy.nav.openPlatform}
-                </button>
-                <button onClick={onSignOut} className="btn-ghost px-4 py-2 text-sm">
-                  {copy.nav.signOut}
-                </button>
-              </>
-            ) : (
-              <>
-                <button onClick={onLogin} className="btn-ghost px-4 py-2 text-sm">
-                  {copy.nav.signIn}
-                </button>
-                <button onClick={onRegister} className="btn-primary px-4 py-2 text-sm">
-                  {copy.nav.openPlatform}
-                </button>
-              </>
-            )}
+            <button onClick={handlePilotLaunch} className="btn-primary px-4 py-2 text-sm">
+              {copy.nav.pilot}
+            </button>
           </div>
 
           <div className="ml-auto flex items-center gap-2 lg:hidden">
@@ -418,8 +329,9 @@ export default function Landing({
             </button>
           </div>
         </div>
+
         {mobileMenuOpen && (
-          <div className="border-t border-white/10 bg-[#0a0a1a]/95 px-5 py-5 backdrop-blur-xl lg:hidden">
+          <div className="border-t border-white/10 bg-bg-primary/95 px-5 py-5 backdrop-blur-xl lg:hidden">
             <div className="flex flex-col gap-3">
               {navItems.map((item) => (
                 <a
@@ -431,6 +343,7 @@ export default function Landing({
                   {item.label}
                 </a>
               ))}
+
               <div className="grid grid-cols-3 gap-3 pt-2">
                 <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="btn-ghost text-center text-sm">
                   {copy.nav.github}
@@ -452,18 +365,15 @@ export default function Landing({
                   {copy.nav.linkedin}
                 </a>
               </div>
+
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (isAuthenticated) {
-                    onNavigate('catalog');
-                  } else {
-                    onLogin();
-                  }
+                  handlePilotLaunch();
                 }}
                 className="btn-primary mt-2 text-sm"
               >
-                {isAuthenticated ? copy.nav.openPlatform : copy.nav.signIn}
+                {copy.nav.pilot}
               </button>
             </div>
           </div>
@@ -472,9 +382,10 @@ export default function Landing({
 
       <main>
         <section className="relative px-5 pb-16 pt-14 sm:px-6 lg:px-8 lg:pb-24 lg:pt-20">
-          <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="space-y-8">
               <div className="rfv-kicker">{copy.hero.eyebrow}</div>
+
               <div className="space-y-5">
                 <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[0.94] tracking-tight text-text-primary sm:text-6xl lg:text-7xl">
                   {copy.hero.title}
@@ -485,48 +396,26 @@ export default function Landing({
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <a href="#products" className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm sm:text-base">
+                <button onClick={handlePilotLaunch} className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm sm:text-base">
                   {copy.hero.primaryCta}
                   <ArrowRight size={16} />
-                </a>
+                </button>
                 <a
-                  href={SITE_LINKS.github}
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#comparison"
                   className="btn-ghost inline-flex items-center gap-2 border border-white/10 px-6 py-3 text-sm sm:text-base"
                 >
                   {copy.hero.secondaryCta}
-                  <Github size={16} />
-                </a>
-                <button
-                  onClick={() => onNavigate('catalog')}
-                  className="btn-ghost inline-flex items-center gap-2 border border-white/10 px-6 py-3 text-sm sm:text-base"
-                >
-                  {copy.hero.tertiaryCta}
                   <ArrowRight size={16} />
-                </button>
+                </a>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-sm text-text-secondary">
-                <span className="rfv-pill">Bot entry point</span>
-                <a
-                  href={SITE_LINKS.telegram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 font-medium text-accent-blue transition-colors hover:text-white"
-                >
-                  {SITE_LINKS.telegramHandle}
-                  <ArrowRight size={15} />
-                </a>
-                <a
-                  href={SITE_LINKS.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 font-medium text-text-secondary transition-colors hover:text-white"
-                >
-                  {copy.nav.linkedin}
-                  <ArrowRight size={15} />
-                </a>
+                {copy.hero.badges.map((badge) => (
+                  <span key={badge} className="rfv-pill">
+                    <CheckCircle2 size={14} className="text-accent-blue" />
+                    {badge}
+                  </span>
+                ))}
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -536,63 +425,162 @@ export default function Landing({
               </div>
             </div>
 
-            <LandingVisual
-              products={featuredAgents}
-              orbitTitle={copy.hero.orbitTitle}
-              orbitCaption={copy.hero.orbitCaption}
-              centralNode={copy.labels.centralNode}
-            />
-          </div>
-        </section>
+            <div className="relative mx-auto w-full max-w-[560px]">
+              <div className="rfv-hero-glow absolute inset-0 rounded-[2.4rem] bg-[radial-gradient(circle_at_top,rgba(38,92,209,0.22),transparent_60%)] blur-3xl" />
+              <div className="rfv-card rfv-hero-frame rfv-hero-shell relative overflow-hidden rounded-[2.4rem] p-3">
+                <div className="rfv-hero-chip absolute left-5 top-5 z-20 inline-flex rounded-full border border-white/10 bg-[#0b1220]/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-blue backdrop-blur">
+                  {copy.hero.imageBadge}
+                </div>
 
-        <RevealBlock id="ecosystem" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.ecosystem}
-              title={copy.sections.ecosystem}
-              description={copy.sections.ecosystemDescription}
-            />
+                <img
+                  src={`${import.meta.env.BASE_URL}assets/brand/romeo-photo.jpg`}
+                  alt={copy.hero.imageAlt}
+                  className="rfv-hero-photo h-[520px] w-full rounded-[2rem] object-cover object-center"
+                />
 
-            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="rfv-card rounded-3xl p-6 sm:p-8">
-                <div className="text-xs uppercase tracking-[0.22em] text-text-muted">ROMA orchestrator</div>
-                <div className="mt-4 rounded-3xl border border-white/[0.08] bg-[#0e1224] p-6">
-                  <div className="flex items-center justify-between gap-4 rounded-2xl border border-accent-blue/20 bg-accent-blue/[0.08] px-5 py-4">
-                    <div>
-                      <div className="text-sm uppercase tracking-[0.24em] text-text-muted">
-                        {copy.labels.centralNode}
-                      </div>
-                      <div className="mt-1 text-2xl font-semibold text-text-primary">ROMA</div>
+                <div className="pointer-events-none absolute inset-3 rounded-[2rem] bg-gradient-to-t from-[#0b1220] via-[#0b1220]/18 to-transparent" />
+
+                <div className="absolute bottom-7 left-7 right-7 z-20 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/80 p-4 backdrop-blur-xl">
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
+                      <Radar size={15} />
+                      {liveLabel}
                     </div>
-                    <div className="rounded-full border border-accent-purple/30 bg-accent-purple/10 px-4 py-2 text-sm text-accent-purple">
-                      LangGraph · LiteLLM · Moltis
-                    </div>
+                    <div className="mt-3 text-lg font-semibold text-text-primary">{copy.hero.imageStat}</div>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary">
+                      {copy.labels.poweredBy}
+                    </p>
                   </div>
 
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {featuredAgents.map((product) => (
-                      <div key={product.id} className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
-                        <div className="flex items-center gap-3">
-                          <AgentAvatar color={product.color} icon={product.icon} status="ready" size="sm" />
-                          <div>
-                            <div className="text-sm font-medium text-text-primary">{product.title}</div>
-                            <div className="text-xs text-text-muted">{product.subtitle}</div>
-                          </div>
-                        </div>
-                        <div className="mt-3 text-sm leading-6 text-text-secondary">{product.description}</div>
-                      </div>
-                    ))}
+                  <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/75 p-4 backdrop-blur-xl">
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
+                      <Camera size={15} />
+                      {proofLabel}
+                    </div>
+                    <div className="mt-3 text-lg font-semibold text-text-primary">{proofTitle}</div>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary">{proofDescription}</p>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              <div className="grid gap-4">
-                {copy.ecosystemCards.map((card) => (
-                  <div key={card.title} className="rfv-card rounded-3xl p-6">
-                    <div className="text-sm uppercase tracking-[0.24em] text-text-muted">{card.title}</div>
-                    <p className="mt-3 text-base leading-7 text-text-secondary">{card.description}</p>
-                  </div>
+        <RevealBlock id="story" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.nav.story}
+              title={copy.sections.story}
+              description={copy.sections.storyDescription}
+            />
+
+            <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="grid gap-5 md:grid-cols-3">
+                {copy.storyCards.map((card) => (
+                  <article key={card.title} className="rfv-card rounded-[2rem] p-6">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
+                      {card.title.includes('Inline') || card.title.includes('станции') ? (
+                        <Camera size={20} />
+                      ) : card.title.includes('evidence') || card.title.includes('доказ') ? (
+                        <ShieldCheck size={20} />
+                      ) : (
+                        <Radar size={20} />
+                      )}
+                    </div>
+                    <h3 className="mt-5 text-xl font-semibold text-text-primary">{card.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
+                  </article>
                 ))}
+              </div>
+
+              <div className="rfv-card rounded-[2rem] p-7">
+                <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
+                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{storyQuote}</div>
+                <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
+                  <Github size={16} />
+                  GitHub
+                </a>
+                <a href={brandGuideHref} className="rfv-pill">
+                  <ShieldCheck size={16} />
+                  {brandGuideLabel}
+                </a>
+                <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
+                  <MessageCircle size={16} />
+                  {SITE_LINKS.telegramHandle}
+                </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RevealBlock>
+
+        <RevealBlock id="pains" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.nav.pains}
+              title={copy.sections.pains}
+              description={copy.sections.painsDescription}
+            />
+
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+              {copy.pains.map((pain, index) => (
+                <article key={pain.title} className="rfv-card rounded-[2rem] p-6">
+                  <div className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-blue">
+                    0{index + 1}
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-text-primary">{pain.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">{pain.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </RevealBlock>
+
+        <RevealBlock id="comparison" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-7xl space-y-10">
+            <SectionHeader
+              kicker={copy.nav.comparison}
+              title={copy.sections.comparison}
+              description={copy.sections.comparisonDescription}
+            />
+
+            <div className="rfv-card overflow-hidden rounded-[2rem]">
+              <div className="overflow-x-auto">
+                <table className="min-w-full border-collapse">
+                  <thead>
+                    <tr className="border-b border-white/[0.08]">
+                      <th className="min-w-[260px] px-6 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
+                        {capabilityLabel}
+                      </th>
+                      {copy.labels.comparisonColumns.map((column) => (
+                        <th
+                          key={column}
+                          className="min-w-[140px] px-4 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted"
+                        >
+                          {column}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {copy.comparisonRows.map((row) => (
+                      <tr key={row.capability} className="border-b border-white/[0.08] last:border-b-0">
+                        <td className="px-6 py-5 text-sm font-medium text-text-primary">{row.capability}</td>
+                        {row.values.map((cell, index) => (
+                          <td key={`${row.capability}-${index}`} className="px-4 py-5">
+                            <span
+                              className={`inline-flex rounded-full border px-3 py-1.5 text-xs font-medium ${comparisonToneClass(cell.tone)}`}
+                            >
+                              {cell.label}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -605,171 +593,74 @@ export default function Landing({
               title={copy.sections.products}
               description={copy.sections.productsDescription}
             />
+
             <div className="grid gap-5 lg:grid-cols-2">
-              {featuredAgents.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  icon={product.icon}
-                  color={product.color}
-                  subtitle={product.subtitle}
-                  openLabel={copy.nav.openRepo}
-                />
+              {copy.products.map((product) => (
+                <ProductCard key={product.title} product={product} openLabel={copy.labels.openRepo} />
               ))}
             </div>
           </div>
         </RevealBlock>
-        <RevealBlock id="stack" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.stack}
-              title={copy.sections.stack}
-              description={copy.sections.stackDescription}
-            />
-            <TechMarquee groups={copy.techGroups} />
-          </div>
-        </RevealBlock>
 
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker="Andrew Swarm"
-              title={copy.sections.architecture}
-              description={copy.sections.architectureDescription}
-            />
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="rfv-card rounded-[2rem] p-7">
+              <div className="rfv-kicker">{copy.labels.poweredBy}</div>
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
+                {copy.sections.community}
+              </h2>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
+                {copy.sections.communityDescription}
+              </p>
 
-            <div className="rfv-card overflow-hidden rounded-3xl p-6 sm:p-8">
-              <div className="grid gap-4 lg:grid-cols-6">
-                {copy.architectureSteps.map((step, index) => (
-                  <div key={step} className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
-                    <div className="text-[11px] uppercase tracking-[0.22em] text-text-muted">
-                      {copy.labels.roadmapStep} {index + 1}
-                    </div>
-                    <div className="mt-2 text-sm font-medium text-text-primary">{step}</div>
-                    {index < copy.architectureSteps.length - 1 && (
-                      <div className="pointer-events-none absolute -right-3 top-1/2 hidden h-px w-6 -translate-y-1/2 bg-gradient-to-r from-accent-blue to-accent-purple lg:block" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {copy.architectureLanes.map((item) => (
-                  <div key={item} className="rfv-pill justify-center py-2 text-center text-sm">
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </RevealBlock>
-
-        <RevealBlock id="roadmap" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.roadmap}
-              title={copy.sections.roadmap}
-              description={copy.sections.roadmapDescription}
-            />
-            <div className="grid gap-5 lg:grid-cols-2">
-              {copy.roadmap.map((item, index) => {
-                const tone =
-                  item.statusTone === 'success'
-                    ? 'border-emerald-400/25 bg-emerald-400/[0.08] text-emerald-200'
-                    : item.statusTone === 'warning'
-                      ? 'border-amber-400/25 bg-amber-400/[0.08] text-amber-200'
-                      : 'border-white/10 bg-white/5 text-text-secondary';
-
-                return (
-                  <div key={`${item.phase}-${index}`} className="rfv-card relative rounded-3xl p-6">
-                    <div className="absolute left-6 top-0 h-full w-px bg-gradient-to-b from-accent-blue/70 via-accent-purple/40 to-transparent" />
-                    <div className="ml-6">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-xs uppercase tracking-[0.22em] text-text-muted">{item.phase}</span>
-                        <span className={`rounded-full border px-3 py-1 text-[11px] font-medium ${tone}`}>
-                          {item.status}
-                        </span>
-                      </div>
-                      <h3 className="mt-4 text-xl font-semibold text-text-primary">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-7 text-text-secondary">{item.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </RevealBlock>
-
-        <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="rfv-card rounded-3xl p-6 sm:p-8">
-              <SectionHeader
-                kicker="Investors"
-                title={copy.sections.investors}
-                description={copy.sections.investorsDescription}
-              />
               <div className="mt-8 space-y-4">
-                {copy.investorBullets.map((bullet) => (
-                  <div key={bullet} className="flex gap-3 text-sm leading-7 text-text-secondary">
-                    <span className="mt-2 h-2 w-2 rounded-full bg-accent-blue" />
-                    <span>{bullet}</span>
+                {copy.hero.badges.map((badge) => (
+                  <div key={badge} className="flex gap-3 text-sm leading-7 text-text-secondary">
+                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-accent-blue" />
+                    <span>{badge}</span>
                   </div>
                 ))}
               </div>
-              <a
-                href={SITE_LINKS.telegram}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary mt-8 inline-flex items-center gap-2 px-5 py-3 text-sm"
-              >
+
+              <button onClick={handlePilotLaunch} className="btn-primary mt-8 inline-flex items-center gap-2 px-5 py-3 text-sm">
                 <MessageCircle size={16} />
-                {copy.labels.investorCta}
-              </a>
+                {copy.nav.pilot}
+              </button>
             </div>
 
-            <div className="space-y-5">
-              <SectionHeader
-                kicker={copy.nav.contact}
-                title={copy.sections.community}
-                description={copy.sections.communityDescription}
-              />
-              <div className="grid gap-4">
-                {copy.communityCards.map((card) => (
-                  <a
-                    key={card.title}
-                    href={card.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rfv-card rounded-3xl p-6 transition-transform duration-200 hover:-translate-y-1"
-                  >
-                    <div className="flex items-center gap-3">
-                      {card.title === 'GitHub' ? (
-                        <Github size={20} className="text-accent-blue" />
-                      ) : card.title === 'LinkedIn' ? (
-                        <Linkedin size={20} className="text-accent-blue" />
-                      ) : (
-                        <MessageCircle size={20} className="text-accent-blue" />
-                      )}
-                      <div className="text-lg font-semibold text-text-primary">{card.title}</div>
-                    </div>
-                    <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
-                    <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent-blue">
-                      {card.action}
-                      <ArrowRight size={16} />
-                    </div>
-                  </a>
-                ))}
-              </div>
+            <div className="grid gap-4">
+              {copy.communityCards.map((card) => (
+                <a
+                  key={card.title}
+                  href={card.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rfv-card rounded-[2rem] p-6 transition-transform duration-200 hover:-translate-y-1"
+                >
+                  <div className="flex items-center gap-3">
+                    {card.title === 'GitHub' ? (
+                      <Github size={20} className="text-accent-blue" />
+                    ) : card.title === 'LinkedIn' ? (
+                      <Linkedin size={20} className="text-accent-blue" />
+                    ) : (
+                      <MessageCircle size={20} className="text-accent-blue" />
+                    )}
+                    <div className="text-lg font-semibold text-text-primary">{card.title}</div>
+                  </div>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
+                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent-blue">
+                    {card.action}
+                    <ArrowRight size={16} />
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </RevealBlock>
 
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker="FAQ"
-              title={copy.sections.faq}
-              description={copy.sections.faqDescription}
-            />
+            <SectionHeader kicker="FAQ" title={copy.sections.faq} description={copy.sections.faqDescription} />
             <div className="grid gap-4 lg:grid-cols-2">
               {copy.faq.map((item) => (
                 <FaqItem key={item.question} item={item} />
@@ -783,25 +674,27 @@ export default function Landing({
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_auto]">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/30 bg-accent-blue/10">
-                <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="RomeoFlexVision" className="h-6 w-6" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-blue/25 bg-accent-blue/10">
+                <img
+                  src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
+                  alt="RoboQC"
+                  className="h-9 w-9"
+                />
               </div>
               <div>
-                <div className="text-sm font-semibold text-text-primary">
-                  Romeo<span className="text-accent-blue">Flex</span>Vision
-                </div>
+                <div className="text-sm font-semibold text-text-primary">RoboQC</div>
                 <div className="text-xs uppercase tracking-[0.22em] text-text-muted">
-                  {copy.labels.builtWith}
+                  {copy.labels.poweredBy}
                 </div>
               </div>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-text-secondary">{copy.labels.footerSummary}</p>
-            <p className="text-sm text-text-muted">{copy.labels.footerStack}</p>
+            <p className="text-sm text-text-muted">{copy.labels.footerNote}</p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{copy.nav.quickLinks}</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{copy.nav.contact}</div>
               <div className="mt-4 flex flex-col gap-2 text-sm">
                 {navItems.map((item) => (
                   <a key={item.href} href={item.href} className="text-text-secondary transition-colors hover:text-white">
@@ -811,8 +704,12 @@ export default function Landing({
               </div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{copy.nav.social}</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{socialLabel}</div>
               <div className="mt-4 flex flex-wrap items-center gap-3">
+                <a href={brandGuideHref} className="rfv-pill">
+                  <ShieldCheck size={16} />
+                  {brandGuideLabel}
+                </a>
                 <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
                   <Github size={16} />
                   GitHub
@@ -830,9 +727,12 @@ export default function Landing({
           </div>
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-2 border-t border-white/[0.08] pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>{copy.labels.rights}</span>
-          <span>Built with Claude + LangGraph + FastAPI + React</span>
+          <span className="inline-flex items-center gap-2 self-start rounded-full border border-accent-blue/20 bg-accent-blue/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-blue sm:self-auto">
+            <ShieldCheck size={14} />
+            {copy.labels.poweredBy}
+          </span>
         </div>
       </footer>
     </div>

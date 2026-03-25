@@ -46,7 +46,7 @@ async function resolveSnapshotPayload() {
   const response = await fetch(sourceUrl, {
     headers: {
       Accept: 'application/json',
-      'User-Agent': 'romeoflexvision-sceneops-sync',
+      'User-Agent': 'roboqc-sceneops-sync',
     },
   });
   if (!response.ok) {

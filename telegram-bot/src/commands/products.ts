@@ -9,15 +9,15 @@ export function registerProductsCommand(bot: RomeoBot, config: AppConfig): void 
       .join('\n\n');
 
     await ctx.reply(
-      message,
+      `RoboQC product line:\n\n${message}`,
       Markup.inlineKeyboard([
         [
-          Markup.button.url('Andrew', config.links.products[0].url),
-          Markup.button.url('Romeo PhD', config.links.products[1].url),
+          Markup.button.url('RoboQC', config.links.products[0].url),
+          Markup.button.url('Andrew', config.links.products[1].url),
         ],
         [
-          Markup.button.url('Bassito', config.links.products[2].url),
-          Markup.button.url('PinoCut', config.links.products[3].url),
+          Markup.button.url('Romeo PhD', config.links.products[2].url),
+          Markup.button.url('Bassito', config.links.products[3].url),
         ],
       ]),
     );

@@ -16,6 +16,19 @@ import { getAgents } from '../data/agents';
 import { loadSceneOpsSnapshot } from '../lib/sceneOps';
 import type { SceneOpsSnapshot } from '../types';
 
+interface DarkTooltipEntry {
+  color?: string;
+  dataKey?: string | number;
+  name?: string | number;
+  value?: number | string;
+}
+
+interface DarkTooltipProps {
+  active?: boolean;
+  label?: string | number;
+  payload?: DarkTooltipEntry[];
+}
+
 function getSignalColor(value: number, warn: number, alert: number) {
   if (value >= alert) return '#ef4444';
   if (value >= warn) return '#d97706';
@@ -107,12 +120,12 @@ const COPY: Record<
     },
     sceneOps: {
       title: 'SceneOps Control Loop',
-      subtitle: 'PinoCut scene bundle -> Andrew review -> Bassito execution',
+      subtitle: 'RoboQC evidence bundle -> QC review -> enablement execution',
       apiFeed: 'API feed',
       mockFeed: 'Mock feed',
       scene: 'Scene',
-      andrew: 'Andrew',
-      bassito: 'Bassito',
+      andrew: 'QC review',
+      bassito: 'Enablement',
       durationDrift: 'Duration drift',
       confidence: 'confidence',
       hitl: 'HITL',
@@ -151,12 +164,12 @@ const COPY: Record<
     },
     sceneOps: {
       title: 'Контур SceneOps',
-      subtitle: 'Сборка сцены PinoCut -> ревью Andrew -> выполнение Bassito',
+      subtitle: 'Пакет доказательств RoboQC -> QC review -> выполнение обучения',
       apiFeed: 'API feed',
       mockFeed: 'Mock feed',
       scene: 'Сцена',
-      andrew: 'Andrew',
-      bassito: 'Bassito',
+      andrew: 'QC review',
+      bassito: 'Обучение',
       durationDrift: 'Отклонение длительности',
       confidence: 'уверенность',
       hitl: 'HITL',
@@ -195,12 +208,12 @@ const COPY: Record<
     },
     sceneOps: {
       title: 'לולאת SceneOps',
-      subtitle: 'חבילת סצנה של PinoCut -> סקירת Andrew -> ביצוע Bassito',
+      subtitle: 'RoboQC evidence bundle -> QC review -> enablement execution',
       apiFeed: 'API feed',
       mockFeed: 'Mock feed',
       scene: 'סצנה',
-      andrew: 'Andrew',
-      bassito: 'Bassito',
+      andrew: 'QC review',
+      bassito: 'Enablement',
       durationDrift: 'סטיית משך',
       confidence: 'ביטחון',
       hitl: 'HITL',
@@ -235,14 +248,14 @@ const STATUS_LABELS: Record<
   he: { approve: 'approve', reject: 'reject', modify: 'modify', skipped: 'skipped' },
 };
 
-const DarkTooltip = ({ active, payload, label }: any) => {
+const DarkTooltip = ({ active, payload, label }: DarkTooltipProps) => {
   if (!active || !payload?.length) return null;
 
   return (
     <div className="bg-bg-card border border-border-subtle rounded-lg p-3 text-xs font-mono">
       <div className="text-text-muted mb-1.5">{label}</div>
-      {payload.map((entry: any) => (
-        <div key={entry.dataKey} className="flex items-center gap-2">
+      {payload.map((entry) => (
+        <div key={String(entry.dataKey ?? entry.name ?? 'value')} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
           <span className="text-text-secondary">{entry.name || entry.dataKey}:</span>
           <span className="text-text-primary font-semibold">

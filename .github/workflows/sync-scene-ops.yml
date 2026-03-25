@@ -1,4 +1,4 @@
-name: Sync SceneOps Snapshot
+name: Sync RoboQC SceneOps Snapshot
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Resolve and write SceneOps snapshot
+      - name: Resolve and write RoboQC SceneOps snapshot
         env:
           SCENE_OPS_SOURCE_URL: ${{ inputs.source_url || github.event.client_payload.source_url || vars.SCENE_OPS_SOURCE_URL || 'https://raw.githubusercontent.com/aleksandrlyubarev-blip/Pino_cut/main/docs/pinnocat-scene-ops-v1.example.json' }}
           SCENE_OPS_INLINE_JSON: ${{ github.event_name == 'repository_dispatch' && toJson(github.event.client_payload.snapshot) || '' }}
@@ -47,5 +47,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add romeoflexvision/public/scene-ops.json
-          git commit -m "chore: sync SceneOps snapshot"
+          git commit -m "chore: sync RoboQC SceneOps snapshot"
           git push origin HEAD:main

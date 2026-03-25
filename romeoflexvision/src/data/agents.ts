@@ -20,7 +20,7 @@ interface LocalizedAgent {
 const AGENT_SOURCE: LocalizedAgent[] = [
   {
     id: 'robo-qc',
-    name: 'Robo QC',
+    name: 'RoboQC Inspector',
     subtitle: { en: 'Quality Control', ru: 'Контроль качества', he: 'בקרת איכות' },
     category: 'analytic',
     status: 'ready',
@@ -45,12 +45,12 @@ const AGENT_SOURCE: LocalizedAgent[] = [
   },
   {
     id: 'romeo-phd',
-    name: 'Romeo PhD',
-    subtitle: { en: 'Research Analyst', ru: 'Научный аналитик', he: 'אנליסט מחקר' },
+    name: 'RoboQC Reports',
+    subtitle: { en: 'Report Copilot', ru: 'Копилот отчёта', he: 'קופיילוט דוחות' },
     category: 'analytic',
     status: 'ready',
     description: {
-      en: 'Analyzes technical documentation, patents, and scientific papers to produce structured reports.',
+      en: 'Turns inspection evidence into structured reports, operator handoff, and pilot-ready summaries.',
       ru: 'Анализ технической документации, патентных баз и научных статей. Генерирует отчёты и цепочки рассуждений.',
       he: 'מנתח מסמכים טכניים, פטנטים ומאמרים מדעיים ומפיק דוחות מובנים.',
     },
@@ -70,12 +70,12 @@ const AGENT_SOURCE: LocalizedAgent[] = [
   },
   {
     id: 'andrew-analytic',
-    name: 'Andrew Analytic',
-    subtitle: { en: 'Data Analyst', ru: 'Аналитик данных', he: 'אנליסט נתונים' },
+    name: 'RoboQC Root Cause',
+    subtitle: { en: 'Pattern Analyst', ru: 'Аналитика причин', he: 'אנליסט סיבת שורש' },
     category: 'analytic',
     status: 'computing',
     description: {
-      en: 'Time-series analysis, anomaly detection, and predictive maintenance for industrial systems.',
+      en: 'Connects defects, station events, and line context to surface repeat patterns and root causes.',
       ru: 'Обработка временных рядов, прогнозирование отказов оборудования (PdM), аномалий и производственных трендов.',
       he: 'אנליזת סדרות זמן, זיהוי אנומליות ותחזוקה חזויה למערכות תעשייתיות.',
     },
@@ -95,12 +95,12 @@ const AGENT_SOURCE: LocalizedAgent[] = [
   },
   {
     id: 'bassito-animator',
-    name: 'Bassito Animator',
-    subtitle: { en: 'Animator', ru: 'Аниматор', he: 'אנימטור' },
+    name: 'RoboQC Academy',
+    subtitle: { en: 'Training Layer', ru: 'Обучающий слой', he: 'שכבת הדרכה' },
     category: 'creative',
     status: 'ready',
     description: {
-      en: 'Creates instructional animations, industrial visualizations, and presentation assets.',
+      en: 'Creates training explainers, operator onboarding clips, and visual enablement assets for the pilot.',
       ru: 'Создание обучающих анимаций, визуализаций производственных процессов и интерактивных презентаций.',
       he: 'יוצר אנימציות הדרכה, ויזואליזציות תעשייתיות ונכסי מצגת.',
     },
@@ -170,20 +170,20 @@ const AGENT_SOURCE: LocalizedAgent[] = [
   },
   {
     id: 'pino-cut',
-    name: 'Pino Cut',
-    subtitle: { en: 'Video Editor', ru: 'Видеоредактор', he: 'עורך וידאו' },
+    name: 'RoboQC Studio',
+    subtitle: { en: 'Evidence Editor', ru: 'Редактор доказательств', he: 'עורך ראיות' },
     category: 'creative',
     status: 'dev',
     description: {
-      en: 'Automates training and promo video assembly, cuts pauses, adds subtitles, transitions, and voiceover.',
+      en: 'Assembles evidence clips, training reels, and pilot visuals from inspection output and operator context.',
       ru: 'Автоматический монтаж обучающих и промо-видео из исходных материалов. Вырезает паузы, расставляет субтитры, добавляет переходы и VO-дорожку.',
       he: 'עורך אוטומטית וידאו הדרכה וקידום, מסיר הפסקות ומוסיף כתוביות, מעברים וקריינות.',
     },
     subAgents: 3,
     dataSources: {
-      en: ['Media storage', 'Transition library', 'Bassito asset library', 'TTS engine'],
-      ru: ['Медиа-хранилище', 'Библиотека переходов', 'Asset-библиотека Bassito', 'TTS-движок Озвучки'],
-      he: ['אחסון מדיה', 'ספריית מעברים', 'ספריית נכסים של Bassito', 'מנוע TTS'],
+      en: ['Media storage', 'Transition library', 'Academy asset library', 'TTS engine'],
+      ru: ['Медиа-хранилище', 'Библиотека переходов', 'Asset-библиотека Academy', 'TTS-движок озвучки'],
+      he: ['אחסון מדיה', 'ספריית מעברים', 'ספריית נכסי Academy', 'מנוע TTS'],
     },
     limitations: {
       en: ['No Adobe Premiere export yet', 'Up to 30 minutes of source media per session', 'Codecs: H.264, H.265, VP9'],
@@ -195,8 +195,8 @@ const AGENT_SOURCE: LocalizedAgent[] = [
   },
   {
     id: 'orchestrator',
-    name: 'OrchestratorCore',
-    subtitle: { en: 'Orchestrator', ru: 'Оркестратор', he: 'מתזמר' },
+    name: 'RoboQC Orchestrator',
+    subtitle: { en: 'Control Router', ru: 'Маршрутизатор контроля', he: 'נתב בקרה' },
     category: 'orchestrator',
     status: 'ready',
     description: {

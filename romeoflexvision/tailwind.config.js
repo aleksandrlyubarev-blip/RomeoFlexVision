@@ -5,20 +5,20 @@ export default {
     extend: {
       colors: {
         bg: {
-          primary: '#1a1d23',
-          secondary: '#1f2330',
-          panel: '#252a38',
-          card: '#2a3040',
-          hover: '#303749',
+          primary: '#0b1220',
+          secondary: '#111827',
+          panel: '#141c2d',
+          card: '#1b2538',
+          hover: '#23304a',
         },
         border: {
-          subtle: '#323a52',
-          DEFAULT: '#404968',
+          subtle: '#253149',
+          DEFAULT: '#32415f',
         },
         text: {
-          primary: '#cdd6f4',
-          secondary: '#a6adc8',
-          muted: '#6c7086',
+          primary: '#f8fbff',
+          secondary: '#c7d4ea',
+          muted: '#8fa0bd',
         },
         signal: {
           normal: '#6b7280',
@@ -27,14 +27,14 @@ export default {
           critical: '#dc2626',
         },
         accent: {
-          blue: '#7aa2f7',
-          cyan: '#73daca',
-          purple: '#9d7cd8',
+          blue: '#265CD1',
+          cyan: '#8FB3FF',
+          purple: '#4B82F1',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'Fira Code', 'monospace'],
       },
       keyframes: {
         morph: {

@@ -21,26 +21,21 @@ function looksLikeSelfQuestion(text: string): boolean {
     'what do you do',
     'about you',
     'tell me about yourself',
-    'кто ты',
-    'что ты',
-    'что ты умеешь',
-    'расскажи о себе',
-    'о себе',
-    'מי אתה',
-    'מה אתה',
-    'ספר על עצמך',
-    'מה אתה עושה',
+    'about roboqc',
   ];
 
   return triggers.some((trigger) => normalized.includes(trigger));
 }
 
-async function replyWithAbout(botReply: (text: string, extra?: unknown) => Promise<unknown>, config: AppConfig) {
+async function replyWithAbout(
+  botReply: (text: string, extra?: unknown) => Promise<unknown>,
+  config: AppConfig,
+) {
   await botReply(
     buildAboutMessage(config),
     Markup.inlineKeyboard([
       [
-        Markup.button.url('Open site', config.links.site),
+        Markup.button.url('Open landing', config.links.site),
         Markup.button.url('GitHub', config.links.githubOrg),
       ],
       [Markup.button.url('LinkedIn', config.links.linkedin)],

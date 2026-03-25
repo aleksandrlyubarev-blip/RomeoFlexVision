@@ -8,12 +8,11 @@ export function registerHelpCommand(bot: RomeoBot, _config: AppConfig): void {
         'Available commands:',
         '/start - main navigation and public links',
         '/help - command list',
-        '/demo - open the live RomeoFlexVision site',
-        '/products - ecosystem product summary',
+        '/demo - open the live RoboQC landing',
+        '/products - RoboQC product summary',
         '/github - org and repository links',
         '/contact - public contact and company routes',
       ].join('\n'),
     );
   });
 }
-

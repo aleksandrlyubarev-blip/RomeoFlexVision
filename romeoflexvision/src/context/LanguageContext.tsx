@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -9,7 +10,7 @@ import {
 
 export type Language = 'en' | 'ru' | 'he';
 
-const LANGUAGE_STORAGE_KEY = 'romeoflexvision-language';
+const LANGUAGE_STORAGE_KEY = 'roboqc-language';
 
 export const LANGUAGE_META: Record<
   Language,
@@ -56,13 +57,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = language;
     document.documentElement.dir = meta.dir;
 
-     const url = new URL(window.location.href);
-     if (language === 'en') {
-       url.searchParams.delete('lang');
-     } else {
-       url.searchParams.set('lang', language);
-     }
-     window.history.replaceState({}, '', url);
+    const url = new URL(window.location.href);
+    if (language === 'en') {
+      url.searchParams.delete('lang');
+    } else {
+      url.searchParams.set('lang', language);
+    }
+    window.history.replaceState({}, '', url);
   }, [language, meta.dir]);
 
   const value = useMemo<LanguageContextValue>(

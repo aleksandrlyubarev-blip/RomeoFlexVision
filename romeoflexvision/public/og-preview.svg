@@ -1,109 +1,112 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="98" y1="62" x2="1120" y2="590" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#07111E"/>
-      <stop offset="0.54" stop-color="#0A0A1A"/>
-      <stop offset="1" stop-color="#151533"/>
+    <linearGradient id="bg" x1="120" y1="90" x2="1080" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220" />
+      <stop offset="0.58" stop-color="#111827" />
+      <stop offset="1" stop-color="#1F2937" />
     </linearGradient>
-    <linearGradient id="accent" x1="175" y1="120" x2="860" y2="540" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#00D4FF"/>
-      <stop offset="1" stop-color="#7C3AED"/>
-    </linearGradient>
-    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(272 154) rotate(43.7995) scale(336.03 271.034)">
-      <stop stop-color="#00D4FF" stop-opacity="0.34"/>
-      <stop offset="1" stop-color="#00D4FF" stop-opacity="0"/>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(286 162) rotate(39) scale(348 254)">
+      <stop stop-color="#265CD1" stop-opacity="0.44" />
+      <stop offset="1" stop-color="#265CD1" stop-opacity="0" />
     </radialGradient>
-    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(987 424) rotate(145.812) scale(289.829 203.142)">
-      <stop stop-color="#7C3AED" stop-opacity="0.38"/>
-      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(945 412) rotate(142) scale(310 218)">
+      <stop stop-color="#7AA2FF" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#7AA2FF" stop-opacity="0" />
     </radialGradient>
   </defs>
-
-  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
-  <rect width="1200" height="630" rx="36" fill="url(#glowA)"/>
-  <rect width="1200" height="630" rx="36" fill="url(#glowB)"/>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)" />
+  <rect width="1200" height="630" rx="36" fill="url(#glowA)" />
+  <rect width="1200" height="630" rx="36" fill="url(#glowB)" />
 
   <g opacity="0.16">
-    <path d="M80 86H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 146H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 206H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 266H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 326H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 386H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 446H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 506H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M80 566H1120" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M140 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M260 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M380 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M500 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M620 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M740 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M860 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M980 60V570" stroke="#E8EEFF" stroke-width="1"/>
-    <path d="M1100 60V570" stroke="#E8EEFF" stroke-width="1"/>
+    <path d="M80 90H1120" stroke="#DCE7FF" />
+    <path d="M80 150H1120" stroke="#DCE7FF" />
+    <path d="M80 210H1120" stroke="#DCE7FF" />
+    <path d="M80 270H1120" stroke="#DCE7FF" />
+    <path d="M80 330H1120" stroke="#DCE7FF" />
+    <path d="M80 390H1120" stroke="#DCE7FF" />
+    <path d="M80 450H1120" stroke="#DCE7FF" />
+    <path d="M80 510H1120" stroke="#DCE7FF" />
+    <path d="M80 570H1120" stroke="#DCE7FF" />
+    <path d="M140 60V570" stroke="#DCE7FF" />
+    <path d="M260 60V570" stroke="#DCE7FF" />
+    <path d="M380 60V570" stroke="#DCE7FF" />
+    <path d="M500 60V570" stroke="#DCE7FF" />
+    <path d="M620 60V570" stroke="#DCE7FF" />
+    <path d="M740 60V570" stroke="#DCE7FF" />
+    <path d="M860 60V570" stroke="#DCE7FF" />
+    <path d="M980 60V570" stroke="#DCE7FF" />
+    <path d="M1100 60V570" stroke="#DCE7FF" />
   </g>
 
-  <g>
-    <rect x="86" y="84" width="182" height="30" rx="15" fill="rgba(0,212,255,0.12)" stroke="rgba(0,212,255,0.28)"/>
-    <text x="111" y="104" fill="#00D4FF" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.26em">
-      AGENTIC AI ECOSYSTEM
-    </text>
-  </g>
-
-  <text x="92" y="198" fill="#F0F4FF" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">
-    RomeoFlexVision
-  </text>
-  <text x="92" y="265" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
-    Building the control plane for data science,
-  </text>
-  <text x="92" y="308" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
-    media production, and AI workflow orchestration.
+  <rect x="92" y="90" width="244" height="36" rx="18" fill="rgba(38,92,209,0.18)" stroke="rgba(138,176,255,0.28)" />
+  <text x="120" y="113" fill="#8FB3FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.18em">
+    POWERED BY ROMEO FLEXVISION
   </text>
 
+  <rect x="92" y="156" width="126" height="126" rx="34" fill="#0B1220" stroke="rgba(255,255,255,0.08)" />
+  <path
+    d="M124 202C124 196.477 128.477 192 134 192H165C170.523 192 175 196.477 175 202V225C175 236.598 165.598 246 154 246H145C133.402 246 124 236.598 124 225V202Z"
+    fill="#F8FAFC"
+  />
+  <path
+    d="M173 202H180.5C187.404 202 193 207.596 193 214.5C193 221.404 187.404 227 180.5 227H173"
+    stroke="#F8FAFC"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+  <path d="M136 183C138.4 176 142.5 172 148 170" stroke="#8EB3FF" stroke-width="6" stroke-linecap="round" />
+  <path d="M154 183C156 177.5 159.4 173.8 164 172" stroke="#8EB3FF" stroke-width="6" stroke-linecap="round" />
+  <circle cx="151.5" cy="214" r="18" stroke="#265CD1" stroke-width="8" />
+  <path d="M161.5 224L171 234" stroke="#265CD1" stroke-width="8" stroke-linecap="round" />
+  <circle cx="168.5" cy="197.5" r="6.5" fill="#265CD1" />
+  <rect x="161" y="193" width="15" height="9" rx="4.5" fill="#1F2937" />
+
+  <text x="246" y="220" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="84" font-weight="700">
+    RoboQC
+  </text>
+  <text x="246" y="284" fill="#DCE7FF" font-family="Space Grotesk, Arial, sans-serif" font-size="34" font-weight="500">
+    The camera-robot that never sleeps.
+  </text>
+  <text x="246" y="326" fill="#DCE7FF" font-family="Space Grotesk, Arial, sans-serif" font-size="34" font-weight="500">
+    Catch errors on station #2, not on test #5.
+  </text>
+
   <g>
-    <rect x="92" y="392" width="294" height="70" rx="24" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-    <text x="124" y="422" fill="#8CA8FF" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700">
-      ROMA / LANGGRAPH / MOLTIS
+    <rect x="92" y="390" width="312" height="82" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" />
+    <text x="126" y="422" fill="#8FB3FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700">
+      INLINE QUALITY CONTROL
     </text>
-    <text x="124" y="448" fill="#D7E3FF" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="600">
-      One ecosystem. Four agents.
+    <text x="126" y="452" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="700">
+      90% of errors caught in real time
     </text>
   </g>
 
   <g>
-    <path d="M760 204L904 158" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
-    <path d="M760 204L956 296" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
-    <path d="M760 204L874 432" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
-    <path d="M760 204L1012 442" stroke="url(#accent)" stroke-width="3" stroke-linecap="round"/>
-  </g>
-
-  <g>
-    <circle cx="760" cy="204" r="76" fill="rgba(12,24,44,0.86)" stroke="rgba(255,255,255,0.14)"/>
-    <circle cx="760" cy="204" r="74" fill="url(#accent)" fill-opacity="0.08"/>
-    <text x="720" y="194" fill="#9ECFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="0.24em">
-      CORE
+    <rect x="760" y="150" width="320" height="108" rx="32" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" />
+    <text x="792" y="192" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700">
+      RoboQC Pilot
     </text>
-    <text x="706" y="228" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">
-      ROMA
+    <text x="792" y="228" fill="#CFE0FF" font-family="Space Grotesk, Arial, sans-serif" font-size="22" font-weight="500">
+      Real-time inspection, traceability, operator proof.
     </text>
   </g>
-
   <g>
-    <rect x="874" y="114" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-    <text x="908" y="148" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Andrew</text>
-    <text x="908" y="173" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Data orchestration</text>
-
-    <rect x="928" y="254" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-    <text x="963" y="288" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Romeo PhD</text>
-    <text x="963" y="313" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Education layer</text>
-
-    <rect x="820" y="388" width="220" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-    <text x="856" y="422" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">Bassito</text>
-    <text x="856" y="447" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Media pipeline</text>
-
-    <rect x="978" y="426" width="170" height="84" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
-    <text x="1011" y="460" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">PinoCut</text>
-    <text x="1011" y="485" fill="#AFC6FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500">Scene stitching</text>
+    <rect x="822" y="292" width="258" height="92" rx="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" />
+    <text x="854" y="330" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="700">
+      Romeo FlexVision
+    </text>
+    <text x="854" y="360" fill="#CFE0FF" font-family="Space Grotesk, Arial, sans-serif" font-size="20" font-weight="500">
+      Vision stack inside
+    </text>
+  </g>
+  <g>
+    <rect x="744" y="414" width="336" height="100" rx="30" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" />
+    <text x="776" y="454" fill="#FFFFFF" font-family="Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700">
+      Built for station-level QC
+    </text>
+    <text x="776" y="486" fill="#CFE0FF" font-family="Space Grotesk, Arial, sans-serif" font-size="21" font-weight="500">
+      Visual evidence, alerts, and faster root-cause loops.
+    </text>
   </g>
 </svg>

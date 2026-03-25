@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RoboQC Brand Guide</title>
+    <meta
+      name="description"
+      content="RoboQC brand guide with logo, palette, positioning, and Romeo FlexVision attribution."
+    />
+    <meta name="theme-color" content="#0b1220" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <style>
+      :root {
+        --bg: #07101d;
+        --panel: rgba(11, 18, 32, 0.84);
+        --border: rgba(255, 255, 255, 0.09);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --blue: #265cd1;
+        --blue-soft: #8fb3ff;
+        --dark: #1f2937;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(38, 92, 209, 0.26), transparent 34%),
+          radial-gradient(circle at right, rgba(143, 179, 255, 0.12), transparent 32%),
+          linear-gradient(180deg, #07101d 0%, #0b1220 52%, #111827 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+
+      .topbar,
+      .hero,
+      .card,
+      .closing {
+        border: 1px solid var(--border);
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        border-radius: 24px;
+        padding: 14px 18px;
+      }
+
+      .topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .topbar-brand img {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(38, 92, 209, 0.28);
+        background: rgba(38, 92, 209, 0.12);
+        border-radius: 999px;
+        padding: 8px 12px;
+        color: var(--blue-soft);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        font-weight: 600;
+        transition: 160ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+      }
+
+      .button.primary {
+        border-color: rgba(38, 92, 209, 0.36);
+        background: linear-gradient(135deg, #265cd1 0%, #1e4bb2 100%);
+      }
+
+      .button.ghost {
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 28px;
+        margin-top: 22px;
+        border-radius: 32px;
+        padding: 30px;
+      }
+
+      .hero-copy h1 {
+        margin: 16px 0 0;
+        max-width: 11ch;
+        font-size: clamp(42px, 8vw, 74px);
+        line-height: 0.94;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-copy p {
+        margin: 18px 0 0;
+        max-width: 640px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.75;
+      }
+
+      .hero-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: 420px;
+      }
+
+      .hero-photo {
+        width: 100%;
+        height: 100%;
+        min-height: 420px;
+        object-fit: cover;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+      }
+
+      .hero-overlay {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .overlay-card {
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(11, 18, 32, 0.82);
+        border-radius: 22px;
+        padding: 16px 18px;
+        backdrop-filter: blur(14px);
+      }
+
+      .overlay-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 18px;
+      }
+
+      .section {
+        margin-top: 26px;
+      }
+
+      .section-header {
+        margin-bottom: 16px;
+      }
+
+      .section-header h2 {
+        margin: 10px 0 0;
+        font-size: 34px;
+        line-height: 1.08;
+      }
+
+      .section-header p,
+      .card p,
+      .closing p {
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        border-radius: 28px;
+        padding: 24px;
+      }
+
+      .card.span-4 {
+        grid-column: span 4;
+      }
+
+      .card.span-5 {
+        grid-column: span 5;
+      }
+
+      .card.span-7 {
+        grid-column: span 7;
+      }
+
+      .card.span-12 {
+        grid-column: span 12;
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .logo-stack,
+      .swatches,
+      .tone-list,
+      .usage-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .logo-panel {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 24px;
+        padding: 24px;
+      }
+
+      .logo-panel img.logo {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .logo-panel img.mark {
+        width: 82px;
+        height: 82px;
+      }
+
+      .swatch {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .swatch-chip {
+        height: 78px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .swatch-meta strong,
+      .tone-list strong,
+      .usage-list strong,
+      .closing strong {
+        display: block;
+        font-size: 15px;
+      }
+
+      .swatch-meta span,
+      .tone-list span,
+      .usage-list span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .icon-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 16px;
+      }
+
+      .icon-chip {
+        display: grid;
+        place-items: center;
+        width: 92px;
+        height: 92px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .icon-chip img {
+        display: block;
+        max-width: 64px;
+        max-height: 64px;
+      }
+
+      .tone-item,
+      .usage-item {
+        border-left: 2px solid rgba(38, 92, 209, 0.9);
+        padding-left: 14px;
+      }
+
+      .closing {
+        margin-top: 28px;
+        border-radius: 28px;
+        padding: 24px;
+      }
+
+      .closing strong {
+        font-size: 20px;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .card.span-4,
+        .card.span-5,
+        .card.span-7,
+        .card.span-12 {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .page {
+          width: min(100% - 20px, 1180px);
+          padding-top: 16px;
+        }
+
+        .topbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .topbar-actions {
+          width: 100%;
+        }
+
+        .topbar-actions .button {
+          flex: 1 1 180px;
+        }
+
+        .swatch {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="topbar">
+        <div class="topbar-brand">
+          <img src="../assets/brand/roboqc-icon-64.png" alt="RoboQC icon" />
+          <div>
+            <div class="eyebrow">RoboQC Brand Surface</div>
+            <div style="margin-top: 10px; font-size: 15px; color: var(--muted)">
+              Primary brand: RoboQC. Technology inside: Romeo FlexVision.
+            </div>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a class="button ghost" href="../">Back to landing</a>
+          <a
+            class="button primary"
+            href="https://github.com/aleksandrlyubarev-blip/RomeoFlexVision"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open repository
+          </a>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Robot-camera that never sleeps</div>
+          <h1>RoboQC Brand Guide</h1>
+          <p>
+            RoboQC is the product-facing quality robot. Romeo FlexVision stays inside as the technical
+            stack. This page packages the logo, color system, icon set, and hero visual for quick handoff.
+          </p>
+          <div class="hero-pills">
+            <span class="pill">Primary Blue: #265CD1</span>
+            <span class="pill">Dark Base: #1F2937</span>
+            <span class="pill">White-first contrast</span>
+            <span class="pill">Station-2 positioning</span>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img class="hero-photo" src="../assets/brand/romeo-photo.jpg" alt="ROMEO robot on factory floor" />
+          <div class="hero-overlay">
+            <div class="overlay-card">
+              <div class="eyebrow">Product line</div>
+              <strong>RoboQC. Your robot-camera on every station.</strong>
+            </div>
+            <div class="overlay-card">
+              <div class="eyebrow">Powered by Romeo FlexVision</div>
+              <strong>Catch defects in real time, not at test #5.</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div class="eyebrow">Core system</div>
+          <h2>Logo, mark, and color language</h2>
+          <p>
+            The product should read as RoboQC first. Romeo FlexVision appears as a supporting attribution,
+            not as the main headline. Keep the interface dark, precise, and industrial with a strong blue accent.
+          </p>
+        </div>
+
+        <div class="grid">
+          <article class="card span-7">
+            <h3>Logo system</h3>
+            <p>
+              Use the full RoboQC lockup for headers and proposal screens. Use the mark or icon for favicons,
+              touch icons, avatars, and compact UI placements.
+            </p>
+            <div class="logo-stack">
+              <div class="logo-panel">
+                <img class="logo" src="../assets/brand/roboqc-logo.svg" alt="RoboQC primary logo" />
+              </div>
+              <div class="logo-panel" style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
+                <img class="mark" src="../assets/brand/roboqc-mark.svg" alt="RoboQC mark" />
+                <div class="usage-list" style="margin-top: 0">
+                  <div class="usage-item">
+                    <strong>Primary lockup</strong>
+                    <span>RoboQC is the visible brand for landing pages, decks, and demos.</span>
+                  </div>
+                  <div class="usage-item">
+                    <strong>Supporting signature</strong>
+                    <span>Use "powered by Romeo FlexVision" as a subtitle or footer-level attribution.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-5">
+            <h3>Palette</h3>
+            <p>Keep contrast crisp. Blue does the signaling. The dark neutrals carry the operational tone.</p>
+            <div class="swatches">
+              <div class="swatch">
+                <div class="swatch-chip" style="background: #265cd1"></div>
+                <div class="swatch-meta">
+                  <strong>Primary Blue</strong>
+                  <span>#265CD1 for CTA buttons, highlights, badges, and active states.</span>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-chip" style="background: #1f2937"></div>
+                <div class="swatch-meta">
+                  <strong>Dark Gray</strong>
+                  <span>#1F2937 for depth, industrial tone, and high-contrast framing.</span>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-chip" style="background: linear-gradient(180deg, #07101d, #111827)"></div>
+                <div class="swatch-meta">
+                  <strong>Background gradient</strong>
+                  <span>Use a deep dark gradient with restrained blue bloom rather than flat black.</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-4">
+            <h3>Icon kit</h3>
+            <p>The robot-camera icon is the quick recognition asset for browser chrome and compact UI.</p>
+            <div class="icon-row">
+              <div class="icon-chip"><img src="../assets/brand/roboqc-icon-16.png" alt="16x16 icon" /></div>
+              <div class="icon-chip"><img src="../assets/brand/roboqc-icon-32.png" alt="32x32 icon" /></div>
+              <div class="icon-chip"><img src="../assets/brand/roboqc-icon-64.png" alt="64x64 icon" /></div>
+              <div class="icon-chip"><img src="../assets/brand/roboqc-icon-128.png" alt="128x128 icon" /></div>
+            </div>
+          </article>
+
+          <article class="card span-4">
+            <h3>Messaging anchors</h3>
+            <p>Copy should sound alert, industrial, and immediate. Talk about stations, defects, traces, and proof.</p>
+            <div class="tone-list">
+              <div class="tone-item">
+                <strong>Hero line</strong>
+                <span>RoboQC. Your robot-camera on every station.</span>
+              </div>
+              <div class="tone-item">
+                <strong>Operational promise</strong>
+                <span>Catch 90% of defects in real time.</span>
+              </div>
+              <div class="tone-item">
+                <strong>Positioning sentence</strong>
+                <span>The robot-camera that catches mistakes on station #2, not at test #5.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-4">
+            <h3>Usage notes</h3>
+            <p>Keep the stack hierarchy stable so product positioning stays clear across demos and proposals.</p>
+            <div class="usage-list">
+              <div class="usage-item">
+                <strong>Do</strong>
+                <span>Lead with RoboQC in headlines, buttons, and navigation.</span>
+              </div>
+              <div class="usage-item">
+                <strong>Do</strong>
+                <span>Use Romeo FlexVision as a technology badge or footer-level attribution.</span>
+              </div>
+              <div class="usage-item">
+                <strong>Avoid</strong>
+                <span>Letting the stack name overpower the product brand in top-level messaging.</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card span-12">
+            <h3>Visual direction</h3>
+            <p>
+              Use the ROMEO factory image for hero, proposal covers, and operational demo contexts where the robotic
+              system needs to feel deployed, vigilant, and physically present on the line.
+            </p>
+            <div class="logo-panel" style="margin-top: 18px; padding: 14px; background: rgba(255, 255, 255, 0.02)">
+              <img
+                src="../assets/brand/romeo-photo.jpg"
+                alt="ROMEO hero visual"
+                style="display: block; width: 100%; height: min(520px, 52vw); object-fit: cover; border-radius: 22px"
+              />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="closing">
+        <strong>Morning-ready handoff</strong>
+        <p>
+          Landing, icons, palette, supporting attribution, and the standalone brand page are now aligned around RoboQC.
+          This page can be shared directly as a quick visual guide while the product continues to ship on the existing
+          Romeo FlexVision infrastructure.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

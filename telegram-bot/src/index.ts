@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   app.get('/', (_req: Request, res: Response) => {
     res.json({
       ok: true,
-      service: 'romeoflexvision-telegram-bot',
+      service: 'roboqc-telegram-bot',
       mode: config.webhookDomain ? 'webhook' : 'polling',
       bot: config.telegramBotUsername,
     });
@@ -57,7 +57,7 @@ async function main(): Promise<void> {
 
   const server = app.listen(config.port, () => {
     console.log(
-      `romeoflexvision-telegram-bot listening on port ${config.port} (${config.webhookDomain ? 'webhook' : 'polling'} mode)`,
+      `roboqc-telegram-bot listening on port ${config.port} (${config.webhookDomain ? 'webhook' : 'polling'} mode)`,
     );
   });
 
@@ -81,4 +81,3 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-

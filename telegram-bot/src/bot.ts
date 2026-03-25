@@ -32,11 +32,11 @@ export function createBot(config: AppConfig): RomeoBot {
 
 export async function syncBotMetadata(bot: RomeoBot, config: AppConfig): Promise<void> {
   await bot.telegram.setMyCommands([
-    { command: 'start', description: 'Open the main navigation and public links' },
-    { command: 'about', description: 'Explain what this bot is and what it can do' },
+    { command: 'start', description: 'Open the RoboQC navigation and pilot links' },
+    { command: 'about', description: 'Explain what RoboQC is and what this bot does' },
     { command: 'help', description: 'Show available commands' },
-    { command: 'demo', description: 'Open the live RomeoFlexVision demo' },
-    { command: 'products', description: 'List ecosystem products and repos' },
+    { command: 'demo', description: 'Open the live RoboQC landing' },
+    { command: 'products', description: 'List RoboQC products and repos' },
     { command: 'github', description: 'Open GitHub org and repositories' },
     { command: 'contact', description: 'Get public contact routes' },
   ]);
@@ -45,9 +45,7 @@ export async function syncBotMetadata(bot: RomeoBot, config: AppConfig): Promise
     const webhookUrl = `${config.webhookDomain}${config.telegramWebhookPath}`;
     await bot.telegram.setWebhook(
       webhookUrl,
-      config.telegramWebhookSecret
-        ? { secret_token: config.telegramWebhookSecret }
-        : undefined,
+      config.telegramWebhookSecret ? { secret_token: config.telegramWebhookSecret } : undefined,
     );
     return;
   }

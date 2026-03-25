@@ -1,5 +1,5 @@
 {
-  "name": "romeoflexvision-telegram-bot",
+  "name": "roboqc-telegram-bot",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -24,4 +24,3 @@
     "node": ">=20"
   }
 }
-
