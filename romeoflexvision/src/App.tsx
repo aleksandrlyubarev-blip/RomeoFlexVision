@@ -31,15 +31,15 @@ const APP_COPY: Record<
     anonymousAvatar: '?',
   },
   ru: {
-    loading: 'Инициализация RoboQC...',
-    healthy: 'Система в норме',
-    signOut: 'Выйти',
-    signIn: 'Войти',
-    createAccount: 'Создать аккаунт',
+    loading: 'РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ RoboQC...',
+    healthy: 'РЎРёСЃС‚РµРјР° РІ РЅРѕСЂРјРµ',
+    signOut: 'Р’С‹Р№С‚Рё',
+    signIn: 'Р’РѕР№С‚Рё',
+    createAccount: 'РЎРѕР·РґР°С‚СЊ Р°РєРєР°СѓРЅС‚',
     anonymousAvatar: '?',
   },
   he: {
-    loading: 'Initializing RoboQC...',
+    loading: 'מאתחל את RoboQC...',
     healthy: 'המערכת תקינה',
     signOut: 'התנתק',
     signIn: 'התחבר',
@@ -268,3 +268,4 @@ export default function App() {
     </LanguageProvider>
   );
 }
+

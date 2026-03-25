@@ -38,6 +38,10 @@
           linear-gradient(180deg, #07101d 0%, #0b1220 52%, #111827 100%);
       }
 
+      body[data-lang="he"] {
+        direction: rtl;
+      }
+
       a {
         color: inherit;
         text-decoration: none;
@@ -348,6 +352,14 @@
         padding-left: 14px;
       }
 
+      body[data-lang="he"] .tone-item,
+      body[data-lang="he"] .usage-item {
+        border-left: 0;
+        border-right: 2px solid rgba(38, 92, 209, 0.9);
+        padding-left: 0;
+        padding-right: 14px;
+      }
+
       .closing {
         margin-top: 28px;
         border-radius: 28px;
@@ -403,20 +415,21 @@
         <div class="topbar-brand">
           <img src="../assets/brand/roboqc-icon-64.png" alt="RoboQC icon" />
           <div>
-            <div class="eyebrow">RoboQC Brand Surface</div>
-            <div style="margin-top: 10px; font-size: 15px; color: var(--muted)">
+            <div class="eyebrow" id="topbar-kicker">RoboQC Brand Surface</div>
+            <div id="topbar-subtitle" style="margin-top: 10px; font-size: 15px; color: var(--muted)">
               Primary brand: RoboQC. Technology inside: Romeo FlexVision.
             </div>
           </div>
         </div>
 
         <div class="topbar-actions">
-          <a class="button ghost" href="../">Back to landing</a>
+          <a class="button ghost" href="../" id="back-link">Back to landing</a>
           <a
             class="button primary"
             href="https://github.com/aleksandrlyubarev-blip/RomeoFlexVision"
             target="_blank"
             rel="noreferrer"
+            id="repo-link"
           >
             Open repository
           </a>
@@ -425,17 +438,17 @@
 
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Robot-camera that never sleeps</div>
-          <h1>RoboQC Brand Guide</h1>
-          <p>
+          <div class="eyebrow" id="hero-kicker">Robot-camera that never sleeps</div>
+          <h1 id="hero-title">RoboQC Brand Guide</h1>
+          <p id="hero-description">
             RoboQC is the product-facing quality robot. Romeo FlexVision stays inside as the technical
             stack. This page packages the logo, color system, icon set, and hero visual for quick handoff.
           </p>
           <div class="hero-pills">
-            <span class="pill">Primary Blue: #265CD1</span>
-            <span class="pill">Dark Base: #1F2937</span>
-            <span class="pill">White-first contrast</span>
-            <span class="pill">Station-2 positioning</span>
+            <span class="pill" id="pill-blue">Primary Blue: #265CD1</span>
+            <span class="pill" id="pill-dark">Dark Base: #1F2937</span>
+            <span class="pill" id="pill-contrast">White-first contrast</span>
+            <span class="pill" id="pill-positioning">Station-2 positioning</span>
           </div>
         </div>
 
@@ -443,12 +456,12 @@
           <img class="hero-photo" src="../assets/brand/romeo-photo.jpg" alt="ROMEO robot on factory floor" />
           <div class="hero-overlay">
             <div class="overlay-card">
-              <div class="eyebrow">Product line</div>
-              <strong>RoboQC. Your robot-camera on every station.</strong>
+              <div class="eyebrow" id="overlay-line-kicker">Product line</div>
+              <strong id="overlay-line-title">RoboQC. Your robot-camera on every station.</strong>
             </div>
             <div class="overlay-card">
-              <div class="eyebrow">Powered by Romeo FlexVision</div>
-              <strong>Catch defects in real time, not at test #5.</strong>
+              <div class="eyebrow" id="overlay-powered-kicker">Powered by Romeo FlexVision</div>
+              <strong id="overlay-powered-title">Catch defects in real time, not at test #5.</strong>
             </div>
           </div>
         </div>
@@ -456,9 +469,9 @@
 
       <section class="section">
         <div class="section-header">
-          <div class="eyebrow">Core system</div>
-          <h2>Logo, mark, and color language</h2>
-          <p>
+          <div class="eyebrow" id="system-kicker">Core system</div>
+          <h2 id="system-title">Logo, mark, and color language</h2>
+          <p id="system-description">
             The product should read as RoboQC first. Romeo FlexVision appears as a supporting attribution,
             not as the main headline. Keep the interface dark, precise, and industrial with a strong blue accent.
           </p>
@@ -466,8 +479,8 @@
 
         <div class="grid">
           <article class="card span-7">
-            <h3>Logo system</h3>
-            <p>
+            <h3 id="logo-title">Logo system</h3>
+            <p id="logo-description">
               Use the full RoboQC lockup for headers and proposal screens. Use the mark or icon for favicons,
               touch icons, avatars, and compact UI placements.
             </p>
@@ -479,12 +492,12 @@
                 <img class="mark" src="../assets/brand/roboqc-mark.svg" alt="RoboQC mark" />
                 <div class="usage-list" style="margin-top: 0">
                   <div class="usage-item">
-                    <strong>Primary lockup</strong>
-                    <span>RoboQC is the visible brand for landing pages, decks, and demos.</span>
+                    <strong id="lockup-title">Primary lockup</strong>
+                    <span id="lockup-description">RoboQC is the visible brand for landing pages, decks, and demos.</span>
                   </div>
                   <div class="usage-item">
-                    <strong>Supporting signature</strong>
-                    <span>Use "powered by Romeo FlexVision" as a subtitle or footer-level attribution.</span>
+                    <strong id="signature-title">Supporting signature</strong>
+                    <span id="signature-description">Use "powered by Romeo FlexVision" as a subtitle or footer-level attribution.</span>
                   </div>
                 </div>
               </div>
@@ -492,36 +505,36 @@
           </article>
 
           <article class="card span-5">
-            <h3>Palette</h3>
-            <p>Keep contrast crisp. Blue does the signaling. The dark neutrals carry the operational tone.</p>
+            <h3 id="palette-title">Palette</h3>
+            <p id="palette-description">Keep contrast crisp. Blue does the signaling. The dark neutrals carry the operational tone.</p>
             <div class="swatches">
               <div class="swatch">
                 <div class="swatch-chip" style="background: #265cd1"></div>
                 <div class="swatch-meta">
-                  <strong>Primary Blue</strong>
-                  <span>#265CD1 for CTA buttons, highlights, badges, and active states.</span>
+                  <strong id="swatch-blue-title">Primary Blue</strong>
+                  <span id="swatch-blue-description">#265CD1 for CTA buttons, highlights, badges, and active states.</span>
                 </div>
               </div>
               <div class="swatch">
                 <div class="swatch-chip" style="background: #1f2937"></div>
                 <div class="swatch-meta">
-                  <strong>Dark Gray</strong>
-                  <span>#1F2937 for depth, industrial tone, and high-contrast framing.</span>
+                  <strong id="swatch-dark-title">Dark Gray</strong>
+                  <span id="swatch-dark-description">#1F2937 for depth, industrial tone, and high-contrast framing.</span>
                 </div>
               </div>
               <div class="swatch">
                 <div class="swatch-chip" style="background: linear-gradient(180deg, #07101d, #111827)"></div>
                 <div class="swatch-meta">
-                  <strong>Background gradient</strong>
-                  <span>Use a deep dark gradient with restrained blue bloom rather than flat black.</span>
+                  <strong id="swatch-bg-title">Background gradient</strong>
+                  <span id="swatch-bg-description">Use a deep dark gradient with restrained blue bloom rather than flat black.</span>
                 </div>
               </div>
             </div>
           </article>
 
           <article class="card span-4">
-            <h3>Icon kit</h3>
-            <p>The robot-camera icon is the quick recognition asset for browser chrome and compact UI.</p>
+            <h3 id="icons-title">Icon kit</h3>
+            <p id="icons-description">The robot-camera icon is the quick recognition asset for browser chrome and compact UI.</p>
             <div class="icon-row">
               <div class="icon-chip"><img src="../assets/brand/roboqc-icon-16.png" alt="16x16 icon" /></div>
               <div class="icon-chip"><img src="../assets/brand/roboqc-icon-32.png" alt="32x32 icon" /></div>
@@ -531,46 +544,46 @@
           </article>
 
           <article class="card span-4">
-            <h3>Messaging anchors</h3>
-            <p>Copy should sound alert, industrial, and immediate. Talk about stations, defects, traces, and proof.</p>
+            <h3 id="messaging-title">Messaging anchors</h3>
+            <p id="messaging-description">Copy should sound alert, industrial, and immediate. Talk about stations, defects, traces, and proof.</p>
             <div class="tone-list">
               <div class="tone-item">
-                <strong>Hero line</strong>
-                <span>RoboQC. Your robot-camera on every station.</span>
+                <strong id="message-hero-title">Hero line</strong>
+                <span id="message-hero-description">RoboQC. Your robot-camera on every station.</span>
               </div>
               <div class="tone-item">
-                <strong>Operational promise</strong>
-                <span>Catch 90% of defects in real time.</span>
+                <strong id="message-promise-title">Operational promise</strong>
+                <span id="message-promise-description">Catch 90% of defects in real time.</span>
               </div>
               <div class="tone-item">
-                <strong>Positioning sentence</strong>
-                <span>The robot-camera that catches mistakes on station #2, not at test #5.</span>
+                <strong id="message-positioning-title">Positioning sentence</strong>
+                <span id="message-positioning-description">The robot-camera that catches mistakes on station #2, not at test #5.</span>
               </div>
             </div>
           </article>
 
           <article class="card span-4">
-            <h3>Usage notes</h3>
-            <p>Keep the stack hierarchy stable so product positioning stays clear across demos and proposals.</p>
+            <h3 id="usage-title">Usage notes</h3>
+            <p id="usage-description">Keep the stack hierarchy stable so product positioning stays clear across demos and proposals.</p>
             <div class="usage-list">
               <div class="usage-item">
-                <strong>Do</strong>
-                <span>Lead with RoboQC in headlines, buttons, and navigation.</span>
+                <strong id="usage-do-title">Do</strong>
+                <span id="usage-do-description">Lead with RoboQC in headlines, buttons, and navigation.</span>
               </div>
               <div class="usage-item">
-                <strong>Do</strong>
-                <span>Use Romeo FlexVision as a technology badge or footer-level attribution.</span>
+                <strong id="usage-do-two-title">Do</strong>
+                <span id="usage-do-two-description">Use Romeo FlexVision as a technology badge or footer-level attribution.</span>
               </div>
               <div class="usage-item">
-                <strong>Avoid</strong>
-                <span>Letting the stack name overpower the product brand in top-level messaging.</span>
+                <strong id="usage-avoid-title">Avoid</strong>
+                <span id="usage-avoid-description">Letting the stack name overpower the product brand in top-level messaging.</span>
               </div>
             </div>
           </article>
 
           <article class="card span-12">
-            <h3>Visual direction</h3>
-            <p>
+            <h3 id="visual-title">Visual direction</h3>
+            <p id="visual-description">
               Use the ROMEO factory image for hero, proposal covers, and operational demo contexts where the robotic
               system needs to feel deployed, vigilant, and physically present on the line.
             </p>
@@ -586,13 +599,111 @@
       </section>
 
       <div class="closing">
-        <strong>Morning-ready handoff</strong>
-        <p>
+        <strong id="closing-title">Morning-ready handoff</strong>
+        <p id="closing-description">
           Landing, icons, palette, supporting attribution, and the standalone brand page are now aligned around RoboQC.
           This page can be shared directly as a quick visual guide while the product continues to ship on the existing
           Romeo FlexVision infrastructure.
         </p>
       </div>
     </div>
+    <script>
+      const lang = new URLSearchParams(window.location.search).get('lang') === 'he' ? 'he' : 'en';
+      const copy = {
+        en: {
+          title: 'RoboQC Brand Guide',
+          description:
+            'RoboQC brand guide with logo, palette, positioning, and Romeo FlexVision attribution.',
+          backHref: '../',
+          strings: {},
+        },
+        he: {
+          title: 'מדריך המותג של RoboQC',
+          description:
+            'מדריך מותג של RoboQC עם לוגו, פלטה, מיצוב וייחוס ל-Romeo FlexVision.',
+          backHref: '../?lang=he',
+          strings: {
+            'topbar-kicker': 'מעטפת המותג של RoboQC',
+            'topbar-subtitle': 'המותג הראשי: RoboQC. הטכנולוגיה בפנים: Romeo FlexVision.',
+            'back-link': 'חזרה ללנדינג',
+            'repo-link': 'פתח מאגר',
+            'hero-kicker': 'רובוט-מצלמה שלא ישן לעולם',
+            'hero-title': 'מדריך המותג של RoboQC',
+            'hero-description':
+              'RoboQC הוא רובוט האיכות שפונה החוצה כמוצר. Romeo FlexVision נשאר בפנים כסטאק הטכני. הדף הזה מרכז לוגו, מערכת צבע, אייקונים ותמונת hero להעברה מהירה.',
+            'pill-blue': 'כחול ראשי: #265CD1',
+            'pill-dark': 'בסיס כהה: #1F2937',
+            'pill-contrast': 'ניגודיות לבן-קודם',
+            'pill-positioning': 'מיצוב תחנה 2',
+            'overlay-line-kicker': 'קו מוצר',
+            'overlay-line-title': 'RoboQC. הרובוט-מצלמה שלך בכל תחנה.',
+            'overlay-powered-kicker': 'Powered by Romeo FlexVision',
+            'overlay-powered-title': 'לתפוס פגמים בזמן אמת, לא רק בבדיקה 5.',
+            'system-kicker': 'מערכת ליבה',
+            'system-title': 'לוגו, סימן ושפת צבע',
+            'system-description':
+              'המוצר צריך להיקרא קודם כל כ-RoboQC. Romeo FlexVision מופיע כייחוס תומך, לא ככותרת הראשית. שמרו על ממשק כהה, מדויק ותעשייתי עם אקסנט כחול חזק.',
+            'logo-title': 'מערכת הלוגו',
+            'logo-description':
+              'השתמשו בלוגו המלא של RoboQC לכותרות, מצגות והצעות. השתמשו בסימן או באייקון ל-favicon, touch icons, avatars ומיקומים קומפקטיים ב-UI.',
+            'lockup-title': 'לוגו ראשי',
+            'lockup-description': 'RoboQC הוא המותג הגלוי ללנדינגים, דקים ודמואים.',
+            'signature-title': 'חתימה תומכת',
+            'signature-description': 'השתמשו ב-"powered by Romeo FlexVision" כתת-כותרת או ייחוס ברמת הפוטר.',
+            'palette-title': 'פלטה',
+            'palette-description': 'שמרו על ניגוד חד. הכחול מבצע את הסיגנלינג. הנייטרלים הכהים נושאים את הטון התפעולי.',
+            'swatch-blue-title': 'כחול ראשי',
+            'swatch-blue-description': '#265CD1 עבור כפתורי CTA, הדגשות, badges ומצבים פעילים.',
+            'swatch-dark-title': 'אפור כהה',
+            'swatch-dark-description': '#1F2937 לעומק, לטון תעשייתי ולמסגור עתיר ניגודיות.',
+            'swatch-bg-title': 'גרדיאנט רקע',
+            'swatch-bg-description': 'השתמשו בגרדיאנט כהה עמוק עם פריחה כחולה מרוסנת במקום שחור שטוח.',
+            'icons-title': 'ערכת אייקונים',
+            'icons-description': 'אייקון הרובוט-מצלמה הוא נכס הזיהוי המהיר לדפדפן ול-UI קומפקטי.',
+            'messaging-title': 'עוגני מסר',
+            'messaging-description': 'הקופי צריך להישמע דרוך, תעשייתי ומיידי. דברו על תחנות, פגמים, עקבות והוכחה.',
+            'message-hero-title': 'שורת hero',
+            'message-hero-description': 'RoboQC. הרובוט-מצלמה שלך בכל תחנה.',
+            'message-promise-title': 'הבטחה תפעולית',
+            'message-promise-description': 'לתפוס 90% מהפגמים בזמן אמת.',
+            'message-positioning-title': 'משפט מיצוב',
+            'message-positioning-description': 'הרובוט-מצלמה שתופס טעויות בתחנה 2, לא בבדיקה 5.',
+            'usage-title': 'הערות שימוש',
+            'usage-description': 'שמרו על היררכיית הסטאק יציבה כדי שהמיצוב יישאר חד לאורך דמואים והצעות.',
+            'usage-do-title': 'כן',
+            'usage-do-description': 'הובילו עם RoboQC בכותרות, כפתורים וניווט.',
+            'usage-do-two-title': 'כן',
+            'usage-do-two-description': 'השתמשו ב-Romeo FlexVision כתג טכנולוגי או ייחוס ברמת הפוטר.',
+            'usage-avoid-title': 'להימנע',
+            'usage-avoid-description': 'לא לתת לשם הסטאק להשתלט על מותג המוצר במסר הראשי.',
+            'visual-title': 'כיוון חזותי',
+            'visual-description':
+              'השתמשו בתמונת המפעל של ROMEO ל-hero, לשערי הצעות ולדמוים תפעוליים שבהם המערכת צריכה להרגיש פרוסה, דרוכה ונוכחת פיזית על הקו.',
+            'closing-title': 'handoff מוכן לבוקר',
+            'closing-description':
+              'הלנדינג, האייקונים, הפלטה, הייחוס התומך ודף המותג הנפרד מיושרים עכשיו סביב RoboQC. אפשר לשתף את הדף הזה ישירות כמדריך חזותי מהיר בזמן שהמוצר ממשיך להישלח על גבי תשתית Romeo FlexVision הקיימת.',
+          },
+        },
+      };
+
+      const selected = copy[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+      document.body.dataset.lang = lang;
+      document.title = selected.title;
+      document.querySelector('meta[name=\"description\"]')?.setAttribute('content', selected.description);
+
+      const backLink = document.getElementById('back-link');
+      if (backLink) {
+        backLink.setAttribute('href', selected.backHref);
+      }
+
+      Object.entries(selected.strings).forEach(([id, value]) => {
+        const node = document.getElementById(id);
+        if (node) {
+          node.textContent = value;
+        }
+      });
+    </script>
   </body>
 </html>

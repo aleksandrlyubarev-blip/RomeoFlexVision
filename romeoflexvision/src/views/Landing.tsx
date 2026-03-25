@@ -303,27 +303,53 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
     { label: copy.nav.contact, href: '#contact' },
   ];
 
-  const liveLabel = language === 'ru' ? 'RoboQC в линии' : 'RoboQC live';
-  const proofLabel = language === 'ru' ? 'Inline-доказательство' : 'Inline proof';
-  const proofTitle = language === 'ru' ? 'Кадр, trace, решение' : 'Frame, trace, decision';
-  const proofDescription =
-    language === 'ru'
-      ? 'Ловим дефект там, где он появляется, и сразу даём линии доказательство для действия.'
-      : 'Catch the defect where it starts, with evidence the line can act on immediately.';
-  const storyQuote =
-    language === 'ru'
-      ? '«Робот-камера, которая никогда не спит.»'
-      : '“The robot-camera that never sleeps.”';
-  const capabilityLabel = language === 'ru' ? 'Возможность' : 'Capability';
-  const socialLabel = language === 'ru' ? 'Соцсети' : 'Social';
+  const landingUiCopy = {
+    en: {
+      liveLabel: 'RoboQC live',
+      proofLabel: 'Inline proof',
+      proofTitle: 'Frame, trace, decision',
+      proofDescription: 'Catch the defect where it starts, with evidence the line can act on immediately.',
+      storyQuote: '"The robot-camera that never sleeps."',
+      capabilityLabel: 'Capability',
+      socialLabel: 'Social',
+      brandGuideLabel: 'Brand guide',
+      faqKicker: 'FAQ',
+    },
+    ru: {
+      liveLabel: 'RoboQC в линии',
+      proofLabel: 'Inline-доказательство',
+      proofTitle: 'Кадр, trace, решение',
+      proofDescription: 'Ловим дефект там, где он появляется, и сразу даём линии доказательство для действия.',
+      storyQuote: '"Робот-камера, которая никогда не спит."',
+      capabilityLabel: 'Возможность',
+      socialLabel: 'Соцсети',
+      brandGuideLabel: 'Бренд-гайд',
+      faqKicker: 'FAQ',
+    },
+    he: {
+      liveLabel: 'RoboQC בזמן אמת',
+      proofLabel: 'הוכחה מהתחנה',
+      proofTitle: 'פריים, עקבה, החלטה',
+      proofDescription: 'תופסים את הפגם במקום שבו הוא נוצר, עם הוכחה שהקו יכול לפעול עליה מיד.',
+      storyQuote: '"הרובוט-מצלמה שלא ישן לעולם."',
+      capabilityLabel: 'יכולת',
+      socialLabel: 'קישורים',
+      brandGuideLabel: 'מדריך מותג',
+      faqKicker: 'שאלות נפוצות',
+    },
+  }[language];
 
-  const brandGuideLabel = 'Brand guide';
-  const brandGuideHref = `${import.meta.env.BASE_URL}brand/`;
+  const brandGuideHref = `${import.meta.env.BASE_URL}brand/${language === 'en' ? '' : `?lang=${language}`}`;
   const flowIcons = [
     <Camera key="capture" size={20} />,
     <Radar key="score" size={20} />,
     <ShieldCheck key="package" size={20} />,
     <MessageCircle key="act" size={20} />,
+  ];
+  const storyIcons = [
+    <Camera key="story-camera" size={20} />,
+    <ShieldCheck key="story-proof" size={20} />,
+    <Radar key="story-radar" size={20} />,
   ];
 
   const handlePilotLaunch = () => {
@@ -530,7 +556,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/80 p-4 backdrop-blur-xl">
                     <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
                       <Radar size={15} />
-                      {liveLabel}
+                      {landingUiCopy.liveLabel}
                     </div>
                     <div className="mt-3 text-lg font-semibold text-text-primary">{copy.hero.imageStat}</div>
                     <p className="mt-2 text-sm leading-6 text-text-secondary">
@@ -541,10 +567,10 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/75 p-4 backdrop-blur-xl">
                     <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
                       <Camera size={15} />
-                      {proofLabel}
+                      {landingUiCopy.proofLabel}
                     </div>
-                    <div className="mt-3 text-lg font-semibold text-text-primary">{proofTitle}</div>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary">{proofDescription}</p>
+                    <div className="mt-3 text-lg font-semibold text-text-primary">{landingUiCopy.proofTitle}</div>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary">{landingUiCopy.proofDescription}</p>
                   </div>
                 </div>
               </div>
@@ -562,16 +588,10 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
             <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="grid gap-5 md:grid-cols-3">
-                {copy.storyCards.map((card) => (
+                {copy.storyCards.map((card, index) => (
                   <article key={card.title} className="rfv-card rounded-[2rem] p-6">
                     <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
-                      {card.title.includes('Inline') || card.title.includes('станции') ? (
-                        <Camera size={20} />
-                      ) : card.title.includes('evidence') || card.title.includes('доказ') ? (
-                        <ShieldCheck size={20} />
-                      ) : (
-                        <Radar size={20} />
-                      )}
+                      {storyIcons[index] ?? <Radar size={20} />}
                     </div>
                     <h3 className="mt-5 text-xl font-semibold text-text-primary">{card.title}</h3>
                     <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
@@ -581,7 +601,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
               <div className="rfv-card rounded-[2rem] p-7">
                 <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
-                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{storyQuote}</div>
+                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{landingUiCopy.storyQuote}</div>
                 <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
@@ -590,7 +610,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   </a>
                   <a href={brandGuideHref} className="rfv-pill">
                     <ShieldCheck size={16} />
-                    {brandGuideLabel}
+                    {landingUiCopy.brandGuideLabel}
                   </a>
                   <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
                     <MessageCircle size={16} />
@@ -638,7 +658,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   <thead>
                     <tr className="border-b border-white/[0.08]">
                       <th className="min-w-[260px] px-6 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
-                        {capabilityLabel}
+                        {landingUiCopy.capabilityLabel}
                       </th>
                       {copy.labels.comparisonColumns.map((column) => (
                         <th
@@ -829,7 +849,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader kicker="FAQ" title={copy.sections.faq} description={copy.sections.faqDescription} />
+            <SectionHeader kicker={landingUiCopy.faqKicker} title={copy.sections.faq} description={copy.sections.faqDescription} />
             <div className="grid gap-4 lg:grid-cols-2">
               {copy.faq.map((item) => (
                 <FaqItem key={item.question} item={item} />
@@ -873,11 +893,11 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
               </div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{socialLabel}</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{landingUiCopy.socialLabel}</div>
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <a href={brandGuideHref} className="rfv-pill">
                   <ShieldCheck size={16} />
-                  {brandGuideLabel}
+                  {landingUiCopy.brandGuideLabel}
                 </a>
                 <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
                   <Github size={16} />
@@ -907,3 +927,5 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
     </div>
   );
 }
+
+

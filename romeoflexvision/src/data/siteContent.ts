@@ -792,11 +792,243 @@ const RU_COPY: SiteCopy = {
 };
 
 const HE_COPY: SiteCopy = {
-  ...EN_COPY,
-  nav: {
-    ...EN_COPY.nav,
-    products: 'RoboQC Line',
+  meta: {
+    title: 'RoboQC | רובוט QC קוגניטיבי',
+    description:
+      'RoboQC הוא רובוט-מפקח איכות קוגניטיבי המבוסס על Romeo FlexVision. תופס טעויות בתחנה 2, לא רק בבדיקה 5.',
+    ogTitle: 'RoboQC | powered by Romeo FlexVision',
+    ogDescription: 'הרובוט-מצלמה שלא ישן לעולם. בקרת איכות inline לפגמים ברמת התחנה.',
   },
+  nav: {
+    story: 'למה RoboQC',
+    pains: '5 כאבים',
+    comparison: 'השוואה',
+    products: 'קו מוצרי RoboQC',
+    contact: 'יצירת קשר',
+    github: 'GitHub',
+    telegram: 'Telegram',
+    linkedin: 'LinkedIn',
+    pilot: 'להפעיל פיילוט RoboQC',
+    menu: 'תפריט',
+    close: 'סגור',
+  },
+  hero: {
+    eyebrow: 'Romeo FlexVision בפנים',
+    title: 'RoboQC. הרובוט-מצלמה שלך בכל תחנה',
+    subtitle: 'בקרת איכות inline. אנחנו תופסים 90% מהטעויות בזמן אמת',
+    primaryCta: 'להפעיל פיילוט RoboQC',
+    secondaryCta: 'לראות את ההשוואה',
+    badges: ['ניטור קו 24/7', 'לולאת משוב בתחנה 2', 'הוכחה לפני הסלמה'],
+    imageBadge: 'רובוט-מצלמה. לא ישן.',
+    imageStat: 'התראה מתחנה 2 בתוך שניות',
+    imageAlt: 'רובוט ROMEO על קו ייצור',
+  },
+  sections: {
+    story: 'רובוט QC קוגניטיבי לרגע שבו הפגם נולד',
+    storyDescription:
+      'RoboQC ממוצב כקו התגובה הראשון על התחנה עצמה: מצלמה, עקבה ולולאת הסלמה במשטח אחד שמיועד למפעיל.',
+    pains: '5 הכאבים ש-RoboQC לוקח בן לילה',
+    painsDescription:
+      'ההבטחה פשוטה: להפסיק לשלם על פגמים שמתגלים מאוחר מדי, על ידי אנשים עייפים, בלי פריים מוכיח ובלי מסירה מסודרת.',
+    comparison: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
+    comparisonDescription:
+      'המיצוב כאן מתמקד בלכידת פגמים inline ובחבילת הוכחה, לא רק בהדרכה, אנליטיקה או דיווח בדיעבד.',
+    products: 'קו מוצרי RoboQC',
+    productsDescription:
+      'האתר שומר את מעטפת כלי ה-AI הרחבה, אבל ממסגר אותה כשכבת הפעלה פרקטית סביב רובוט הבדיקה.',
+    community: 'פיילוט, מאגרים ונקודות מגע ציבוריות',
+    communityDescription:
+      'Telegram מתאים לפתיחת פיילוט מהירה, GitHub מציג את פני המוצר, ו-LinkedIn מחזיק את המיצוב כלפי חוץ.',
+    faq: 'שאלות נפוצות',
+    faqDescription: 'תשובות קצרות למפעילים, למנהלי הנדסה ולמי שמממן או מוביל את הפיילוט.',
+  },
+  labels: {
+    poweredBy: 'Powered by Romeo FlexVision',
+    openRepo: 'פתח מאגר',
+    comparisonColumns: ['RoboQC', 'LightGuide', 'Arkite', 'Drishti', 'Retrocausal'],
+    footerSummary: 'RoboQC הוא רובוט בקרת איכות קוגניטיבי שנבנה על גבי תשתית Romeo FlexVision.',
+    footerNote: 'הרובוט-מצלמה שתופס פגמים בתחנה 2 במקום לגלות אותם רק בבדיקה 5.',
+    rights: '(c) 2026 RoboQC. כל הזכויות שמורות.',
+  },
+  metrics: [
+    { label: 'טעויות שנתפסות בזמן אמת', value: 90, suffix: '%' },
+    { label: 'קצב כיסוי', value: 24, suffix: '/7' },
+    { label: 'תחנת יעד', value: 2, suffix: '' },
+    { label: 'השקת פיילוט בשבועות', value: 1, suffix: '+' },
+  ],
+  storyCards: [
+    {
+      title: 'Inline לפני סוף הקו',
+      description: 'RoboQC נבנה לתחנה עצמה, לא רק לעמדות בדיקה סופיות או לדוחות QA מאוחרים.',
+    },
+    {
+      title: 'ראיה חזותית, לא זיכרון מפעיל',
+      description: 'כל התראה יכולה לשאת פריים, עקבה וסיבת הסלמה בזמן שהחלק עדיין בתנועה.',
+    },
+    {
+      title: 'Romeo FlexVision מתחת למכסה המנוע',
+      description: 'המותג החדש נשאר product-first, אבל שומר את Romeo FlexVision כמנוע הטכני בפנים.',
+    },
+  ],
+  pains: [
+    {
+      title: 'פגמים מתגלים מאוחר מדי',
+      description: 'RoboQC תופס את הבעיה בתחנה 2 במקום לגלות אותה רק בבדיקה 5.',
+    },
+    {
+      title: 'בדיקות ידניות משתנות ממשמרת למשמרת',
+      description: 'הרובוט-מצלמה לא מתעייף, לא ממהר ולא מתבלבל בגלל לחץ הקו.',
+    },
+    {
+      title: 'אישורי שווא עוברים בלי הוכחה',
+      description: 'כל התראה מגיעה עם פריים, עקבת ביטחון וסיבה חזותית ברורה לפעולה.',
+    },
+    {
+      title: 'סיבת השורש נעלמת בין תחנות',
+      description: 'לולאת הפיילוט קושרת את הפגם לתחנה המדויקת, לרגע המדויק ולפעולת המפעיל.',
+    },
+    {
+      title: 'הנדסה שורפת זמן על ישיבות תיקון',
+      description: 'RoboQC נותן לצוותי איכות הוכחה מיידית במקום סיפורי פגם מאוחרים.',
+    },
+  ],
+  comparisonRows: [
+    {
+      capability: 'בדיקה חזותית inline על התחנה עצמה',
+      values: [
+        { label: 'כן', tone: 'strong' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'לא', tone: 'weak' },
+      ],
+    },
+    {
+      capability: 'פוקוס על מניעת פגמים, לא רק על הנחיה',
+      values: [
+        { label: 'כן', tone: 'strong' },
+        { label: 'לא', tone: 'weak' },
+        { label: 'לא', tone: 'weak' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'חלקית', tone: 'mid' },
+      ],
+    },
+    {
+      capability: 'פריים מוכיח ועקיבות לכל התראה',
+      values: [
+        { label: 'מובנה', tone: 'strong' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'חלקית', tone: 'mid' },
+        { label: 'כן', tone: 'strong' },
+        { label: 'חלקית', tone: 'mid' },
+      ],
+    },
+    {
+      capability: 'פיילוט בלי לתכנן מחדש את כל הקו',
+      values: [
+        { label: 'מהיר', tone: 'strong' },
+        { label: 'בינוני', tone: 'mid' },
+        { label: 'בינוני', tone: 'mid' },
+        { label: 'בינוני', tone: 'mid' },
+        { label: 'איטי', tone: 'weak' },
+      ],
+    },
+    {
+      capability: 'סטאק הוויז׳ן של Romeo FlexVision כלול בפנים',
+      values: [
+        { label: 'מובנה', tone: 'strong' },
+        { label: 'לא', tone: 'weak' },
+        { label: 'לא', tone: 'weak' },
+        { label: 'לא', tone: 'weak' },
+        { label: 'לא', tone: 'weak' },
+      ],
+    },
+  ],
+  products: [
+    {
+      title: 'RoboQC Inspector',
+      eyebrow: 'המותג הראשי',
+      description: 'הרובוט-מצלמה ברמת התחנה שמביט בתהליך ברצף ומרים פגם לפני שהוא זולג לבדיקות downstream.',
+      status: 'מוכן לפיילוט',
+      statusTone: 'success',
+      tags: ['בקרת inline', 'התראות ויז׳ן', 'עקיבות'],
+      repoUrl: SITE_LINKS.products.roboqc,
+    },
+    {
+      title: 'Romeo FlexVision Core',
+      eyebrow: 'הטכנולוגיה בפנים',
+      description: 'עמוד השדרה של הוויז׳ן שמפעיל את לוגיקת הזיהוי, הסקורינג, התנהגות המצלמה והוכחת המפעיל.',
+      status: 'סטאק ליבה',
+      statusTone: 'info',
+      tags: ['סטאק ויז׳ן', 'סקורינג', 'לוגיקת מצלמה'],
+      repoUrl: SITE_LINKS.products.roboqc,
+    },
+    {
+      title: 'RoboQC Root Cause',
+      eyebrow: 'אנליסט שורש הבעיה',
+      description: 'מחבר בין פגמים, אירועי תחנה והקשר ייצור כדי שצוותי האיכות יזהו דפוסים חוזרים מהר יותר.',
+      status: 'אנליטיקת תפעול',
+      statusTone: 'warning',
+      tags: ['אנליטיקה', 'סקירת מגמות', 'נתוני תחנה'],
+      repoUrl: SITE_LINKS.products.andrew,
+    },
+    {
+      title: 'RoboQC Reports',
+      eyebrow: 'קופיילוט להסלמה',
+      description: 'הופך את תוצרי הבדיקה לדוחות קריאים, סיכומי מפעיל וחבילת handoff טכנית לסקירות פיילוט.',
+      status: 'שכבת דיווח',
+      statusTone: 'info',
+      tags: ['דוחות', 'handoff למפעיל', 'הערות פיילוט'],
+      repoUrl: SITE_LINKS.products.romeo,
+    },
+    {
+      title: 'RoboQC Academy',
+      eyebrow: 'שכבת הדרכה',
+      description: 'מייצר סרטוני הדרכה קצרים ומסבירנים כשצריך onboarding מהיר סביב פגמים חוזרים.',
+      status: 'הטמעה',
+      statusTone: 'info',
+      tags: ['הדרכה', 'מדיה', 'קליטה'],
+      repoUrl: SITE_LINKS.products.bassito,
+    },
+  ],
+  communityCards: [
+    {
+      title: 'GitHub',
+      description: 'המאגר, קוד המקור של הלנדינג ופני המוצר העדכניים למצגת RoboQC.',
+      href: SITE_LINKS.github,
+      action: 'פתח GitHub',
+    },
+    {
+      title: 'Telegram Bot',
+      description: 'נקודת הכניסה הציבורית המהירה ביותר לדמו, לפתיחת פיילוט ולפניות נכנסות.',
+      href: SITE_LINKS.telegram,
+      action: 'פתח Telegram',
+    },
+    {
+      title: 'LinkedIn',
+      description: 'עדכוני מיצוב קצרים ונרטיב חיצוני סביב Romeo FlexVision.',
+      href: SITE_LINKS.linkedin,
+      action: 'פתח LinkedIn',
+    },
+  ],
+  faq: [
+    {
+      question: 'מה זה RoboQC במשפט אחד?',
+      answer: 'RoboQC הוא רובוט-מפקח קוגניטיבי לבקרת איכות inline, המופעל על גבי סטאק הוויז׳ן של Romeo FlexVision.',
+    },
+    {
+      question: 'מה קורה בפיילוט?',
+      answer: 'הפיילוט מתמקד בתחנה אחת, בלולאת מצלמה אחת ובמשפחת פגמים אחת כדי להוכיח ערך מהר.',
+    },
+    {
+      question: 'למה מזכירים תחנה 2 ובדיקה 5?',
+      answer: 'כי המוצר ממוסגר סביב תפיסת הפגם במקום שבו הוא נוצר, לא במקום שבו הוא כבר הופך ליקר.',
+    },
+    {
+      question: 'האם כלי ה-AI האחרים עדיין קיימים?',
+      answer: 'כן. האתר שומר את הכלים הסובבים וממסגר אותם כשכבות תמיכה סביב לולאת הבדיקה של RoboQC.',
+    },
+  ],
 };
 
 const EN_EXTRAS: SiteCopyExtras = {
@@ -927,7 +1159,109 @@ const RU_EXTRAS: SiteCopyExtras = {
   ],
 };
 
-const HE_EXTRAS: SiteCopyExtras = EN_EXTRAS;
+const HE_EXTRAS: SiteCopyExtras = {
+  nav: {
+    stack: 'סטאק טכנולוגי',
+    roadmap: 'מפת פריסה',
+  },
+  sections: {
+    stack: 'בנוי לתחנה, לא למצגת',
+    stackDescription:
+      'RoboQC מחבר לכידת מצלמה, scoring של Romeo FlexVision, התראות מפעיל ודיווח ללולאה אחת שפונה לייצור.',
+    flow: 'איך לולאת ההוכחה עובדת',
+    flowDescription:
+      'מהפריים הראשון ועד לפעולת המפעיל, RoboQC שומר את הקונטקסט של הפגם שלם כדי שהקו יוכל להגיב מיד.',
+    roadmap: 'מפת הפריסה',
+    roadmapDescription:
+      'מסלול מעשי מפיילוט בתחנה אחת לכיסוי inline של כמה תחנות בלי לתכנן מחדש את כל המפעל.',
+  },
+  techGroups: [
+    {
+      title: 'שכבת ויז׳ן',
+      description: 'כל מה שצריך כדי לתפוס פגמים במקום שבו הם נולדים על הקו.',
+      items: ['מצלמות תעשייתיות', 'Romeo FlexVision', 'Confidence scoring', 'ספי תחנה'],
+    },
+    {
+      title: 'לולאת שליטה למפעיל',
+      description: 'המפעיל רואה את אותה חבילת הוכחה שעל פיה המודל החליט להסלים.',
+      items: ['התראות inline', 'סקירת QC', 'אישור אנושי', 'כללי הסלמה'],
+    },
+    {
+      title: 'הוכחה ודיווח',
+      description: 'כל אירוע נשאר עקיב מהפריים ועד לדוח המשמרת.',
+      items: ['Trace IDs', 'Evidence packs', 'דוחות משמרת', 'סקירת שורש הבעיה'],
+    },
+    {
+      title: 'מעטפת הפריסה',
+      description: 'סטאק קומפקטי שאפשר באמת להרים בפיילוט ולתחזק לאורך זמן.',
+      items: ['FastAPI', 'LangGraph', 'Telegram bot', 'GitHub Actions'],
+    },
+  ],
+  flowSteps: [
+    {
+      eyebrow: '01 לכידה',
+      title: 'מצלמת התחנה מסמנת את האנומליה',
+      description:
+        'RoboQC מביט ברצף על התחנה ומבודד את הפריים שבו התהליך מתחיל לסטות מהנורמה.',
+      note: 'טריגר מתחנה 2 בלולאת הדמו החיה',
+    },
+    {
+      eyebrow: '02 ניקוד',
+      title: 'Romeo FlexVision מדרג את הפגם',
+      description:
+        'סטאק הוויז׳ן מסווג את הבעיה, מצמיד confidence ובודק האם ההתראה חוצה את סף התחנה.',
+      note: 'הסקורינג וה-confidence נשארים קשורים לאותה חבילת הוכחה',
+    },
+    {
+      eyebrow: '03 חבילה',
+      title: 'פריים, עקבה ודוח נארזים יחד',
+      description:
+        'במקום אזעקה ערומה, הקו מקבל פריים, עקבה והסבר קריא שמבהיר למה צריך לבדוק את ההתראה עכשיו.',
+      note: 'פריים + confidence + traceability בחבילה אחת למפעיל',
+    },
+    {
+      eyebrow: '04 פעולה',
+      title: 'המפעיל מחליט כשהחלק עדיין על הקו',
+      description:
+        'RoboQC הופך את פלט המודל לרגע פעולה כאן ועכשיו, לא לדיון QA מאוחר אחרי סיום המשמרת.',
+      note: 'כך מעבירים את גילוי הפגם מבדיקה 5 בחזרה לתחנה 2',
+    },
+  ],
+  roadmap: [
+    {
+      phase: 'עכשיו',
+      title: 'פיילוט בתחנה אחת',
+      description:
+        'מחברים מצלמה אחת, משפחת פגמים אחת וערוץ מפעיל אחד כדי להוכיח מהר את שיעור התפיסה בזמן אמת.',
+      status: 'מוכן לפיילוט',
+      tone: 'success',
+    },
+    {
+      phase: 'השלב הבא',
+      title: 'חבילת הוכחה ולולאת דיווח',
+      description:
+        'מעלים frame capture, confidence, trace והערות הסלמה כחבילת דיווח אחת שפונה למפעיל בכל התראה קריטית.',
+      status: 'בפריסה',
+      tone: 'info',
+    },
+    {
+      phase: 'השלב הבא',
+      title: 'משוב שורש הבעיה לפי תחנה',
+      description:
+        'ממפים פגמים חוזרים לפי תחנה, משמרת ומשפחת חלקים כדי שההנדסה תראה איפה התהליך באמת מחליק.',
+      status: 'אנליטיקה פעילה',
+      tone: 'info',
+    },
+    {
+      phase: 'אחר כך',
+      title: 'אורקסטרציה של כמה תחנות',
+      description:
+        'מתאמים התראות, אישורים וזרימת evidence בין כמה תחנות בלי להגדיל את כוח האדם לבדיקה ידנית.',
+      status: 'שלב הרחבה',
+      tone: 'warning',
+    },
+  ],
+};
 
 export function getSiteContent(language: Language): ResolvedSiteCopy {
   const baseCopy = language === 'ru' ? RU_COPY : language === 'he' ? HE_COPY : EN_COPY;

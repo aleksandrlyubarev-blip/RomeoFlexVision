@@ -32,27 +32,27 @@ const NAV_LABELS: Record<
     },
   },
   ru: {
-    guest: 'Гость',
-    unauthorized: 'Не авторизован',
-    operator: 'Оператор',
-    authorizationRequired: 'Нужна авторизация',
+    guest: 'Р“РѕСЃС‚СЊ',
+    unauthorized: 'РќРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ',
+    operator: 'РћРїРµСЂР°С‚РѕСЂ',
+    authorizationRequired: 'РќСѓР¶РЅР° Р°РІС‚РѕСЂРёР·Р°С†РёСЏ',
     items: {
-      landing: 'Главная',
-      catalog: 'Агенты',
-      workspace: 'Рабочее пространство',
-      dashboard: 'Мониторинг',
+      landing: 'Р“Р»Р°РІРЅР°СЏ',
+      catalog: 'РђРіРµРЅС‚С‹',
+      workspace: 'Р Р°Р±РѕС‡РµРµ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ',
+      dashboard: 'РњРѕРЅРёС‚РѕСЂРёРЅРі',
     },
   },
   he: {
-    guest: 'Guest',
-    unauthorized: 'Not signed in',
-    operator: 'Operator',
-    authorizationRequired: 'Authorization required',
+    guest: 'אורח',
+    unauthorized: 'לא מחובר',
+    operator: 'מפעיל',
+    authorizationRequired: 'נדרשת התחברות',
     items: {
-      landing: 'Home',
-      catalog: 'Agents',
-      workspace: 'Workspace',
-      dashboard: 'Monitoring',
+      landing: 'דף הבית',
+      catalog: 'סוכנים',
+      workspace: 'סביבת עבודה',
+      dashboard: 'ניטור',
     },
   },
 };
@@ -137,3 +137,4 @@ export default function Sidebar({ currentView, onNavigate, isAuthenticated }: Si
     </aside>
   );
 }
+
