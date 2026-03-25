@@ -55,6 +55,22 @@ export interface SiteFaqItem {
   answer: string;
 }
 
+export interface SitePainPoint {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface SiteCompetitor {
+  name: string;
+  inline: boolean;
+  ai: boolean;
+  multiStation: boolean;
+  ru: boolean;
+  fastPilot: boolean;
+  isUs: boolean;
+}
+
 interface SiteMetaCopy {
   title: string;
   description: string;
@@ -90,6 +106,23 @@ interface SiteHeroCopy {
   tertiaryCta: string;
   orbitTitle: string;
   orbitCaption: string;
+}
+
+interface SitePainSectionCopy {
+  kicker: string;
+  title: string;
+  description: string;
+}
+
+interface SiteCompetitorsSectionCopy {
+  kicker: string;
+  title: string;
+  description: string;
+  featureInline: string;
+  featureAi: string;
+  featureMulti: string;
+  featureRu: string;
+  featurePilot: string;
 }
 
 interface SiteSectionCopy {
@@ -133,6 +166,8 @@ interface SiteCopy {
   hero: SiteHeroCopy;
   sections: SiteSectionCopy;
   labels: SiteLabelCopy;
+  pain: SitePainSectionCopy;
+  competitorsSection: SiteCompetitorsSectionCopy;
   metrics: SiteMetric[];
   products: SiteProduct[];
   techGroups: SiteTechGroup[];
@@ -143,102 +178,104 @@ interface SiteCopy {
   architectureSteps: string[];
   architectureLanes: string[];
   investorBullets: string[];
+  painPoints: SitePainPoint[];
+  competitors: SiteCompetitor[];
 }
 
 const SHARED_PRODUCTS: SiteProduct[] = [
   {
-    id: 'andrew-analytic',
-    title: 'Andrew Swarm',
-    eyebrow: 'Data Science Orchestration Agent',
+    id: 'roboqc-vision',
+    title: 'RoboQC Vision',
+    eyebrow: 'Inline Camera Inspection Module',
     description:
-      'Multi-model routing with sqlglot validation, AST safety, and sandboxed execution for analytics-heavy technical workflows.',
-    status: 'Sprint 5 - Moltis integration',
-    statusTone: 'warning',
-    tags: ['LangGraph', 'SQL', 'Python', 'LiteLLM'],
+      'Real-time camera-based defect detection directly at production stations. Catches 90%+ of visual defects before they reach downstream stages — powered by Romeo FlexVision CV.',
+    status: 'Pilot Ready',
+    statusTone: 'success',
+    tags: ['Camera AI', 'Real-time', 'CV', 'Romeo FlexVision'],
     repoUrl: SITE_LINKS.products.andrew,
   },
   {
-    id: 'romeo-phd',
-    title: 'Romeo PhD',
-    eyebrow: 'Educational AI Companion',
+    id: 'roboqc-analytics',
+    title: 'RoboQC Analytics',
+    eyebrow: 'Defect Intelligence Dashboard',
     description:
-      'A TypeScript monorepo for pedagogical explanation, technical tutoring, and developer-friendly reasoning flows.',
-    status: 'v6.0',
-    statusTone: 'success',
-    tags: ['TypeScript', 'React 19', 'Claude API', 'PostgreSQL'],
+      'Multi-model analytics for quality trends, root-cause analysis, and station-level defect reporting. Operator dashboards with full inspection history and anomaly alerts.',
+    status: 'Sprint 5',
+    statusTone: 'warning',
+    tags: ['LangGraph', 'SQL', 'Python', 'LiteLLM'],
     repoUrl: SITE_LINKS.products.romeo,
   },
   {
-    id: 'bassito-animator',
-    title: 'Bassito',
-    eyebrow: 'Automated Video Production Pipeline',
+    id: 'roboqc-reporter',
+    title: 'RoboQC Reporter',
+    eyebrow: 'Automated Quality Reporting Pipeline',
     description:
-      'Script to background, voice, lip-sync, CTA5, and FFmpeg compositing through a Telegram-first production loop.',
-    status: 'Active pipeline',
+      'End-to-end quality report generation: station snapshots, defect summaries, trend charts — delivered automatically via Telegram and dashboard after every shift.',
+    status: 'Active',
     statusTone: 'info',
-    tags: ['FFmpeg', 'CTA5', 'Google Drive', 'Telegram Bot'],
+    tags: ['Telegram Bot', 'Reports', 'FFmpeg', 'Automation'],
     repoUrl: SITE_LINKS.products.bassito,
   },
   {
-    id: 'pino-cut',
-    title: 'PinoCut',
-    eyebrow: 'Modular AI Video Assembly Agent',
+    id: 'roboqc-orchestrator',
+    title: 'RoboQC Orchestrator',
+    eyebrow: 'Multi-Station QC Coordinator',
     description:
-      'A scene assembly codebase that plugs into the wider ecosystem for automated rough cuts, structured timelines, and scene review.',
+      'Coordinates camera inspection across multiple production stations simultaneously. Manages inspection queues, review cycles, and operator escalation workflows at scale.',
     status: 'v1.0 released',
     statusTone: 'success',
-    tags: ['Video Assembly', 'Modular', 'Andrew Swarm', 'Scene Stitcher'],
+    tags: ['Multi-station', 'Modular', 'QC Workflow', 'Orchestration'],
     repoUrl: SITE_LINKS.products.pinocut,
   },
 ];
 
 const SHARED_TECH_GROUPS: SiteTechGroup[] = [
+  { title: 'Vision & CV', items: ['Romeo FlexVision', 'Camera AI', 'OpenCV', 'YOLO'] },
   { title: 'Orchestration', items: ['LangGraph', 'ROMA', 'Moltis (Rust)'] },
-  { title: 'AI Models', items: ['Claude Sonnet', 'GPT-4o-mini', 'Grok 4', 'LiteLLM'] },
-  { title: 'Backend', items: ['Python', 'FastAPI', 'TypeScript', 'Node.js 24', 'Express 5'] },
+  { title: 'AI Models', items: ['Claude Sonnet', 'GPT-4o-mini', 'LiteLLM'] },
+  { title: 'Backend', items: ['Python', 'FastAPI', 'TypeScript', 'Node.js 24'] },
   { title: 'Data', items: ['PostgreSQL', 'Drizzle ORM', 'sqlglot', 'E2B Sandbox'] },
-  { title: 'Media', items: ['FFmpeg', 'CTA5', 'Google Drive API'] },
-  { title: 'DevOps', items: ['GitHub Actions', 'Docker', 'GitHub Pages'] },
+  { title: 'DevOps', items: ['GitHub Actions', 'Docker', 'Telegram Bot', 'GitHub Pages'] },
 ];
 
 const SHARED_ROADMAP: SiteRoadmapItem[] = [
   {
-    phase: 'Sprints 1-2',
-    title: 'LangGraph foundations and core pipelines',
+    phase: 'Phase 1',
+    title: 'Romeo FlexVision CV core & camera integration',
     description:
-      'StateGraph orchestration, SQL/Python execution paths, and LiteLLM abstraction were established.',
+      'Core computer vision pipeline established: camera calibration, frame capture, Romeo FlexVision defect model integration, and inline detection loop.',
     status: 'Done',
     statusTone: 'success',
   },
   {
-    phase: 'Sprint 3',
-    title: 'Column-level validation and AST safety',
+    phase: 'Phase 2',
+    title: 'Station #2 pilot — real-time defect catching',
     description:
-      'sqlglot guards and AST visitors reduced unsafe execution paths and improved explainability.',
+      'Live pilot at Station #2 catching assembly defects in real time. 90%+ catch rate validated against manual inspection baseline.',
     status: 'Done',
     statusTone: 'success',
   },
   {
-    phase: 'Sprint 4',
-    title: 'Weighted routing and model lanes',
+    phase: 'Phase 3',
+    title: 'Analytics dashboard & operator alerts',
     description:
-      '48-keyword routing and three model lanes turned the stack into a real multi-model orchestrator.',
+      'Defect analytics dashboard with per-station metrics, shift summaries, and Telegram-based operator alert system.',
     status: 'Done',
     statusTone: 'success',
   },
   {
-    phase: 'Sprint 5',
-    title: 'Moltis bridge and runtime hardening',
+    phase: 'Phase 4 — Current',
+    title: 'Multi-station orchestration (Moltis runtime)',
     description:
-      'The current focus is a Rust runtime bridge through FastAPI to strengthen throughput and execution reliability.',
+      'Scaling RoboQC to 5+ stations simultaneously with the Moltis Rust runtime bridge and central inspection queue management.',
     status: 'In Progress',
     statusTone: 'warning',
   },
   {
     phase: 'Next',
-    title: 'Investor positioning and v1.0 GA',
+    title: 'Commercial pilot program & v1.0 GA',
     description:
-      'The public narrative, product packaging, and distribution loop are being aligned for the next release milestone.',
+      'Opening the RoboQC pilot program to manufacturing partners. Full product packaging, SLA definition, and public launch.',
     status: 'Planned',
     statusTone: 'muted',
   },
@@ -268,52 +305,121 @@ const SHARED_COMMUNITY: SiteLinkCard[] = [
 
 const SHARED_FAQ: SiteFaqItem[] = [
   {
-    question: 'What is RomeoFlexVision in one sentence?',
+    question: 'What is RoboQC in one sentence?',
     answer:
-      'It is an agentic AI ecosystem connecting research, orchestration, analytics, and automated media production.',
+      'RoboQC is a cognitive robot-camera that performs inline quality control at every production station — catching defects in real time before they reach the next stage.',
   },
   {
-    question: 'Is this a single chatbot or a multi-agent system?',
+    question: 'How fast is defect detection?',
     answer:
-      'It is explicitly a multi-agent system coordinated through ROMA and supported by dedicated product surfaces.',
+      'Detection latency is under 50ms per frame. Operator alerts fire within 2 seconds of a confirmed defect, so issues are caught at station #2, not discovered at test #5.',
   },
   {
-    question: 'What is already real versus planned?',
+    question: 'Which production environments does RoboQC support?',
     answer:
-      'The repos, CI workflows, SceneOps seams, media pipeline scaffolding, and product shells are real. Moltis runtime hardening is in progress.',
+      'RoboQC integrates with standard industrial cameras (USB, GigE, IP). It runs on-premise — no cloud dependency — and supports 5+ stations simultaneously through the Moltis orchestration layer.',
   },
   {
-    question: 'Why combine data science and media production?',
+    question: 'What is the pilot program?',
     answer:
-      'Because the platform goal is one orchestrated operating layer that can inspect, explain, and generate operational assets in the same workflow.',
+      'We run a 2-week paid pilot at one production station. You get the full RoboQC Vision module, defect catch-rate benchmarking against your manual baseline, and a daily quality report via Telegram.',
   },
   {
-    question: 'How should the Telegram bot be used?',
+    question: 'How does RoboQC differ from LightGuide, Arkite, or Drishti?',
     answer:
-      'As the fastest public entry point: launch demos, route visitors to GitHub and product pages, collect inbound requests, and hand off qualified conversations into Telegram or email.',
+      'RoboQC combines cognitive AI vision (Romeo FlexVision) with real-time orchestration across multiple stations. Competitors focus on visual work instructions (LightGuide, Arkite) or single-station analytics. RoboQC catches errors inline, not post-process.',
+  },
+  {
+    question: 'What technology powers RoboQC?',
+    answer:
+      'The core is Romeo FlexVision computer vision. Orchestration runs on LangGraph + ROMA + Moltis (Rust runtime). Reporting is built on a Telegram-first pipeline with FastAPI backend and React dashboard.',
   },
 ];
 
 const METRICS_BY_LANGUAGE: Record<Language, SiteMetric[]> = {
   en: [
-    { label: 'Lines of code', value: 10000, suffix: '+' },
-    { label: 'Tests passing', value: 27, suffix: '/27' },
-    { label: 'AI models integrated', value: 3, suffix: '+' },
-    { label: 'Pipeline stages', value: 5, suffix: '' },
+    { label: 'Defects caught inline', value: 90, suffix: '%+' },
+    { label: 'Detection latency (ms)', value: 50, suffix: '' },
+    { label: 'Stations supported', value: 5, suffix: '+' },
+    { label: 'Pilot weeks to deploy', value: 2, suffix: '' },
   ],
   ru: [
-    { label: 'Строк кода', value: 10000, suffix: '+' },
-    { label: 'Тестов пройдено', value: 27, suffix: '/27' },
-    { label: 'Интегрировано AI-моделей', value: 3, suffix: '+' },
-    { label: 'Стадий пайплайна', value: 5, suffix: '' },
+    { label: 'Дефектов ловим inline', value: 90, suffix: '%+' },
+    { label: 'Задержка детекции (мс)', value: 50, suffix: '' },
+    { label: 'Станций поддерживаем', value: 5, suffix: '+' },
+    { label: 'Недели на пилот', value: 2, suffix: '' },
   ],
   he: [
-    { label: 'שורות קוד', value: 10000, suffix: '+' },
-    { label: 'בדיקות עוברות', value: 27, suffix: '/27' },
-    { label: 'מודלי AI משולבים', value: 3, suffix: '+' },
-    { label: 'שלבי pipeline', value: 5, suffix: '' },
+    { label: 'פגמים שנתפסו inline', value: 90, suffix: '%+' },
+    { label: 'זמן זיהוי (ms)', value: 50, suffix: '' },
+    { label: 'תחנות נתמכות', value: 5, suffix: '+' },
+    { label: 'שבועות להטמעה', value: 2, suffix: '' },
   ],
 };
+
+const SHARED_PAIN_POINTS_EN: SitePainPoint[] = [
+  {
+    icon: '🕵️',
+    title: 'Defects found too late',
+    description: 'You discover the problem at test #5, but it was made at station #2. Every hour of delay multiplies the scrap cost.',
+  },
+  {
+    icon: '😴',
+    title: 'Human inspectors miss things',
+    description: 'Manual inspection fatigues. After hour 4, defect catch rates drop 30–40%. Night shifts are the worst.',
+  },
+  {
+    icon: '📊',
+    title: 'No real-time quality data',
+    description: 'Shift reports arrive at end-of-day. By then, hundreds of defective units are already in the next stage.',
+  },
+  {
+    icon: '📈',
+    title: 'Hard to scale to new lines',
+    description: 'Adding a new production station means hiring more inspectors. QC cost scales linearly with capacity.',
+  },
+  {
+    icon: '💸',
+    title: 'Expensive scrap and returns',
+    description: 'Each late-caught defect costs 5–20× more than an inline catch. Customer returns damage more than just margins.',
+  },
+];
+
+const SHARED_PAIN_POINTS_RU: SitePainPoint[] = [
+  {
+    icon: '🕵️',
+    title: 'Дефекты находят слишком поздно',
+    description: 'Проблему обнаруживают на тесте №5, хотя она возникла на станции №2. Каждый час задержки умножает стоимость брака.',
+  },
+  {
+    icon: '😴',
+    title: 'Ручной контроль устаёт и пропускает',
+    description: 'Ручная инспекция утомляет. После 4 часов работы процент обнаружения дефектов падает на 30–40%. Ночные смены — ещё хуже.',
+  },
+  {
+    icon: '📊',
+    title: 'Нет данных о качестве в реальном времени',
+    description: 'Отчёты о смене приходят в конце дня. К тому времени сотни бракованных деталей уже ушли на следующий этап.',
+  },
+  {
+    icon: '📈',
+    title: 'Сложно масштабировать контроль',
+    description: 'Добавление новой станции означает найм новых контролёров. Затраты на QC растут линейно вместе с мощностью.',
+  },
+  {
+    icon: '💸',
+    title: 'Дорогой брак и возвраты',
+    description: 'Дефект, пойманный поздно, обходится в 5–20 раз дороже, чем тот, что пойман inline. Возвраты от клиентов бьют не только по марже.',
+  },
+];
+
+const SHARED_COMPETITORS: SiteCompetitor[] = [
+  { name: 'RoboQC', inline: true, ai: true, multiStation: true, ru: true, fastPilot: true, isUs: true },
+  { name: 'LightGuide', inline: false, ai: false, multiStation: true, ru: false, fastPilot: false, isUs: false },
+  { name: 'Arkite', inline: true, ai: false, multiStation: true, ru: false, fastPilot: false, isUs: false },
+  { name: 'Drishti', inline: true, ai: true, multiStation: false, ru: false, fastPilot: false, isUs: false },
+  { name: 'Retrocausal', inline: true, ai: true, multiStation: false, ru: false, fastPilot: false, isUs: false },
+];
 
 const LOCALIZED_COPY: Record<
   Language,
@@ -321,14 +427,14 @@ const LOCALIZED_COPY: Record<
 > = {
   en: {
     meta: {
-      title: 'RomeoFlexVision | Agentic AI Ecosystem',
+      title: 'RoboQC — Cognitive QC Robot | Romeo FlexVision',
       description:
-        'Multi-agent orchestration for data science and automated media production. Explore Andrew Swarm, Romeo PhD, Bassito, and PinoCut.',
-      ogTitle: 'RomeoFlexVision | Agentic AI Ecosystem',
-      ogDescription: 'Building the future of AI agent orchestration for data science and media production.',
+        'RoboQC catches 90%+ of production defects inline, at station #2, not at test #5. Powered by Romeo FlexVision computer vision.',
+      ogTitle: 'RoboQC — Your Robot-Camera at Every Production Station',
+      ogDescription: 'Inline quality control that never sleeps. 90% of errors caught in real time.',
     },
     nav: {
-      ecosystem: 'Ecosystem',
+      ecosystem: 'How It Works',
       products: 'Products',
       stack: 'Tech Stack',
       roadmap: 'Roadmap',
@@ -336,7 +442,7 @@ const LOCALIZED_COPY: Record<
       github: 'GitHub',
       telegram: 'Telegram',
       linkedin: 'LinkedIn',
-      openPlatform: 'Open Platform',
+      openPlatform: 'Launch Pilot',
       signIn: 'Sign in',
       signOut: 'Sign out',
       menu: 'Menu',
@@ -346,111 +452,128 @@ const LOCALIZED_COPY: Record<
       social: 'Social',
     },
     hero: {
-      eyebrow: 'Agentic AI Ecosystem for Data Science and Media Production',
-      title: 'Building the Agentic AI Ecosystem',
+      eyebrow: 'Inline Quality Control · Powered by Romeo FlexVision',
+      title: 'RoboQC. Your robot-camera at every station.',
       subtitle:
-        'Multi-agent orchestration for data science and media production, powered by ROMA, LangGraph, and the next Moltis runtime layer.',
-      primaryCta: 'Explore Products',
+        'Inline quality control that never sleeps. We catch 90%+ of defects in real time — at station #2, not at test #5.',
+      primaryCta: 'Launch RoboQC Pilot',
       secondaryCta: 'View on GitHub',
-      tertiaryCta: 'Open Platform',
-      orbitTitle: 'ROMA orchestration map',
+      tertiaryCta: 'Launch Pilot',
+      orbitTitle: 'RoboQC station map',
       orbitCaption:
-        'A single operator layer coordinates analytics, education, automated video production, and modular post-processing.',
+        'One cognitive inspection layer coordinates cameras across all stations, queues defect reviews, and alerts operators instantly.',
     },
     sections: {
-      ecosystem: 'One ecosystem. Four agents. Infinite possibilities.',
+      ecosystem: 'One robot. Every station. Zero missed defects.',
       ecosystemDescription:
-        'The public landing page is structured around one control plane: ROMA routes work, while specialized products execute it.',
-      products: 'Products built for real operator workflows',
+        'RoboQC wraps Romeo FlexVision computer vision in a production-ready inspection platform: cameras at stations, AI in the loop, operator alerts in real time.',
+      products: 'The full RoboQC lineup',
       productsDescription:
-        'Each product surface solves a distinct role, but the real leverage comes from their shared orchestration model.',
-      stack: 'Tech stack across orchestration, inference, data, and media',
+        'Four modules built to cover the full QC lifecycle — from camera detection to multi-station orchestration and automated shift reporting.',
+      stack: 'Tech stack: vision, orchestration, data, and reporting',
       stackDescription:
-        'The stack is intentionally hybrid: orchestration-heavy, model-flexible, and practical for both developer tools and media automation.',
-      architecture: 'How Andrew Swarm routes technical work',
+        'Romeo FlexVision CV at the core. LangGraph + Moltis for multi-station orchestration. Telegram-first operator interface. FastAPI + React dashboard.',
+      architecture: 'How RoboQC detects defects',
       architectureDescription:
-        'Queries move through routing, lane selection, validation, and sandboxing before they ever become execution.',
-      roadmap: 'Roadmap toward RomeoFlexVision v1.0',
+        'Every frame moves through capture, model inference, threshold validation, and operator alert pipeline — all under 50ms.',
+      roadmap: 'Roadmap to RoboQC v1.0 GA',
       roadmapDescription:
-        'The public roadmap shows how the ecosystem moved from orchestration foundations into runtime hardening and product positioning.',
-      investors: 'For investors and strategic partners',
+        'From single-station pilot to multi-station orchestration — the public roadmap shows where RoboQC stands and where it is going.',
+      investors: 'For investors and manufacturing partners',
       investorsDescription:
-        'RomeoFlexVision is being shaped as a visible, inspectable product ecosystem rather than an abstract AI concept.',
-      community: 'Community, product access, and repositories',
+        'RoboQC is built on proven Romeo FlexVision technology with a clear path from pilot to production deployment at scale.',
+      community: 'Community, pilot access, and repositories',
       communityDescription:
-        'GitHub, Telegram, and LinkedIn are the current public surfaces where the ecosystem is documented and distributed.',
-      faq: 'FAQ for developers and decision makers',
+        'GitHub, Telegram, and LinkedIn are the current public surfaces where RoboQC is documented and pilot requests are handled.',
+      faq: 'FAQ for plant managers and decision makers',
       faqDescription:
-        'A concise technical FAQ for developers, partners, and anyone trying to understand where the ecosystem stands today.',
+        'A concise FAQ for production engineers, quality managers, and anyone evaluating inline AI quality control.',
     },
     labels: {
-      centralNode: 'Central node',
-      sharedControlPlane: 'Shared control plane',
+      centralNode: 'RoboQC Hub',
+      sharedControlPlane: 'Inline inspection layer',
       sharedControlPlaneDescription:
-        'Routing, validation, review loops, and cost visibility are handled as platform behavior, not as disconnected scripts.',
-      crossDomainExecution: 'Cross-domain execution',
+        'Camera frames, defect classifications, operator alerts, and shift reports all flow through one centralized inspection control plane.',
+      crossDomainExecution: 'Multi-station coverage',
       crossDomainExecutionDescription:
-        'The ecosystem supports data science, educational explanation, automated video production, and modular scene assembly in one narrative.',
-      humanLoop: 'Human-in-the-loop',
+        'RoboQC coordinates inspection across 5+ stations simultaneously — the same cognitive model, everywhere on the line.',
+      humanLoop: 'Operator-in-the-loop',
       humanLoopDescription:
-        'Confidence gates stay inspectable. Operators remain in control when uncertainty crosses the threshold.',
-      builtWith: 'Built with Claude + LangGraph',
+        'Confidence gates are operator-visible. When defect likelihood crosses the threshold, the human is notified before the part moves on.',
+      builtWith: 'Powered by Romeo FlexVision',
       footerSummary:
-        'RomeoFlexVision is a public build log and product surface for agentic AI orchestration across data science and media production.',
-      footerStack: 'FastAPI, TypeScript, React, FFmpeg, and developer-first AI tooling.',
-      rights: '(c) 2026 RomeoFlexVision. All rights reserved.',
+        'RoboQC is a cognitive robot-inspector built on Romeo FlexVision. It catches production defects inline — at station #2, not at test #5.',
+      footerStack: 'Romeo FlexVision · LangGraph · FastAPI · React · Telegram · Moltis runtime.',
+      rights: '(c) 2026 RoboQC | Romeo FlexVision. All rights reserved.',
       investorCta: 'Open Telegram',
-      roadmapStep: 'Step',
+      roadmapStep: 'Phase',
     },
     ecosystemCards: [
       {
-        title: 'Shared control plane',
+        title: 'Inline inspection layer',
         description:
-          'Routing, validation, review loops, and FinOps visibility live at the platform level rather than inside isolated tools.',
+          'Camera frames are processed in real time at the station — defect detection happens before the part ever reaches the next step.',
       },
       {
-        title: 'Cross-domain execution',
+        title: 'Multi-station coverage',
         description:
-          'The same ecosystem supports data science, educational explanation, video automation, and structured scene assembly.',
+          'RoboQC Orchestrator coordinates inspection across 5+ stations from a single control plane, without adding headcount.',
       },
       {
-        title: 'Human-in-the-loop review',
+        title: 'Operator-in-the-loop alerts',
         description:
-          'Confidence and quality gates remain visible so an operator can intervene before the workflow drifts.',
+          'When a defect is confirmed, the operator is alerted within 2 seconds via dashboard and Telegram — before the part moves on.',
       },
     ],
     architectureSteps: [
-      'User Query',
-      'Keyword Router',
-      'Model Lane',
-      'sqlglot Validation',
-      'AST Safety',
-      'Sandbox Response',
+      'Camera Frame',
+      'Romeo FlexVision CV',
+      'Defect Model',
+      'Threshold Gate',
+      'Operator Alert',
+      'Shift Report',
     ],
     architectureLanes: [
-      'Reasoning / Math -> Grok 4',
-      'Analytics -> GPT-4o-mini',
-      'Standard -> Claude Sonnet',
-      'sqlglot column-level validation',
-      'AST visitor safety guard',
-      'E2B sandbox execution',
+      'USB / GigE / IP camera input',
+      'Romeo FlexVision inference < 50ms',
+      'Confidence threshold validation',
+      'Telegram operator alert (< 2s)',
+      'Defect log & analytics storage',
+      'Automated shift PDF/dashboard report',
     ],
     investorBullets: [
-      'Multi-agent stack with clear product surfaces instead of one generic assistant.',
-      'Routing, validation, and HITL checkpoints make the system inspectable by design.',
-      'A path from developer tooling into operator-facing workflow products.',
+      'Proven Romeo FlexVision CV core with 90%+ inline defect catch rate validated in pilot.',
+      'Multi-station orchestration via Moltis runtime — scales without linear headcount growth.',
+      'Clear path from 2-week paid pilot to full production deployment contract.',
     ],
+    pain: {
+      kicker: 'Why RoboQC',
+      title: '5 pains RoboQC takes away overnight',
+      description:
+        'Every manufacturing plant with manual QC faces the same five problems. RoboQC eliminates them at the source.',
+    },
+    competitorsSection: {
+      kicker: 'Competitive landscape',
+      title: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
+      description:
+        'Most competitors solve one piece of the puzzle. RoboQC is the only solution combining cognitive AI vision with multi-station real-time orchestration.',
+      featureInline: 'Inline real-time detection',
+      featureAi: 'Cognitive AI vision',
+      featureMulti: 'Multi-station',
+      featureRu: 'Russian market support',
+      featurePilot: '2-week fast pilot',
+    },
   },
   ru: {
     meta: {
-      title: 'RomeoFlexVision | Агентная AI-экосистема',
+      title: 'RoboQC — Когнитивный QC-робот | Romeo FlexVision',
       description:
-        'Мультиагентная оркестрация для data science и автоматизированного медиа-производства. Andrew Swarm, Romeo PhD, Bassito и PinoCut.',
-      ogTitle: 'RomeoFlexVision | Агентная AI-экосистема',
-      ogDescription: 'AI-оркестрация для data science и media production.',
+        'RoboQC ловит 90%+ производственных дефектов inline — на станции №2, а не на тесте №5. Технология Romeo FlexVision.',
+      ogTitle: 'RoboQC — Твой робот-камера на каждой станции',
+      ogDescription: 'Inline контроль качества. 90% ошибок ловим в реальном времени.',
     },
     nav: {
-      ecosystem: 'Экосистема',
+      ecosystem: 'Как работает',
       products: 'Продукты',
       stack: 'Техстек',
       roadmap: 'Roadmap',
@@ -458,7 +581,7 @@ const LOCALIZED_COPY: Record<
       github: 'GitHub',
       telegram: 'Telegram',
       linkedin: 'LinkedIn',
-      openPlatform: 'Открыть платформу',
+      openPlatform: 'Запустить пилот',
       signIn: 'Войти',
       signOut: 'Выйти',
       menu: 'Меню',
@@ -468,108 +591,125 @@ const LOCALIZED_COPY: Record<
       social: 'Соцсети',
     },
     hero: {
-      eyebrow: 'Agentic AI Ecosystem для Data Science и Media Production',
-      title: 'Создаём агентную AI-экосистему',
+      eyebrow: 'Inline контроль качества · На базе Romeo FlexVision',
+      title: 'RoboQC. Твой робот-камера на каждой станции.',
       subtitle:
-        'Мультиагентная оркестрация для data science и media production на базе ROMA, LangGraph и следующего runtime-слоя Moltis.',
-      primaryCta: 'Изучить продукты',
+        'Inline контроль качества, который никогда не спит. 90% ошибок ловим в реальном времени — на станции №2, а не на тесте №5.',
+      primaryCta: 'Запустить RoboQC-пилот',
       secondaryCta: 'Смотреть на GitHub',
-      tertiaryCta: 'Открыть платформу',
-      orbitTitle: 'Карта оркестрации ROMA',
+      tertiaryCta: 'Запустить пилот',
+      orbitTitle: 'Карта станций RoboQC',
       orbitCaption:
-        'Один операторный слой координирует аналитику, обучение, автоматизированное видео-производство и модульный постпроцессинг.',
+        'Один когнитивный слой инспекции координирует камеры по всем станциям, ставит дефекты в очередь проверки и мгновенно оповещает оператора.',
     },
     sections: {
-      ecosystem: 'Одна экосистема. Четыре агента. Бесконечные комбинации.',
+      ecosystem: 'Один робот. Каждая станция. Ноль пропущенных дефектов.',
       ecosystemDescription:
-        'Публичный лендинг строится вокруг единой control plane: ROMA маршрутизирует работу, а специализированные продукты её исполняют.',
-      products: 'Продукты для реальных операторных сценариев',
+        'RoboQC оборачивает компьютерное зрение Romeo FlexVision в production-ready платформу инспекции: камеры на станциях, AI в петле, оповещения оператора в реальном времени.',
+      products: 'Вся линейка RoboQC',
       productsDescription:
-        'Каждый продукт решает отдельную роль, но главное преимущество появляется за счёт общей модели оркестрации.',
-      stack: 'Техстек для оркестрации, inference, данных и медиа',
+        'Четыре модуля для полного цикла QC — от детекции камерой до оркестрации нескольких станций и автоматической отчётности по сменам.',
+      stack: 'Техстек: зрение, оркестрация, данные и отчётность',
       stackDescription:
-        'Стек намеренно гибридный: сильная оркестрация, свобода выбора моделей и практичность для developer tools и media automation.',
-      architecture: 'Как Andrew Swarm маршрутизирует техническую работу',
+        'Ядро — Romeo FlexVision CV. Оркестрация — LangGraph + Moltis. Интерфейс оператора — Telegram. Дашборд — FastAPI + React.',
+      architecture: 'Как RoboQC обнаруживает дефекты',
       architectureDescription:
-        'Запрос проходит маршрутизацию, выбор модельной полосы, валидацию и sandboxing ещё до фактического выполнения.',
-      roadmap: 'Roadmap к RomeoFlexVision v1.0',
+        'Каждый кадр проходит захват, инференс модели, валидацию порога и пайплайн оповещения оператора — всё за 50 мс.',
+      roadmap: 'Roadmap к RoboQC v1.0 GA',
       roadmapDescription:
-        'Публичная дорожная карта показывает переход от foundations оркестрации к runtime hardening и продуктовой упаковке.',
-      investors: 'Для инвесторов и стратегических партнёров',
+        'От пилота на одной станции к оркестрации нескольких станций — публичная дорожная карта показывает, где RoboQC сейчас и куда движется.',
+      investors: 'Для инвесторов и производственных партнёров',
       investorsDescription:
-        'RomeoFlexVision формируется как наблюдаемая продуктовая экосистема, а не как абстрактная AI-идея.',
-      community: 'Сообщество, доступ к продукту и репозитории',
+        'RoboQC построен на проверенной технологии Romeo FlexVision с чётким путём от пилота к полному производственному развёртыванию.',
+      community: 'Сообщество, доступ к пилоту и репозитории',
       communityDescription:
-        'GitHub, Telegram и LinkedIn сейчас являются главными публичными поверхностями, где документируется и распространяется экосистема.',
-      faq: 'FAQ для разработчиков и лиц, принимающих решения',
+        'GitHub, Telegram и LinkedIn — публичные поверхности, где RoboQC документируется и принимаются заявки на пилот.',
+      faq: 'FAQ для руководителей производства и инженеров качества',
       faqDescription:
-        'Короткий технический FAQ для разработчиков, партнёров и тех, кто хочет понять текущее состояние экосистемы.',
+        'Короткий FAQ для производственных инженеров, менеджеров качества и всех, кто рассматривает inline AI-контроль качества.',
     },
     labels: {
-      centralNode: 'Центральный узел',
-      sharedControlPlane: 'Единая control plane',
+      centralNode: 'Хаб RoboQC',
+      sharedControlPlane: 'Слой inline-инспекции',
       sharedControlPlaneDescription:
-        'Маршрутизация, валидация, review-циклы и контроль стоимости реализованы как поведение платформы, а не как набор разрозненных скриптов.',
-      crossDomainExecution: 'Кросс-доменное исполнение',
+        'Кадры с камер, классификации дефектов, оповещения операторов и отчёты по сменам — всё течёт через единую control plane инспекции.',
+      crossDomainExecution: 'Покрытие нескольких станций',
       crossDomainExecutionDescription:
-        'Экосистема поддерживает data science, объяснение, автоматизированное видео-производство и модульную сборку сцен в одном нарративе.',
-      humanLoop: 'Human-in-the-loop',
+        'RoboQC координирует инспекцию 5+ станций одновременно — одна когнитивная модель, везде на линии.',
+      humanLoop: 'Оператор в петле',
       humanLoopDescription:
-        'Уровни уверенности и quality gates остаются видимыми, чтобы оператор мог вмешаться до того, как workflow уйдёт в дрейф.',
-      builtWith: 'Собрано с Claude + LangGraph',
+        'Пороги уверенности видимы оператору. Когда вероятность дефекта пересекает порог, человек получает уведомление до перемещения детали.',
+      builtWith: 'На базе Romeo FlexVision',
       footerSummary:
-        'RomeoFlexVision — это публичный build log и продуктовая поверхность для агентной AI-оркестрации в data science и media production.',
-      footerStack: 'FastAPI, TypeScript, React, FFmpeg и AI-инструменты с developer-first подходом.',
-      rights: '(c) 2026 RomeoFlexVision. Все права защищены.',
+        'RoboQC — когнитивный робот-инспектор на базе Romeo FlexVision. Ловит производственные дефекты inline — на станции №2, а не на тесте №5.',
+      footerStack: 'Romeo FlexVision · LangGraph · FastAPI · React · Telegram · Moltis runtime.',
+      rights: '(c) 2026 RoboQC | Romeo FlexVision. Все права защищены.',
       investorCta: 'Открыть Telegram',
-      roadmapStep: 'Шаг',
+      roadmapStep: 'Фаза',
     },
     ecosystemCards: [
       {
-        title: 'Единая control plane',
+        title: 'Слой inline-инспекции',
         description:
-          'Маршрутизация, валидация, review-циклы и FinOps-наблюдаемость живут на уровне платформы, а не внутри изолированных тулов.',
+          'Кадры с камеры обрабатываются в реальном времени прямо на станции — обнаружение дефектов происходит до перехода детали на следующий этап.',
       },
       {
-        title: 'Кросс-доменное исполнение',
+        title: 'Покрытие нескольких станций',
         description:
-          'Одна и та же экосистема покрывает data science, образовательное объяснение, video automation и структурированную сборку сцен.',
+          'RoboQC Orchestrator координирует инспекцию 5+ станций с единой control plane — без увеличения штата контролёров.',
       },
       {
-        title: 'Human-in-the-loop review',
+        title: 'Оповещение оператора в петле',
         description:
-          'Уровни уверенности и контроль качества остаются видимыми, чтобы оператор мог вмешаться до ухода workflow в дрейф.',
+          'При подтверждении дефекта оператор получает уведомление в течение 2 секунд через дашборд и Telegram — до перемещения детали.',
       },
     ],
     architectureSteps: [
-      'Запрос пользователя',
-      'Keyword Router',
-      'Model Lane',
-      'sqlglot Validation',
-      'AST Safety',
-      'Ответ из sandbox',
+      'Кадр с камеры',
+      'Romeo FlexVision CV',
+      'Модель дефектов',
+      'Порог уверенности',
+      'Оповещение оператора',
+      'Отчёт по смене',
     ],
     architectureLanes: [
-      'Reasoning / Math -> Grok 4',
-      'Analytics -> GPT-4o-mini',
-      'Standard -> Claude Sonnet',
-      'sqlglot column-level validation',
-      'AST visitor safety guard',
-      'E2B sandbox execution',
+      'USB / GigE / IP камера',
+      'Инференс Romeo FlexVision < 50мс',
+      'Валидация порога уверенности',
+      'Telegram-оповещение оператора (< 2с)',
+      'Лог дефектов и аналитическое хранилище',
+      'Автоматический PDF/дашборд-отчёт по смене',
     ],
     investorBullets: [
-      'Мультиагентный стек с понятными продуктовыми поверхностями вместо одного универсального ассистента.',
-      'Маршрутизация, валидация и HITL-checkpoints делают систему наблюдаемой по дизайну.',
-      'Путь от developer tooling к операторским workflow-продуктам.',
+      'Проверенное ядро Romeo FlexVision CV с уловом 90%+ дефектов inline, подтверждённым на пилоте.',
+      'Оркестрация нескольких станций через Moltis runtime — масштабирование без линейного роста штата.',
+      'Чёткий путь от 2-недельного платного пилота к полному контракту на производственное развёртывание.',
     ],
+    pain: {
+      kicker: 'Зачем RoboQC',
+      title: '5 болей, которые RoboQC забирает за одну ночь',
+      description:
+        'Каждое производство с ручным QC сталкивается с одними и теми же пятью проблемами. RoboQC устраняет их в источнике.',
+    },
+    competitorsSection: {
+      kicker: 'Конкурентная карта',
+      title: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
+      description:
+        'Большинство конкурентов решают только один кусочек головоломки. RoboQC — единственное решение, объединяющее когнитивное AI-зрение с оркестрацией нескольких станций в реальном времени.',
+      featureInline: 'Inline-детекция в реальном времени',
+      featureAi: 'Когнитивное AI-зрение',
+      featureMulti: 'Несколько станций',
+      featureRu: 'Поддержка российского рынка',
+      featurePilot: 'Быстрый пилот за 2 недели',
+    },
   },
   he: {
     meta: {
-      title: 'RomeoFlexVision | אקוסיסטם Agentic AI',
+      title: 'RoboQC — רובוט QC קוגניטיבי | Romeo FlexVision',
       description:
-        'תזמור רב-סוכני עבור data science והפקת מדיה אוטומטית. Andrew Swarm, Romeo PhD, Bassito ו-PinoCut.',
-      ogTitle: 'RomeoFlexVision | אקוסיסטם Agentic AI',
-      ogDescription: 'תשתית תזמור AI עבור data science והפקת מדיה.',
+        'RoboQC תופס 90%+ מפגמי ייצור inline — בתחנה #2, לא בבדיקה #5. מופעל על ידי Romeo FlexVision.',
+      ogTitle: 'RoboQC — המצלמה הרובוטית שלך בכל תחנה',
+      ogDescription: 'בקרת איכות inline שלעולם לא ישנה. 90% מהשגיאות נתפסות בזמן אמת.',
     },
     nav: {
       ecosystem: 'אקוסיסטם',
@@ -590,100 +730,117 @@ const LOCALIZED_COPY: Record<
       social: 'קהילה',
     },
     hero: {
-      eyebrow: 'Agentic AI Ecosystem for Data Science and Media Production',
-      title: 'בונים את האקוסיסטם הסוכני',
+      eyebrow: 'בקרת איכות Inline · מופעל על ידי Romeo FlexVision',
+      title: 'RoboQC. המצלמה הרובוטית שלך בכל תחנה.',
       subtitle:
-        'תזמור רב-סוכני עבור data science והפקת מדיה על גבי ROMA, LangGraph ושכבת runtime הבאה של Moltis.',
-      primaryCta: 'גלה את המוצרים',
+        'בקרת איכות inline שלעולם לא ישנה. אנחנו תופסים 90%+ מהפגמים בזמן אמת — בתחנה #2, לא בבדיקה #5.',
+      primaryCta: 'הפעל פיילוט RoboQC',
       secondaryCta: 'צפה ב-GitHub',
-      tertiaryCta: 'פתח פלטפורמה',
-      orbitTitle: 'מפת התזמור של ROMA',
+      tertiaryCta: 'הפעל פיילוט',
+      orbitTitle: 'מפת תחנות RoboQC',
       orbitCaption:
-        'שכבת תפעול אחת מתאמת אנליטיקה, למידה, הפקת וידאו אוטומטית ופוסט-פרודקשן מודולרי.',
+        'שכבת בדיקה קוגניטיבית אחת מתאמת מצלמות בכל התחנות, מכניסה פגמים לתור בדיקה ומתריעה למפעיל מיד.',
     },
     sections: {
-      ecosystem: 'אקוסיסטם אחד. ארבעה סוכנים. אינסוף אפשרויות.',
+      ecosystem: 'רובוט אחד. כל תחנה. אפס פגמים שמוחמצים.',
       ecosystemDescription:
-        'עמוד הנחיתה הציבורי בנוי סביב control plane אחת: ROMA מנתב את העבודה והמוצרים הייעודיים מבצעים אותה.',
-      products: 'מוצרים שנבנו לזרימות עבודה אמיתיות',
+        'RoboQC עוטף ראיית מחשב Romeo FlexVision בפלטפורמת בדיקה מוכנה לייצור: מצלמות בתחנות, AI בלולאה, התראות מפעיל בזמן אמת.',
+      products: 'כל קו המוצרים של RoboQC',
       productsDescription:
-        'כל מוצר פותר תפקיד אחר, אבל המנוף האמיתי מגיע ממודל התזמור המשותף.',
-      stack: 'Tech stack עבור orchestration, inference, data ו-media',
+        'ארבעה מודולים לכיסוי מחזור QC המלא — מזיהוי מצלמה ועד תיאום תחנות מרובות ודיווח אוטומטי על משמרות.',
+      stack: 'Tech stack: ראייה, תזמור, נתונים ודיווח',
       stackDescription:
-        'הסטאק בכוונה היברידי: תזמור חזק, גמישות מודלית ופרקטיות לכלי פיתוח ולאוטומציית מדיה.',
-      architecture: 'איך Andrew Swarm מנתב עבודה טכנית',
+        'ליבת Romeo FlexVision CV. תזמור LangGraph + Moltis. ממשק מפעיל Telegram. דשבורד FastAPI + React.',
+      architecture: 'איך RoboQC מזהה פגמים',
       architectureDescription:
-        'שאילתה עוברת ניתוב, בחירת lane, ולידציה ו-sandboxing עוד לפני שהיא הופכת לביצוע.',
-      roadmap: 'Roadmap אל RomeoFlexVision v1.0',
+        'כל פריים עובר לכידה, הסקת מסקנות מודל, אימות סף והתראת מפעיל — הכל תוך 50ms.',
+      roadmap: 'Roadmap ל-RoboQC v1.0 GA',
       roadmapDescription:
-        'מפת הדרך הציבורית מציגה את המעבר מיסודות orchestration אל runtime hardening ו-product positioning.',
-      investors: 'למשקיעים ולשותפים אסטרטגיים',
+        'מפיילוט בתחנה אחת לתיאום תחנות מרובות — מפת הדרכים הציבורית מציגה היכן RoboQC נמצא והלאן הוא הולך.',
+      investors: 'למשקיעים ולשותפי ייצור',
       investorsDescription:
-        'RomeoFlexVision מעוצב כאקוסיסטם מוצרי נראה וניתן לבדיקה, ולא כרעיון AI מופשט.',
-      community: 'קהילה, גישה למוצר ומאגרים',
+        'RoboQC בנוי על טכנולוגיית Romeo FlexVision מוכחת עם נתיב ברור מפיילוט לפריסת ייצור מלאה.',
+      community: 'קהילה, גישה לפיילוט ומאגרים',
       communityDescription:
-        'GitHub, Telegram ו-LinkedIn הם כרגע המשטחים הציבוריים המרכזיים שבהם האקוסיסטם מתועד ומופץ.',
-      faq: 'FAQ למפתחים ולמקבלי החלטות',
+        'GitHub, Telegram ו-LinkedIn הם המשטחים הציבוריים שבהם RoboQC מתועד ומטפל בבקשות פיילוט.',
+      faq: 'FAQ למנהלי מפעל ומהנדסי איכות',
       faqDescription:
-        'FAQ טכני קצר למפתחים, שותפים וכל מי שמנסה להבין היכן האקוסיסטם עומד היום.',
+        'FAQ תמציתי למהנדסי ייצור, מנהלי איכות וכל מי שמעריך בקרת איכות AI inline.',
     },
     labels: {
-      centralNode: 'צומת מרכזי',
-      sharedControlPlane: 'Control plane משותפת',
+      centralNode: 'RoboQC Hub',
+      sharedControlPlane: 'שכבת בדיקה inline',
       sharedControlPlaneDescription:
-        'ניתוב, ולידציה, לולאות review ונראות עלויות מטופלים כהתנהגות פלטפורמה ולא כסקריפטים מבודדים.',
-      crossDomainExecution: 'ביצוע חוצה דומיינים',
+        'פריימים ממצלמה, סיווגי פגמים, התראות מפעיל ודוחות משמרת — הכל זורם דרך control plane בדיקה מרכזית אחת.',
+      crossDomainExecution: 'כיסוי תחנות מרובות',
       crossDomainExecutionDescription:
-        'האקוסיסטם תומך ב-data science, הסבר לימודי, הפקת וידאו אוטומטית והרכבת סצנות מודולרית בתוך נרטיב אחד.',
-      humanLoop: 'Human-in-the-loop',
+        'RoboQC מתאם בדיקה ב-5+ תחנות בו-זמנית — אותו מודל קוגניטיבי, בכל מקום על הקו.',
+      humanLoop: 'מפעיל בלולאה',
       humanLoopDescription:
-        'רמות הביטחון ושערי האיכות נשארים גלויים כדי שמפעיל יוכל להתערב לפני שה-workflow נסחף.',
-      builtWith: 'נבנה עם Claude + LangGraph',
+        'ספי ביטחון גלויים למפעיל. כאשר הסתברות פגם חוצה את הסף, האדם מקבל הודעה לפני שהחלק זזה.',
+      builtWith: 'מופעל על ידי Romeo FlexVision',
       footerSummary:
-        'RomeoFlexVision הוא build log ציבורי ומשטח מוצר עבור orchestration סוכני בתחומי data science והפקת מדיה.',
-      footerStack: 'FastAPI, TypeScript, React, FFmpeg וכלי AI בגישת developer-first.',
-      rights: '(c) 2026 RomeoFlexVision. כל הזכויות שמורות.',
+        'RoboQC הוא רובוט-בודק קוגניטיבי הבנוי על Romeo FlexVision. תופס פגמי ייצור inline — בתחנה #2, לא בבדיקה #5.',
+      footerStack: 'Romeo FlexVision · LangGraph · FastAPI · React · Telegram · Moltis runtime.',
+      rights: '(c) 2026 RoboQC | Romeo FlexVision. כל הזכויות שמורות.',
       investorCta: 'פתח Telegram',
       roadmapStep: 'שלב',
     },
     ecosystemCards: [
       {
-        title: 'Control plane משותפת',
+        title: 'שכבת בדיקה inline',
         description:
-          'ניתוב, ולידציה, לולאות review ונראות FinOps חיים ברמת הפלטפורמה ולא בתוך כלים מבודדים.',
+          'פריימים ממצלמה מעובדים בזמן אמת בתחנה — זיהוי פגמים מתרחש לפני שהחלק מגיע לשלב הבא.',
       },
       {
-        title: 'ביצוע חוצה דומיינים',
+        title: 'כיסוי תחנות מרובות',
         description:
-          'אותו אקוסיסטם תומך ב-data science, הסבר חינוכי, אוטומציית וידאו והרכבת סצנות מובנית.',
+          'RoboQC Orchestrator מתאם בדיקה ב-5+ תחנות מ-control plane אחת — ללא הגדלת צוות.',
       },
       {
-        title: 'Human-in-the-loop review',
+        title: 'התראת מפעיל בלולאה',
         description:
-          'רמות הביטחון ובקרת האיכות נשארות גלויות כדי שמפעיל יוכל להתערב לפני שה-workflow סוטה.',
+          'כאשר פגם מאושר, המפעיל מקבל התראה תוך 2 שניות דרך דשבורד ו-Telegram — לפני שהחלק זזה.',
       },
     ],
     architectureSteps: [
-      'שאילתת משתמש',
-      'Keyword Router',
-      'Model Lane',
-      'sqlglot Validation',
-      'AST Safety',
-      'תגובה מה-sandbox',
+      'פריים ממצלמה',
+      'Romeo FlexVision CV',
+      'מודל פגמים',
+      'שער סף',
+      'התראת מפעיל',
+      'דוח משמרת',
     ],
     architectureLanes: [
-      'Reasoning / Math -> Grok 4',
-      'Analytics -> GPT-4o-mini',
-      'Standard -> Claude Sonnet',
-      'sqlglot column-level validation',
-      'AST visitor safety guard',
-      'E2B sandbox execution',
+      'USB / GigE / IP קלט מצלמה',
+      'הסקת Romeo FlexVision < 50ms',
+      'אימות סף ביטחון',
+      'התראת Telegram למפעיל (< 2s)',
+      'לוג פגמים ואחסון אנליטיקה',
+      'דוח PDF/דשבורד אוטומטי למשמרת',
     ],
     investorBullets: [
-      'סטאק רב-סוכני עם משטחי מוצר ברורים במקום עוזר כללי אחד.',
-      'ניתוב, ולידציה ו-HITL checkpoints הופכים את המערכת לנראית וניתנת לבדיקה.',
-      'מסלול מכלי פיתוח אל מוצרי workflow למפעילים.',
+      'ליבת Romeo FlexVision CV מוכחת עם שיעור תפיסת פגמים 90%+ inline מאומת בפיילוט.',
+      'תזמור תחנות מרובות דרך Moltis runtime — מסקלים ללא צמיחה לינארית בכוח אדם.',
+      'נתיב ברור מפיילוט בתשלום של שבועיים לחוזה פריסת ייצור מלאה.',
     ],
+    pain: {
+      kicker: 'למה RoboQC',
+      title: '5 כאבים ש-RoboQC לוקח בלילה אחד',
+      description:
+        'כל מפעל עם QC ידני מתמודד עם אותן חמש בעיות. RoboQC מבטל אותן במקור.',
+    },
+    competitorsSection: {
+      kicker: 'נוף תחרותי',
+      title: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
+      description:
+        'רוב המתחרים פותרים רק חתיכה אחת של הפאזל. RoboQC הוא הפתרון היחיד המשלב ראיית AI קוגניטיבית עם תיאום תחנות מרובות בזמן אמת.',
+      featureInline: 'זיהוי inline בזמן אמת',
+      featureAi: 'ראיית AI קוגניטיבית',
+      featureMulti: 'תחנות מרובות',
+      featureRu: 'תמיכה בשוק הרוסי',
+      featurePilot: 'פיילוט מהיר 2 שבועות',
+    },
   },
 };
 
@@ -696,5 +853,7 @@ export function getSiteContent(language: Language): SiteCopy {
     roadmap: SHARED_ROADMAP,
     communityCards: SHARED_COMMUNITY,
     faq: SHARED_FAQ,
+    painPoints: language === 'ru' ? SHARED_PAIN_POINTS_RU : SHARED_PAIN_POINTS_EN,
+    competitors: SHARED_COMPETITORS,
   };
 }

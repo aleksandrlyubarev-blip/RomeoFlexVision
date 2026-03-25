@@ -27,7 +27,7 @@ export default {
           critical: '#dc2626',
         },
         accent: {
-          blue: '#7aa2f7',
+          blue: '#265CD1',
           cyan: '#73daca',
           purple: '#9d7cd8',
         },

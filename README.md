@@ -1,20 +1,50 @@
-# RomeoFlexVision
-My web page
+# RoboQC — Когнитивный QC-робот (Romeo FlexVision)
+
+**RoboQC** — это робот-камера, которая никогда не спит. Ловит ошибки на станции №2, а не на тесте №5.
+
+> Inline контроль качества · 90% дефектов в реальном времени · Powered by Romeo FlexVision
+
+**Лендинг:** [romeoflexvision.com](https://romeoflexvision.com/)
+
+---
+
+## Что такое RoboQC
+
+RoboQC — когнитивная система inline-инспекции качества на производстве, построенная на базе компьютерного зрения Romeo FlexVision. Работает прямо на производственных станциях, обнаруживает дефекты в реальном времени (< 50 мс) и мгновенно оповещает оператора через Telegram.
+
+**Позиционирование:** «Робот-камера, которая никогда не спит. Ловит ошибки на станции №2, а не на тесте №5»
+
+## Линейка продуктов
+
+| Продукт | Описание |
+|---|---|
+| **RoboQC Vision** | Inline Camera Inspection Module — детекция дефектов в реальном времени |
+| **RoboQC Analytics** | Defect Intelligence Dashboard — аналитика качества и тренды |
+| **RoboQC Reporter** | Automated Quality Reporting Pipeline — автоотчёты по сменам в Telegram |
+| **RoboQC Orchestrator** | Multi-Station QC Coordinator — оркестрация 5+ станций одновременно |
+
+## Технологии
+
+- **Компьютерное зрение:** Romeo FlexVision CV · OpenCV · Camera AI
+- **Оркестрация:** LangGraph · ROMA · Moltis (Rust runtime)
+- **Backend:** Python · FastAPI · TypeScript · Node.js
+- **Интерфейс оператора:** Telegram Bot · React Dashboard
+- **DevOps:** GitHub Actions · Docker · GitHub Pages
 
 ## Telegram Bot Backend
 
-The repository now also includes an isolated Telegram backend service at:
+The repository also includes an isolated Telegram backend service at:
 
 - [telegram-bot](telegram-bot)
 
 It is a small Node.js + TypeScript service built with Telegraf and Express.
-The bot is meant to work as the public entry point for RomeoFlexVision:
+The bot is meant to work as the public entry point for RoboQC:
 
 - `/start` for navigation
 - `/demo` for the live site
-- `/products` for ecosystem repos
+- `/products` for RoboQC product modules
 - `/github` for the org and repos
-- `/contact` for public company routes
+- `/contact` for pilot requests and contact handoff
 
 The service supports both long polling for development and HTTPS webhook mode for deployment.
 

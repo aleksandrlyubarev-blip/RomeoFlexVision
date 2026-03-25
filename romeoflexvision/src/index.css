@@ -19,8 +19,8 @@
     margin: 0;
     min-width: 320px;
     background:
-      radial-gradient(circle at top, rgba(0, 212, 255, 0.08), transparent 32%),
-      radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.12), transparent 28%),
+      radial-gradient(circle at top, rgba(38, 92, 209, 0.10), transparent 32%),
+      radial-gradient(circle at 80% 20%, rgba(31, 41, 55, 0.30), transparent 28%),
       #0a0a1a;
     color: #f0f4ff;
     -webkit-font-smoothing: antialiased;
@@ -45,7 +45,7 @@
   }
 
   ::selection {
-    background: rgba(0, 212, 255, 0.22);
+    background: rgba(38, 92, 209, 0.28);
     color: #ffffff;
   }
 
@@ -86,13 +86,13 @@
   }
 
   .btn-primary {
-    @apply rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-slate-950 transition-all duration-200 active:scale-[0.98];
-    background: linear-gradient(135deg, #00d4ff 0%, #7aa2f7 52%, #9d7cd8 100%);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+    @apply rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-white transition-all duration-200 active:scale-[0.98];
+    background: linear-gradient(135deg, #265CD1 0%, #3b6ee8 52%, #1e4abf 100%);
+    box-shadow: 0 10px 30px rgba(38, 92, 209, 0.25);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 16px 40px rgba(0, 212, 255, 0.28);
+    box-shadow: 0 16px 40px rgba(38, 92, 209, 0.38);
     transform: translateY(-1px);
   }
 

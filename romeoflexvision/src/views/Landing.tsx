@@ -10,12 +10,22 @@ import {
   Sparkles,
   Workflow,
   X,
+  Camera,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import AgentAvatar from '../components/AgentAvatar';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { useLanguage } from '../context/LanguageContext';
 import { getAgents } from '../data/agents';
-import { getSiteContent, SITE_LINKS, type SiteFaqItem, type SiteProduct } from '../data/siteContent';
+import {
+  getSiteContent,
+  SITE_LINKS,
+  type SiteFaqItem,
+  type SiteProduct,
+  type SitePainPoint,
+  type SiteCompetitor,
+} from '../data/siteContent';
 import type { View } from '../types';
 
 interface LandingProps {
@@ -250,12 +260,12 @@ function LandingVisual({
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[520px]">
       <div className="absolute inset-6 rounded-full border border-accent-blue/20" />
-      <div className="absolute inset-16 rounded-full border border-accent-purple/20" />
-      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,212,255,0.16),transparent_62%)]" />
+      <div className="absolute inset-16 rounded-full border border-accent-blue/10" />
+      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(38,92,209,0.14),transparent_62%)]" />
 
-      <div className="absolute left-1/2 top-1/2 z-20 flex w-44 -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-3xl border border-white/10 bg-[#0f1326]/85 px-5 py-5 text-center shadow-[0_0_80px_rgba(0,212,255,0.12)] backdrop-blur-xl">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-blue/30 to-accent-purple/30 text-accent-blue">
-          <Sparkles size={22} />
+      <div className="absolute left-1/2 top-1/2 z-20 flex w-44 -translate-x-1/2 -translate-y-1/2 flex-col items-center rounded-3xl border border-white/10 bg-[#0f1326]/85 px-5 py-5 text-center shadow-[0_0_80px_rgba(38,92,209,0.16)] backdrop-blur-xl">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-blue/30 to-accent-blue/10 text-accent-blue">
+          <Camera size={22} />
         </div>
         <div className="mt-4 text-sm uppercase tracking-[0.24em] text-text-muted">{centralNode}</div>
         <div className="mt-1 text-lg font-semibold text-text-primary">{orbitTitle}</div>
@@ -279,6 +289,97 @@ function LandingVisual({
       <div className="absolute bottom-[24%] left-[26%] h-px w-[24%] rotate-[25deg] bg-gradient-to-r from-accent-blue/0 via-accent-blue/70 to-accent-blue/0" />
       <div className="absolute bottom-[26%] right-[24%] h-px w-[22%] -rotate-[25deg] bg-gradient-to-r from-accent-purple/0 via-accent-purple/70 to-accent-purple/0" />
     </div>
+  );
+}
+
+function PainPointsSection({ points, pain }: { points: SitePainPoint[]; pain: { kicker: string; title: string; description: string } }) {
+  return (
+    <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-7xl space-y-10">
+        <SectionHeader kicker={pain.kicker} title={pain.title} description={pain.description} />
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {points.map((point, index) => (
+            <div key={index} className="rfv-card rounded-3xl p-6">
+              <div className="text-3xl">{point.icon}</div>
+              <h3 className="mt-4 text-base font-semibold text-text-primary">{point.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-text-secondary">{point.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </RevealBlock>
+  );
+}
+
+function CompetitorsSection({
+  competitors,
+  section,
+}: {
+  competitors: SiteCompetitor[];
+  section: { kicker: string; title: string; description: string; featureInline: string; featureAi: string; featureMulti: string; featureRu: string; featurePilot: string };
+}) {
+  const features: Array<{ key: keyof SiteCompetitor; label: string }> = [
+    { key: 'inline', label: section.featureInline },
+    { key: 'ai', label: section.featureAi },
+    { key: 'multiStation', label: section.featureMulti },
+    { key: 'ru', label: section.featureRu },
+    { key: 'fastPilot', label: section.featurePilot },
+  ];
+
+  return (
+    <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-7xl space-y-10">
+        <SectionHeader kicker={section.kicker} title={section.title} description={section.description} />
+        <div className="rfv-card overflow-hidden rounded-3xl">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="border-b border-white/[0.08]">
+                  <th className="py-4 pl-6 pr-4 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
+                    Feature
+                  </th>
+                  {competitors.map((c) => (
+                    <th
+                      key={c.name}
+                      className={`px-4 py-4 text-center text-sm font-semibold ${c.isUs ? 'text-accent-blue' : 'text-text-secondary'}`}
+                    >
+                      {c.name}
+                      {c.isUs && (
+                        <span className="ml-2 rounded-full border border-accent-blue/30 bg-accent-blue/10 px-2 py-0.5 text-[10px] font-medium text-accent-blue">
+                          us
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {features.map((feature, rowIndex) => (
+                  <tr
+                    key={feature.key}
+                    className={rowIndex % 2 === 0 ? 'bg-white/[0.01]' : ''}
+                  >
+                    <td className="py-4 pl-6 pr-4 text-sm text-text-secondary">{feature.label}</td>
+                    {competitors.map((c) => {
+                      const val = c[feature.key] as boolean;
+                      return (
+                        <td key={c.name} className="px-4 py-4 text-center">
+                          {val ? (
+                            <CheckCircle2 size={18} className="mx-auto text-accent-blue" />
+                          ) : (
+                            <XCircle size={18} className="mx-auto text-text-muted opacity-40" />
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </RevealBlock>
   );
 }
 
@@ -327,8 +428,8 @@ export default function Landing({
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#0a0a1a] text-text-primary">
       <div className="pointer-events-none absolute inset-0 rfv-grid opacity-50" />
-      <div className="absolute left-1/2 top-0 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,212,255,0.18),transparent_58%)] blur-3xl" />
-      <div className="absolute right-[-8rem] top-[16rem] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.18),transparent_60%)] blur-3xl" />
+      <div className="absolute left-1/2 top-0 h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(38,92,209,0.18),transparent_58%)] blur-3xl" />
+      <div className="absolute right-[-8rem] top-[16rem] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,rgba(31,41,55,0.40),transparent_60%)] blur-3xl" />
 
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
@@ -340,15 +441,15 @@ export default function Landing({
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex items-center gap-3"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/30 bg-accent-blue/10 shadow-[0_0_24px_rgba(0,212,255,0.16)]">
-              <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="RomeoFlexVision" className="h-6 w-6" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/30 bg-accent-blue/10 shadow-[0_0_24px_rgba(38,92,209,0.22)]">
+              <Camera size={22} className="text-accent-blue" />
             </div>
             <div className="text-left">
               <div className="text-sm font-semibold tracking-wide text-text-primary">
-                Romeo<span className="text-accent-blue">Flex</span>Vision
+                Robo<span className="text-accent-blue">QC</span>
               </div>
               <div className="text-[11px] uppercase tracking-[0.22em] text-text-muted">
-                Agentic AI ecosystem
+                powered by Romeo FlexVision
               </div>
             </div>
           </button>
@@ -545,6 +646,8 @@ export default function Landing({
           </div>
         </section>
 
+        <PainPointsSection points={copy.painPoints} pain={copy.pain} />
+
         <RevealBlock id="ecosystem" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
             <SectionHeader
@@ -555,17 +658,17 @@ export default function Landing({
 
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="rfv-card rounded-3xl p-6 sm:p-8">
-                <div className="text-xs uppercase tracking-[0.22em] text-text-muted">ROMA orchestrator</div>
+                <div className="text-xs uppercase tracking-[0.22em] text-text-muted">RoboQC platform</div>
                 <div className="mt-4 rounded-3xl border border-white/[0.08] bg-[#0e1224] p-6">
                   <div className="flex items-center justify-between gap-4 rounded-2xl border border-accent-blue/20 bg-accent-blue/[0.08] px-5 py-4">
                     <div>
                       <div className="text-sm uppercase tracking-[0.24em] text-text-muted">
                         {copy.labels.centralNode}
                       </div>
-                      <div className="mt-1 text-2xl font-semibold text-text-primary">ROMA</div>
+                      <div className="mt-1 text-2xl font-semibold text-text-primary">RoboQC</div>
                     </div>
-                    <div className="rounded-full border border-accent-purple/30 bg-accent-purple/10 px-4 py-2 text-sm text-accent-purple">
-                      LangGraph · LiteLLM · Moltis
+                    <div className="rounded-full border border-accent-blue/30 bg-accent-blue/10 px-4 py-2 text-sm text-accent-blue">
+                      Romeo FlexVision · LangGraph · Moltis
                     </div>
                   </div>
 
@@ -619,6 +722,8 @@ export default function Landing({
             </div>
           </div>
         </RevealBlock>
+        <CompetitorsSection competitors={copy.competitors} section={copy.competitorsSection} />
+
         <RevealBlock id="stack" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
             <SectionHeader
@@ -633,7 +738,7 @@ export default function Landing({
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
             <SectionHeader
-              kicker="Andrew Swarm"
+              kicker="RoboQC Vision"
               title={copy.sections.architecture}
               description={copy.sections.architectureDescription}
             />
@@ -784,11 +889,11 @@ export default function Landing({
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/30 bg-accent-blue/10">
-                <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="RomeoFlexVision" className="h-6 w-6" />
+                <Camera size={20} className="text-accent-blue" />
               </div>
               <div>
                 <div className="text-sm font-semibold text-text-primary">
-                  Romeo<span className="text-accent-blue">Flex</span>Vision
+                  Robo<span className="text-accent-blue">QC</span>
                 </div>
                 <div className="text-xs uppercase tracking-[0.22em] text-text-muted">
                   {copy.labels.builtWith}
@@ -832,7 +937,7 @@ export default function Landing({
 
         <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-2 border-t border-white/[0.08] pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>{copy.labels.rights}</span>
-          <span>Built with Claude + LangGraph + FastAPI + React</span>
+          <span>Powered by Romeo FlexVision · Built with LangGraph + FastAPI + React</span>
         </div>
       </footer>
     </div>
