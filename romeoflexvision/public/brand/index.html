@@ -3,24 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RoboQC Brand Guide</title>
+    <title>Romeo FlexVision Brand Guide</title>
     <meta
       name="description"
-      content="RoboQC brand guide with logo, palette, positioning, and Romeo FlexVision attribution."
+      content="Corporate brand guide for Romeo FlexVision and the RoboQC product surface."
     />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="theme-color" content="#f7faff" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #07101d;
-        --panel: rgba(11, 18, 32, 0.84);
-        --border: rgba(255, 255, 255, 0.09);
-        --text: #f8fafc;
-        --muted: #94a3b8;
+        --bg: #f7faff;
+        --panel: rgba(255, 255, 255, 0.96);
+        --panel-soft: rgba(245, 248, 255, 0.94);
+        --border: rgba(203, 213, 225, 0.92);
+        --text: #1f2937;
+        --muted: #4b5563;
         --blue: #265cd1;
-        --blue-soft: #8fb3ff;
-        --dark: #1f2937;
+        --blue-soft: #eaf1ff;
+        --dark: #333333;
+        --gray: #6b7280;
+        --light-gray: #f0f1f5;
+        --white: #ffffff;
       }
 
       * {
@@ -30,12 +40,34 @@
       body {
         margin: 0;
         min-height: 100vh;
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(38, 92, 209, 0.26), transparent 34%),
-          radial-gradient(circle at right, rgba(143, 179, 255, 0.12), transparent 32%),
-          linear-gradient(180deg, #07101d 0%, #0b1220 52%, #111827 100%);
+          radial-gradient(circle at top left, rgba(38, 92, 209, 0.12), transparent 32%),
+          radial-gradient(circle at 88% 14%, rgba(143, 179, 255, 0.18), transparent 26%),
+          linear-gradient(180deg, #f5f8ff 0%, #ffffff 42%, #f6f9ff 100%);
+        position: relative;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset-inline: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        top: 78px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(38, 92, 209, 0.52), transparent);
+      }
+
+      body::after {
+        top: 96px;
+        height: 120px;
+        background: linear-gradient(180deg, rgba(38, 92, 209, 0.08), rgba(38, 92, 209, 0));
       }
 
       body[data-lang="he"] {
@@ -51,6 +83,8 @@
         width: min(1180px, calc(100% - 32px));
         margin: 0 auto;
         padding: 28px 0 56px;
+        position: relative;
+        z-index: 1;
       }
 
       .topbar,
@@ -60,7 +94,9 @@
         border: 1px solid var(--border);
         background: var(--panel);
         backdrop-filter: blur(18px);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 24px 60px rgba(15, 23, 42, 0.08);
       }
 
       .topbar {
@@ -82,6 +118,9 @@
         width: 42px;
         height: 42px;
         border-radius: 14px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        box-shadow: 0 14px 30px rgba(38, 92, 209, 0.12);
       }
 
       .eyebrow {
@@ -89,10 +128,10 @@
         align-items: center;
         gap: 8px;
         border: 1px solid rgba(38, 92, 209, 0.28);
-        background: rgba(38, 92, 209, 0.12);
+        background: var(--blue-soft);
         border-radius: 999px;
         padding: 8px 12px;
-        color: var(--blue-soft);
+        color: var(--blue);
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.18em;
@@ -114,9 +153,12 @@
         padding: 0 16px;
         border-radius: 999px;
         border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--text);
         font-size: 14px;
         font-weight: 600;
         transition: 160ms ease;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
       }
 
       .button:hover {
@@ -126,10 +168,11 @@
       .button.primary {
         border-color: rgba(38, 92, 209, 0.36);
         background: linear-gradient(135deg, #265cd1 0%, #1e4bb2 100%);
+        color: #ffffff;
       }
 
       .button.ghost {
-        background: rgba(255, 255, 255, 0.04);
+        background: rgba(255, 255, 255, 0.96);
       }
 
       .hero {
@@ -169,11 +212,12 @@
         align-items: center;
         gap: 8px;
         border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.96);
         border-radius: 999px;
         padding: 9px 14px;
         color: var(--muted);
         font-size: 13px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
       }
 
       .hero-visual {
@@ -187,7 +231,8 @@
         min-height: 420px;
         object-fit: cover;
         border-radius: 28px;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(219, 231, 246, 0.96);
+        box-shadow: 0 30px 68px rgba(15, 23, 42, 0.12);
       }
 
       .hero-overlay {
@@ -200,11 +245,12 @@
       }
 
       .overlay-card {
-        border: 1px solid rgba(255, 255, 255, 0.09);
-        background: rgba(11, 18, 32, 0.82);
+        border: 1px solid rgba(219, 231, 246, 0.96);
+        background: rgba(255, 255, 255, 0.92);
         border-radius: 22px;
         padding: 16px 18px;
         backdrop-filter: blur(14px);
+        box-shadow: 0 20px 46px rgba(15, 23, 42, 0.1);
       }
 
       .overlay-card strong {
@@ -277,9 +323,10 @@
 
       .logo-panel {
         border: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.03);
+        background: var(--panel-soft);
         border-radius: 24px;
         padding: 24px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
       }
 
       .logo-panel img.logo {
@@ -302,7 +349,8 @@
       .swatch-chip {
         height: 78px;
         border-radius: 22px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
       }
 
       .swatch-meta strong,
@@ -337,7 +385,75 @@
         height: 92px;
         border: 1px solid var(--border);
         border-radius: 24px;
-        background: rgba(255, 255, 255, 0.03);
+        background: var(--panel-soft);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+      }
+
+      .rfv-lockup {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        color: var(--blue);
+      }
+
+      .rfv-monogram {
+        font-size: clamp(44px, 8vw, 80px);
+        font-weight: 800;
+        font-style: italic;
+        line-height: 0.88;
+        letter-spacing: -0.08em;
+      }
+
+      .rfv-eye {
+        position: relative;
+        width: 126px;
+        height: 74px;
+        border: 4px solid currentColor;
+        border-radius: 999px;
+        flex-shrink: 0;
+      }
+
+      .rfv-eye::before {
+        content: "";
+        position: absolute;
+        inset: 14px 28px;
+        border: 4px solid currentColor;
+        border-radius: 999px;
+      }
+
+      .rfv-eye::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 18px;
+        height: 18px;
+        border: 4px solid currentColor;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--white);
+      }
+
+      .rfv-wordmark {
+        display: grid;
+        gap: 2px;
+        font-size: clamp(24px, 3.4vw, 42px);
+        font-weight: 700;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+      }
+
+      .rfv-wordmark span {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .brand-caption {
+        margin: 18px 0 0;
+        max-width: 48ch;
+        color: var(--muted);
+        line-height: 1.7;
       }
 
       .icon-chip img {
@@ -364,6 +480,7 @@
         margin-top: 28px;
         border-radius: 28px;
         padding: 24px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 248, 255, 0.98));
       }
 
       .closing strong {
@@ -406,6 +523,19 @@
         .swatch {
           grid-template-columns: 1fr;
         }
+
+        .rfv-lockup {
+          gap: 12px;
+        }
+
+        .rfv-eye {
+          width: 98px;
+          height: 58px;
+        }
+
+        .rfv-eye::before {
+          inset: 11px 22px;
+        }
       }
     </style>
   </head>
@@ -415,9 +545,9 @@
         <div class="topbar-brand">
           <img src="../assets/brand/roboqc-icon-64.png" alt="RoboQC icon" />
           <div>
-            <div class="eyebrow" id="topbar-kicker">RoboQC Brand Surface</div>
+            <div class="eyebrow" id="topbar-kicker">Corporate visual system</div>
             <div id="topbar-subtitle" style="margin-top: 10px; font-size: 15px; color: var(--muted)">
-              Primary brand: RoboQC. Technology inside: Romeo FlexVision.
+              Master brand: Romeo FlexVision. Product surface: RoboQC.
             </div>
           </div>
         </div>
@@ -438,17 +568,18 @@
 
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow" id="hero-kicker">Robot-camera that never sleeps</div>
-          <h1 id="hero-title">RoboQC Brand Guide</h1>
+          <div class="eyebrow" id="hero-kicker">White-blue industrial system</div>
+          <h1 id="hero-title">Romeo FlexVision Brand Guide</h1>
           <p id="hero-description">
-            RoboQC is the product-facing quality robot. Romeo FlexVision stays inside as the technical
-            stack. This page packages the logo, color system, icon set, and hero visual for quick handoff.
+            This guide aligns the site with company rules: white-first surfaces, primary blue accents,
+            disciplined gray neutrals, and a clear hierarchy between the Romeo FlexVision master brand and
+            the RoboQC product layer.
           </p>
           <div class="hero-pills">
             <span class="pill" id="pill-blue">Primary Blue: #265CD1</span>
-            <span class="pill" id="pill-dark">Dark Base: #1F2937</span>
-            <span class="pill" id="pill-contrast">White-first contrast</span>
-            <span class="pill" id="pill-positioning">Station-2 positioning</span>
+            <span class="pill" id="pill-dark">Dark Gray: #333333</span>
+            <span class="pill" id="pill-contrast">Light Gray: #F0F1F5</span>
+            <span class="pill" id="pill-positioning">White-first layouts</span>
           </div>
         </div>
 
@@ -456,12 +587,12 @@
           <img class="hero-photo" src="../assets/brand/romeo-photo.jpg" alt="ROMEO robot on factory floor" />
           <div class="hero-overlay">
             <div class="overlay-card">
-              <div class="eyebrow" id="overlay-line-kicker">Product line</div>
-              <strong id="overlay-line-title">RoboQC. Your robot-camera on every station.</strong>
+              <div class="eyebrow" id="overlay-line-kicker">Master brand</div>
+              <strong id="overlay-line-title">Romeo FlexVision for company-facing surfaces.</strong>
             </div>
             <div class="overlay-card">
-              <div class="eyebrow" id="overlay-powered-kicker">Powered by Romeo FlexVision</div>
-              <strong id="overlay-powered-title">Catch defects in real time, not at test #5.</strong>
+              <div class="eyebrow" id="overlay-powered-kicker">Product surface</div>
+              <strong id="overlay-powered-title">RoboQC carries the pilot message and CTA layer.</strong>
             </div>
           </div>
         </div>
@@ -469,35 +600,45 @@
 
       <section class="section">
         <div class="section-header">
-          <div class="eyebrow" id="system-kicker">Core system</div>
-          <h2 id="system-title">Logo, mark, and color language</h2>
+          <div class="eyebrow" id="system-kicker">Brand rules</div>
+          <h2 id="system-title">Logo, palette, and application hierarchy</h2>
           <p id="system-description">
-            The product should read as RoboQC first. Romeo FlexVision appears as a supporting attribution,
-            not as the main headline. Keep the interface dark, precise, and industrial with a strong blue accent.
+            Company-facing pages should stay light, structured, and blue-led. RoboQC remains the product
+            layer for pilots and demos, while Romeo FlexVision defines the corporate design system.
           </p>
         </div>
 
         <div class="grid">
           <article class="card span-7">
-            <h3 id="logo-title">Logo system</h3>
+            <h3 id="logo-title">Master brand and product layer</h3>
             <p id="logo-description">
-              Use the full RoboQC lockup for headers and proposal screens. Use the mark or icon for favicons,
-              touch icons, avatars, and compact UI placements.
+              Use the Romeo FlexVision lockup for company headers, proposals, and partnership surfaces.
+              Use RoboQC for product messaging, pilot landing pages, and CTA-driven demo flows.
             </p>
             <div class="logo-stack">
               <div class="logo-panel">
-                <img class="logo" src="../assets/brand/roboqc-logo.svg" alt="RoboQC primary logo" />
+                <div class="rfv-lockup" aria-label="Romeo FlexVision corporate lockup">
+                  <div class="rfv-monogram">RF</div>
+                  <div class="rfv-eye" aria-hidden="true"></div>
+                  <div class="rfv-wordmark">
+                    <strong>Romeo</strong>
+                    <span>FlexVision</span>
+                  </div>
+                </div>
+                <p class="brand-caption">
+                  Corporate signature for company-level pages, proposals, and compliance-facing material.
+                </p>
               </div>
               <div class="logo-panel" style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap">
                 <img class="mark" src="../assets/brand/roboqc-mark.svg" alt="RoboQC mark" />
                 <div class="usage-list" style="margin-top: 0">
                   <div class="usage-item">
-                    <strong id="lockup-title">Primary lockup</strong>
-                    <span id="lockup-description">RoboQC is the visible brand for landing pages, decks, and demos.</span>
+                    <strong id="lockup-title">Product lockup</strong>
+                    <span id="lockup-description">RoboQC is the visible brand for pilot landing pages, decks, and demos.</span>
                   </div>
                   <div class="usage-item">
-                    <strong id="signature-title">Supporting signature</strong>
-                    <span id="signature-description">Use "powered by Romeo FlexVision" as a subtitle or footer-level attribution.</span>
+                    <strong id="signature-title">Powered signature</strong>
+                    <span id="signature-description">Use "powered by Romeo FlexVision" as a subtitle, technology badge, or footer attribution.</span>
                   </div>
                 </div>
               </div>
@@ -506,7 +647,7 @@
 
           <article class="card span-5">
             <h3 id="palette-title">Palette</h3>
-            <p id="palette-description">Keep contrast crisp. Blue does the signaling. The dark neutrals carry the operational tone.</p>
+            <p id="palette-description">Use a clean white base, one authoritative blue, and a restrained gray scale for corporate surfaces.</p>
             <div class="swatches">
               <div class="swatch">
                 <div class="swatch-chip" style="background: #265cd1"></div>
@@ -516,17 +657,31 @@
                 </div>
               </div>
               <div class="swatch">
-                <div class="swatch-chip" style="background: #1f2937"></div>
+                <div class="swatch-chip" style="background: #333333"></div>
                 <div class="swatch-meta">
                   <strong id="swatch-dark-title">Dark Gray</strong>
-                  <span id="swatch-dark-description">#1F2937 for depth, industrial tone, and high-contrast framing.</span>
+                  <span id="swatch-dark-description">#333333 for headings, separators, and high-contrast corporate framing.</span>
                 </div>
               </div>
               <div class="swatch">
-                <div class="swatch-chip" style="background: linear-gradient(180deg, #07101d, #111827)"></div>
+                <div class="swatch-chip" style="background: #6b7280"></div>
                 <div class="swatch-meta">
-                  <strong id="swatch-bg-title">Background gradient</strong>
-                  <span id="swatch-bg-description">Use a deep dark gradient with restrained blue bloom rather than flat black.</span>
+                  <strong id="swatch-bg-title">Gray</strong>
+                  <span id="swatch-bg-description">#6B7280 for supporting copy, secondary controls, and neutral dividers.</span>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-chip" style="background: #f0f1f5"></div>
+                <div class="swatch-meta">
+                  <strong>Light Gray</strong>
+                  <span>#F0F1F5 for panel fills, secondary surfaces, and calm structure.</span>
+                </div>
+              </div>
+              <div class="swatch">
+                <div class="swatch-chip" style="background: #ffffff"></div>
+                <div class="swatch-meta">
+                  <strong>White</strong>
+                  <span>#FFFFFF for primary page surfaces, contrast, and browser-level clarity.</span>
                 </div>
               </div>
             </div>
@@ -599,11 +754,10 @@
       </section>
 
       <div class="closing">
-        <strong id="closing-title">Morning-ready handoff</strong>
+        <strong id="closing-title">Corporate-ready handoff</strong>
         <p id="closing-description">
-          Landing, icons, palette, supporting attribution, and the standalone brand page are now aligned around RoboQC.
-          This page can be shared directly as a quick visual guide while the product continues to ship on the existing
-          Romeo FlexVision infrastructure.
+          The public surface now follows the company white-blue system while preserving the RoboQC product layer.
+          This page can be shared as a quick brand reference for proposals, site updates, and pilot material reviews.
         </p>
       </div>
     </div>
@@ -611,9 +765,9 @@
       const lang = new URLSearchParams(window.location.search).get('lang') === 'he' ? 'he' : 'en';
       const copy = {
         en: {
-          title: 'RoboQC Brand Guide',
+          title: 'Romeo FlexVision Brand Guide',
           description:
-            'RoboQC brand guide with logo, palette, positioning, and Romeo FlexVision attribution.',
+            'Corporate brand guide for Romeo FlexVision and the RoboQC product surface.',
           backHref: '../',
           strings: {},
         },

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+﻿import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
   ArrowRight,
   Camera,
@@ -19,19 +19,10 @@ import {
   getSiteContent,
   SITE_LINKS,
   type SiteFaqItem,
-  type SiteFlowStep,
-  type SiteProduct,
   type SiteRoadmapItem,
-  type SiteTechGroup,
 } from '../data/siteContent';
-import type { View } from '../types';
-
 interface LandingProps {
-  onNavigate: (view: View) => void;
-  onLogin: () => void;
-  onRegister: () => void;
-  onSignOut: () => void;
-  isAuthenticated: boolean;
+  onPilotLaunch: () => void;
 }
 
 function useCountUp(target: number, duration = 1200) {
@@ -154,109 +145,28 @@ function FaqItem({ item }: { item: SiteFaqItem }) {
   );
 }
 
-function ProductCard({ product, openLabel }: { product: SiteProduct; openLabel: string }) {
-  const statusTone =
-    product.statusTone === 'success'
-      ? 'border-blue-300/30 bg-blue-400/10 text-blue-100'
-      : product.statusTone === 'warning'
-        ? 'border-slate-200/15 bg-white/5 text-slate-100'
-        : 'border-sky-300/25 bg-sky-400/10 text-sky-100';
-
-  return (
-    <article className="rfv-card group relative overflow-hidden rounded-[2rem] p-6">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-blue/80 to-transparent opacity-80" />
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{product.eyebrow}</div>
-          <h3 className="mt-2 text-2xl font-semibold text-text-primary">{product.title}</h3>
-        </div>
-        <span className={`rounded-full border px-3 py-1 text-[11px] font-medium ${statusTone}`}>
-          {product.status}
-        </span>
-      </div>
-
-      <p className="mt-4 text-sm leading-7 text-text-secondary">{product.description}</p>
-
-      <div className="mt-5 flex flex-wrap gap-2">
-        {product.tags.map((tag) => (
-          <span key={tag} className="rfv-pill">
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <a
-        href={product.repoUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-blue transition-colors hover:text-white"
-      >
-        {openLabel}
-        <ArrowRight size={16} />
-      </a>
-    </article>
-  );
-}
-
-function TechGroupCard({ group }: { group: SiteTechGroup }) {
-  return (
-    <article className="rfv-card rounded-[2rem] p-6">
-      <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{group.title}</div>
-      <p className="mt-3 text-sm leading-7 text-text-secondary">{group.description}</p>
-      <div className="mt-5 flex flex-wrap gap-2">
-        {group.items.map((item) => (
-          <span key={item} className="rfv-pill">
-            {item}
-          </span>
-        ))}
-      </div>
-    </article>
-  );
-}
-
-function FlowStepCard({ step, icon }: { step: SiteFlowStep; icon: ReactNode }) {
-  return (
-    <article className="rfv-card relative overflow-hidden rounded-[2rem] p-6">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-blue/70 to-transparent" />
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs uppercase tracking-[0.24em] text-accent-blue">{step.eyebrow}</div>
-          <h3 className="mt-3 text-xl font-semibold text-text-primary">{step.title}</h3>
-        </div>
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
-          {icon}
-        </div>
-      </div>
-      <p className="mt-4 text-sm leading-7 text-text-secondary">{step.description}</p>
-      <div className="mt-5 rounded-[1.25rem] border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-xs leading-6 text-text-muted">
-        {step.note}
-      </div>
-    </article>
-  );
-}
-
 function comparisonToneClass(tone: 'strong' | 'mid' | 'weak') {
   if (tone === 'strong') {
-    return 'border-blue-300/25 bg-blue-400/10 text-blue-50';
+    return 'border-blue-200 bg-blue-50 text-blue-700';
   }
 
   if (tone === 'mid') {
-    return 'border-white/10 bg-white/5 text-text-secondary';
+    return 'border-slate-200 bg-slate-50 text-slate-700';
   }
 
-  return 'border-white/10 bg-transparent text-text-muted';
+  return 'border-slate-200 bg-white text-slate-500';
 }
 
 function roadmapToneClass(tone: SiteRoadmapItem['tone']) {
   if (tone === 'success') {
-    return 'border-blue-300/25 bg-blue-400/10 text-blue-100';
+    return 'border-blue-200 bg-blue-50 text-blue-700';
   }
 
   if (tone === 'warning') {
-    return 'border-slate-200/12 bg-white/[0.05] text-slate-100';
+    return 'border-slate-200 bg-slate-50 text-slate-700';
   }
 
-  return 'border-sky-300/25 bg-sky-400/10 text-sky-100';
+  return 'border-sky-200 bg-sky-50 text-sky-700';
 }
 
 function RoadmapCard({ item, isLast }: { item: SiteRoadmapItem; isLast: boolean }) {
@@ -280,9 +190,10 @@ function RoadmapCard({ item, isLast }: { item: SiteRoadmapItem; isLast: boolean 
   );
 }
 
-export default function Landing({ onNavigate, onRegister, isAuthenticated }: LandingProps) {
+export default function Landing({ onPilotLaunch }: LandingProps) {
   const { language } = useLanguage();
   const copy = getSiteContent(language);
+  const { ui } = copy;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -297,55 +208,11 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
     { label: copy.nav.story, href: '#story' },
     { label: copy.nav.pains, href: '#pains' },
     { label: copy.nav.comparison, href: '#comparison' },
-    { label: copy.nav.products, href: '#products' },
-    { label: copy.nav.stack, href: '#stack' },
     { label: copy.nav.roadmap, href: '#roadmap' },
     { label: copy.nav.contact, href: '#contact' },
   ];
 
-  const landingUiCopy = {
-    en: {
-      liveLabel: 'RoboQC live',
-      proofLabel: 'Inline proof',
-      proofTitle: 'Frame, trace, decision',
-      proofDescription: 'Catch the defect where it starts, with evidence the line can act on immediately.',
-      storyQuote: '"The robot-camera that never sleeps."',
-      capabilityLabel: 'Capability',
-      socialLabel: 'Social',
-      brandGuideLabel: 'Brand guide',
-      faqKicker: 'FAQ',
-    },
-    ru: {
-      liveLabel: 'RoboQC в линии',
-      proofLabel: 'Inline-доказательство',
-      proofTitle: 'Кадр, trace, решение',
-      proofDescription: 'Ловим дефект там, где он появляется, и сразу даём линии доказательство для действия.',
-      storyQuote: '"Робот-камера, которая никогда не спит."',
-      capabilityLabel: 'Возможность',
-      socialLabel: 'Соцсети',
-      brandGuideLabel: 'Бренд-гайд',
-      faqKicker: 'FAQ',
-    },
-    he: {
-      liveLabel: 'RoboQC בזמן אמת',
-      proofLabel: 'הוכחה מהתחנה',
-      proofTitle: 'פריים, עקבה, החלטה',
-      proofDescription: 'תופסים את הפגם במקום שבו הוא נוצר, עם הוכחה שהקו יכול לפעול עליה מיד.',
-      storyQuote: '"הרובוט-מצלמה שלא ישן לעולם."',
-      capabilityLabel: 'יכולת',
-      socialLabel: 'קישורים',
-      brandGuideLabel: 'מדריך מותג',
-      faqKicker: 'שאלות נפוצות',
-    },
-  }[language];
-
   const brandGuideHref = `${import.meta.env.BASE_URL}brand/${language === 'en' ? '' : `?lang=${language}`}`;
-  const flowIcons = [
-    <Camera key="capture" size={20} />,
-    <Radar key="score" size={20} />,
-    <ShieldCheck key="package" size={20} />,
-    <MessageCircle key="act" size={20} />,
-  ];
   const storyIcons = [
     <Camera key="story-camera" size={20} />,
     <ShieldCheck key="story-proof" size={20} />,
@@ -353,23 +220,20 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
   ];
 
   const handlePilotLaunch = () => {
-    if (isAuthenticated) {
-      onNavigate('catalog');
-      return;
-    }
-
-    onRegister();
+    onPilotLaunch();
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-bg-primary text-text-primary">
-      <div className="pointer-events-none absolute inset-0 rfv-grid opacity-40" />
-      <div className="absolute left-[-12rem] top-[-10rem] h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(38,92,209,0.25),transparent_62%)] blur-3xl" />
-      <div className="absolute right-[-8rem] top-[18rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(143,179,255,0.16),transparent_62%)] blur-3xl" />
+    <div className="landing-shell relative min-h-screen overflow-x-hidden">
+      <div className="pointer-events-none absolute inset-0 rfv-grid opacity-70" />
+      <div className="pointer-events-none absolute inset-x-[8%] top-24 h-px bg-[linear-gradient(90deg,transparent,rgba(38,92,209,0.5),transparent)]" />
+      <div className="pointer-events-none absolute left-[-12rem] top-[-4rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(38,92,209,0.15),transparent_64%)] blur-3xl" />
+      <div className="pointer-events-none absolute right-[-6rem] top-[12rem] h-[20rem] w-[20rem] rounded-full bg-[radial-gradient(circle,rgba(143,179,255,0.2),transparent_68%)] blur-3xl" />
+      <div className="pointer-events-none absolute left-[10%] top-[36rem] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(circle,rgba(38,92,209,0.08),transparent_72%)] blur-3xl" />
 
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled ? 'border-b border-white/10 bg-bg-primary/80 backdrop-blur-xl' : 'bg-transparent'
+          scrolled ? 'landing-header landing-header-scrolled' : 'landing-header'
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4 sm:px-6 lg:px-8">
@@ -377,7 +241,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="flex items-center gap-3 text-left"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-blue/25 bg-accent-blue/10 shadow-[0_0_24px_rgba(38,92,209,0.18)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#bfd2f7] bg-white shadow-[0_18px_40px_rgba(38,92,209,0.14)]">
               <img
                 src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
                 alt="RoboQC"
@@ -397,7 +261,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
               <a
                 key={item.href}
                 href={item.href}
-                className="text-sm text-text-secondary transition-colors hover:text-white"
+                className="landing-nav-link text-sm"
               >
                 {item.label}
               </a>
@@ -434,7 +298,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
             <LanguageSwitcher />
             <button
               onClick={() => setMobileMenuOpen((current) => !current)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-text-primary backdrop-blur-md"
+              className="landing-icon-button inline-flex h-11 w-11 items-center justify-center rounded-2xl"
               aria-label={mobileMenuOpen ? copy.nav.close : copy.nav.menu}
             >
               {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -443,14 +307,14 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-t border-white/10 bg-bg-primary/95 px-5 py-5 backdrop-blur-xl lg:hidden">
+          <div className="landing-mobile-panel px-5 py-5 lg:hidden">
             <div className="flex flex-col gap-3">
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-2xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 text-sm text-text-secondary"
+                  className="landing-mobile-link rounded-2xl px-4 py-3 text-sm"
                 >
                   {item.label}
                 </a>
@@ -509,12 +373,12 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
               <div className="flex flex-wrap gap-3">
                 <button onClick={handlePilotLaunch} className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-sm sm:text-base">
-                  {copy.hero.primaryCta}
+                  {copy.nav.pilot}
                   <ArrowRight size={16} />
                 </button>
                 <a
                   href="#comparison"
-                  className="btn-ghost inline-flex items-center gap-2 border border-white/10 px-6 py-3 text-sm sm:text-base"
+                  className="landing-btn-secondary inline-flex px-6 py-3 text-sm sm:text-base"
                 >
                   {copy.hero.secondaryCta}
                   <ArrowRight size={16} />
@@ -540,7 +404,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
             <div className="relative mx-auto w-full max-w-[560px]">
               <div className="rfv-hero-glow absolute inset-0 rounded-[2.4rem] bg-[radial-gradient(circle_at_top,rgba(38,92,209,0.22),transparent_60%)] blur-3xl" />
               <div className="rfv-card rfv-hero-frame rfv-hero-shell relative overflow-hidden rounded-[2.4rem] p-3">
-                <div className="rfv-hero-chip absolute left-5 top-5 z-20 inline-flex rounded-full border border-white/10 bg-[#0b1220]/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-accent-blue backdrop-blur">
+                <div className="landing-hero-chip rfv-hero-chip absolute left-5 top-5 z-20 inline-flex rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
                   {copy.hero.imageBadge}
                 </div>
 
@@ -550,13 +414,13 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   className="rfv-hero-photo h-[520px] w-full rounded-[2rem] object-cover object-center"
                 />
 
-                <div className="pointer-events-none absolute inset-3 rounded-[2rem] bg-gradient-to-t from-[#0b1220] via-[#0b1220]/18 to-transparent" />
+                <div className="pointer-events-none absolute inset-3 rounded-[2rem] bg-gradient-to-t from-[#0f172a]/22 via-transparent to-white/10" />
 
                 <div className="absolute bottom-7 left-7 right-7 z-20 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/80 p-4 backdrop-blur-xl">
+                  <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
                     <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
                       <Radar size={15} />
-                      {landingUiCopy.liveLabel}
+                      {ui.liveLabel}
                     </div>
                     <div className="mt-3 text-lg font-semibold text-text-primary">{copy.hero.imageStat}</div>
                     <p className="mt-2 text-sm leading-6 text-text-secondary">
@@ -564,13 +428,13 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                     </p>
                   </div>
 
-                  <div className="rounded-[1.6rem] border border-white/10 bg-[#0b1220]/75 p-4 backdrop-blur-xl">
+                  <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
                     <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
                       <Camera size={15} />
-                      {landingUiCopy.proofLabel}
+                      {ui.proofLabel}
                     </div>
-                    <div className="mt-3 text-lg font-semibold text-text-primary">{landingUiCopy.proofTitle}</div>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary">{landingUiCopy.proofDescription}</p>
+                    <div className="mt-3 text-lg font-semibold text-text-primary">{ui.proofTitle}</div>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary">{ui.proofDescription}</p>
                   </div>
                 </div>
               </div>
@@ -601,7 +465,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
               <div className="rfv-card rounded-[2rem] p-7">
                 <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
-                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{landingUiCopy.storyQuote}</div>
+                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{ui.storyQuote}</div>
                 <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
@@ -610,7 +474,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   </a>
                   <a href={brandGuideHref} className="rfv-pill">
                     <ShieldCheck size={16} />
-                    {landingUiCopy.brandGuideLabel}
+                    {ui.brandGuideLabel}
                   </a>
                   <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
                     <MessageCircle size={16} />
@@ -656,9 +520,9 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
               <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-white/[0.08]">
+                    <tr className="border-b border-slate-200/90">
                       <th className="min-w-[260px] px-6 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
-                        {landingUiCopy.capabilityLabel}
+                        {ui.capabilityLabel}
                       </th>
                       {copy.labels.comparisonColumns.map((column) => (
                         <th
@@ -672,7 +536,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   </thead>
                   <tbody>
                     {copy.comparisonRows.map((row) => (
-                      <tr key={row.capability} className="border-b border-white/[0.08] last:border-b-0">
+                      <tr key={row.capability} className="border-b border-slate-200/70 last:border-b-0">
                         <td className="px-6 py-5 text-sm font-medium text-text-primary">{row.capability}</td>
                         {row.values.map((cell, index) => (
                           <td key={`${row.capability}-${index}`} className="px-4 py-5">
@@ -688,58 +552,6 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-        </RevealBlock>
-
-        <RevealBlock id="products" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.products}
-              title={copy.sections.products}
-              description={copy.sections.productsDescription}
-            />
-
-            <div className="grid gap-5 lg:grid-cols-2">
-              {copy.products.map((product) => (
-                <ProductCard key={product.title} product={product} openLabel={copy.labels.openRepo} />
-              ))}
-            </div>
-          </div>
-        </RevealBlock>
-
-        <RevealBlock id="stack" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.stack}
-              title={copy.sections.stack}
-              description={copy.sections.stackDescription}
-            />
-
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {copy.techGroups.map((group) => (
-                <TechGroupCard key={group.title} group={group} />
-              ))}
-            </div>
-          </div>
-        </RevealBlock>
-
-        <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.labels.poweredBy}
-              title={copy.sections.flow}
-              description={copy.sections.flowDescription}
-            />
-
-            <div className="grid gap-5 lg:grid-cols-2">
-              {copy.flowSteps.map((step, index) => (
-                <FlowStepCard
-                  key={step.title}
-                  step={step}
-                  icon={flowIcons[index] ?? <Radar size={20} />}
-                />
-              ))}
             </div>
           </div>
         </RevealBlock>
@@ -849,7 +661,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
 
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader kicker={landingUiCopy.faqKicker} title={copy.sections.faq} description={copy.sections.faqDescription} />
+            <SectionHeader kicker={ui.faqKicker} title={copy.sections.faq} description={copy.sections.faqDescription} />
             <div className="grid gap-4 lg:grid-cols-2">
               {copy.faq.map((item) => (
                 <FaqItem key={item.question} item={item} />
@@ -859,11 +671,11 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
         </RevealBlock>
       </main>
 
-      <footer id="contact" className="border-t border-white/10 px-5 py-12 sm:px-6 lg:px-8">
+      <footer id="contact" className="landing-footer px-5 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_auto]">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-accent-blue/25 bg-accent-blue/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#bfd2f7] bg-white shadow-[0_18px_34px_rgba(38,92,209,0.12)]">
                 <img
                   src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
                   alt="RoboQC"
@@ -886,18 +698,18 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
               <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{copy.nav.contact}</div>
               <div className="mt-4 flex flex-col gap-2 text-sm">
                 {navItems.map((item) => (
-                  <a key={item.href} href={item.href} className="text-text-secondary transition-colors hover:text-white">
+                  <a key={item.href} href={item.href} className="landing-footer-link">
                     {item.label}
                   </a>
                 ))}
               </div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{landingUiCopy.socialLabel}</div>
+              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{ui.socialLabel}</div>
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <a href={brandGuideHref} className="rfv-pill">
                   <ShieldCheck size={16} />
-                  {landingUiCopy.brandGuideLabel}
+                  {ui.brandGuideLabel}
                 </a>
                 <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
                   <Github size={16} />
@@ -916,7 +728,7 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
           </div>
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-white/[0.08] pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-slate-200/90 pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>{copy.labels.rights}</span>
           <span className="inline-flex items-center gap-2 self-start rounded-full border border-accent-blue/20 bg-accent-blue/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-blue sm:self-auto">
             <ShieldCheck size={14} />
@@ -927,5 +739,6 @@ export default function Landing({ onNavigate, onRegister, isAuthenticated }: Lan
     </div>
   );
 }
+
 
 
