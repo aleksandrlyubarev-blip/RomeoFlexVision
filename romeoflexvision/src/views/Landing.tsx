@@ -194,6 +194,40 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
   const { language } = useLanguage();
   const copy = getSiteContent(language);
   const { ui } = copy;
+  const heroVisualCopy = {
+    en: {
+      surfaceLabel: 'Corporate inspection surface',
+      surfaceTitle: 'A cleaner frame for the pilot conversation.',
+      coreTitle: 'Station #2 control loop',
+      coreText:
+        'Inline quality capture, operator proof, and escalation timing in one branded surface.',
+      stationLabel: 'Pilot station',
+      catchLabel: 'Real-time catch',
+      evidenceLabel: 'Evidence mode',
+      alertLabel: 'Operator alert',
+    },
+    ru: {
+      surfaceLabel: 'Корпоративная QC-поверхность',
+      surfaceTitle: 'Более чистая подача для пилотного разговора.',
+      coreTitle: 'Контур станции №2',
+      coreText:
+        'Inline-поимка дефекта, доказательство для оператора и время эскалации в одной фирменной поверхности.',
+      stationLabel: 'Пилотная станция',
+      catchLabel: 'Поимка в real-time',
+      evidenceLabel: 'Режим доказательства',
+      alertLabel: 'Алерт оператору',
+    },
+    he: {
+      surfaceLabel: 'משטח QC תאגידי',
+      surfaceTitle: 'מסגרת נקייה יותר לשיחת הפיילוט.',
+      coreTitle: 'לולאת תחנה 2',
+      coreText: 'תפיסת פגם inline, הוכחה למפעיל ותזמון הסלמה במשטח ממותג אחד.',
+      stationLabel: 'תחנת פיילוט',
+      catchLabel: 'תפיסה בזמן אמת',
+      evidenceLabel: 'מצב הוכחה',
+      alertLabel: 'התראת מפעיל',
+    },
+  }[language];
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -403,38 +437,104 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
 
             <div className="relative mx-auto w-full max-w-[560px]">
               <div className="rfv-hero-glow absolute inset-0 rounded-[2.4rem] bg-[radial-gradient(circle_at_top,rgba(38,92,209,0.22),transparent_60%)] blur-3xl" />
-              <div className="rfv-card rfv-hero-frame rfv-hero-shell relative overflow-hidden rounded-[2.4rem] p-3">
-                <div className="landing-hero-chip rfv-hero-chip absolute left-5 top-5 z-20 inline-flex rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
-                  {copy.hero.imageBadge}
-                </div>
-
-                <img
-                  src={`${import.meta.env.BASE_URL}assets/brand/romeo-photo.jpg`}
-                  alt={copy.hero.imageAlt}
-                  className="rfv-hero-photo h-[520px] w-full rounded-[2rem] object-cover object-center"
-                />
-
-                <div className="pointer-events-none absolute inset-3 rounded-[2rem] bg-gradient-to-t from-[#0f172a]/22 via-transparent to-white/10" />
-
-                <div className="absolute bottom-7 left-7 right-7 z-20 grid gap-4 sm:grid-cols-2">
-                  <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
-                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
-                      <Radar size={15} />
-                      {ui.liveLabel}
+              <div className="rfv-card rfv-hero-frame rfv-hero-shell relative overflow-hidden rounded-[2.4rem] p-4 sm:p-5">
+                <div className="hero-visual-stage rounded-[2rem] p-5 sm:p-6">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="max-w-[18rem] space-y-3">
+                      <div className="landing-hero-chip rfv-hero-chip inline-flex rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em]">
+                        {heroVisualCopy.surfaceLabel}
+                      </div>
+                      <div className="text-2xl font-semibold leading-tight text-text-primary">
+                        {heroVisualCopy.surfaceTitle}
+                      </div>
                     </div>
-                    <div className="mt-3 text-lg font-semibold text-text-primary">{copy.hero.imageStat}</div>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary">
-                      {copy.labels.poweredBy}
-                    </p>
+
+                    <div className="hero-visual-brand">
+                      <img
+                        src={`${import.meta.env.BASE_URL}assets/brand/roboqc-mark.svg`}
+                        alt="RoboQC mark"
+                        className="h-12 w-12 shrink-0"
+                      />
+                      <div>
+                        <div className="text-sm font-semibold uppercase tracking-[0.18em] text-accent-blue">
+                          RoboQC
+                        </div>
+                        <div className="mt-1 text-sm text-text-secondary">{copy.labels.poweredBy}</div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
-                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
-                      <Camera size={15} />
-                      {ui.proofLabel}
+                  <div className="hero-visual-constellation mt-6">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="hero-visual-mini-card">
+                        <div className="hero-visual-mini-label">{heroVisualCopy.stationLabel}</div>
+                        <div className="hero-visual-mini-value">#{copy.metrics[2]?.value ?? 2}</div>
+                      </div>
+                      <div className="hero-visual-mini-card">
+                        <div className="hero-visual-mini-label">{heroVisualCopy.catchLabel}</div>
+                        <div className="hero-visual-mini-value">
+                          {copy.metrics[0]?.value}
+                          {copy.metrics[0]?.suffix}
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-3 text-lg font-semibold text-text-primary">{ui.proofTitle}</div>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary">{ui.proofDescription}</p>
+
+                    <div className="hero-visual-core mt-4">
+                      <div className="hero-visual-core-badge">
+                        <img
+                          src={`${import.meta.env.BASE_URL}assets/brand/roboqc-mark.svg`}
+                          alt="RoboQC mark"
+                          className="h-16 w-16"
+                        />
+                      </div>
+                      <div className="mt-4 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/84">
+                        {copy.hero.imageBadge}
+                      </div>
+                      <div className="mt-5 text-2xl font-semibold text-white">{heroVisualCopy.coreTitle}</div>
+                      <p className="mx-auto mt-3 max-w-[21rem] text-sm leading-7 text-blue-50/88">
+                        {heroVisualCopy.coreText}
+                      </p>
+                      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                        <span className="hero-visual-core-pill">{ui.liveLabel}</span>
+                        <span className="hero-visual-core-pill">{ui.proofLabel}</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <div className="hero-visual-mini-card">
+                        <div className="hero-visual-mini-label">{heroVisualCopy.evidenceLabel}</div>
+                        <div className="hero-visual-mini-value">{ui.proofLabel}</div>
+                      </div>
+                      <div className="hero-visual-mini-card">
+                        <div className="hero-visual-mini-label">{heroVisualCopy.alertLabel}</div>
+                        <div className="hero-visual-mini-value">
+                          {copy.metrics[3]?.value}
+                          {copy.metrics[3]?.suffix}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
+                        <Radar size={15} />
+                        {ui.liveLabel}
+                      </div>
+                      <div className="mt-3 text-lg font-semibold text-text-primary">{copy.hero.imageStat}</div>
+                      <p className="mt-2 text-sm leading-6 text-text-secondary">
+                        {copy.labels.poweredBy}
+                      </p>
+                    </div>
+
+                    <div className="landing-hero-overlay-card rounded-[1.6rem] p-4">
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent-blue">
+                        <Camera size={15} />
+                        {ui.proofLabel}
+                      </div>
+                      <div className="mt-3 text-lg font-semibold text-text-primary">{ui.proofTitle}</div>
+                      <p className="mt-2 text-sm leading-6 text-text-secondary">{ui.proofDescription}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -672,68 +772,70 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
       </main>
 
       <footer id="contact" className="landing-footer px-5 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_auto]">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#bfd2f7] bg-white shadow-[0_18px_34px_rgba(38,92,209,0.12)]">
-                <img
-                  src={`${import.meta.env.BASE_URL}assets/brand/roboqc-icon-64.png`}
-                  alt="RoboQC"
-                  className="h-9 w-9"
-                />
+        <div className="mx-auto max-w-7xl">
+          <div className="rfv-card landing-footer-panel rounded-[2rem] p-7 sm:p-8 lg:p-10">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(220px,0.72fr)_minmax(0,1fr)]">
+              <div className="space-y-5">
+                <div className="landing-footer-brand">
+                  <div className="landing-footer-mark">
+                    <img
+                      src={`${import.meta.env.BASE_URL}assets/brand/roboqc-mark.svg`}
+                      alt="RoboQC"
+                      className="h-11 w-11"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-semibold tracking-tight text-text-primary">RoboQC</div>
+                    <div className="mt-1 text-sm text-text-secondary">{copy.labels.poweredBy}</div>
+                  </div>
+                </div>
+
+                <p className="max-w-xl text-base leading-8 text-text-secondary">{copy.labels.footerSummary}</p>
+                <div className="landing-footer-note">{copy.labels.footerNote}</div>
               </div>
+
               <div>
-                <div className="text-sm font-semibold text-text-primary">RoboQC</div>
-                <div className="text-xs uppercase tracking-[0.22em] text-text-muted">
-                  {copy.labels.poweredBy}
+                <div className="landing-footer-heading">{copy.nav.contact}</div>
+                <div className="mt-5 flex flex-col gap-3 text-sm">
+                  {navItems.map((item) => (
+                    <a key={item.href} href={item.href} className="landing-footer-navchip">
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="landing-footer-heading">{ui.socialLabel}</div>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <a href={brandGuideHref} className="rfv-pill">
+                    <ShieldCheck size={16} />
+                    {ui.brandGuideLabel}
+                  </a>
+                  <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
+                    <Github size={16} />
+                    GitHub
+                  </a>
+                  <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
+                    <MessageCircle size={16} />
+                    {SITE_LINKS.telegramHandle}
+                  </a>
+                  <a href={SITE_LINKS.linkedin} target="_blank" rel="noreferrer" className="rfv-pill">
+                    <Linkedin size={16} />
+                    LinkedIn
+                  </a>
                 </div>
               </div>
             </div>
-            <p className="max-w-2xl text-sm leading-7 text-text-secondary">{copy.labels.footerSummary}</p>
-            <p className="text-sm text-text-muted">{copy.labels.footerNote}</p>
-          </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{copy.nav.contact}</div>
-              <div className="mt-4 flex flex-col gap-2 text-sm">
-                {navItems.map((item) => (
-                  <a key={item.href} href={item.href} className="landing-footer-link">
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="text-xs uppercase tracking-[0.22em] text-text-muted">{ui.socialLabel}</div>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <a href={brandGuideHref} className="rfv-pill">
-                  <ShieldCheck size={16} />
-                  {ui.brandGuideLabel}
-                </a>
-                <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
-                  <Github size={16} />
-                  GitHub
-                </a>
-                <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
-                  <MessageCircle size={16} />
-                  {SITE_LINKS.telegramHandle}
-                </a>
-                <a href={SITE_LINKS.linkedin} target="_blank" rel="noreferrer" className="rfv-pill">
-                  <Linkedin size={16} />
-                  LinkedIn
-                </a>
-              </div>
+            <div className="mt-10 flex flex-col gap-3 border-t border-slate-200/90 pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
+              <span>{copy.labels.rights}</span>
+              <span className="inline-flex items-center gap-2 self-start rounded-full border border-accent-blue/20 bg-accent-blue/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-blue sm:self-auto">
+                <ShieldCheck size={14} />
+                {copy.labels.poweredBy}
+              </span>
             </div>
           </div>
-        </div>
-
-        <div className="mx-auto mt-8 flex max-w-7xl flex-col gap-3 border-t border-slate-200/90 pt-6 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>{copy.labels.rights}</span>
-          <span className="inline-flex items-center gap-2 self-start rounded-full border border-accent-blue/20 bg-accent-blue/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-blue sm:self-auto">
-            <ShieldCheck size={14} />
-            {copy.labels.poweredBy}
-          </span>
         </div>
       </footer>
     </div>
