@@ -6,879 +6,745 @@ export const SITE_LINKS = {
   telegramHandle: '@RomeoFlexVision_bot',
   linkedin: 'https://www.linkedin.com/company/romeoflexvision',
   landing: 'https://romeoflexvision.com/',
+  physicalAiDeck: '/downloads/RomeoFlexVision_Physical_AI.pdf',
+  roboqcDeck: '/downloads/RoboQC_Precision_Assembly_AI.pdf',
+  combinedDeck: '/downloads/RomeoFlexVision_RoboQC_Combined_Deck.pdf',
 } as const;
 
-export interface SiteMetric {
-  label: string;
-  value: number;
-  suffix: string;
-}
-
-export interface SiteStoryCard {
-  title: string;
-  description: string;
-}
-
-export interface SitePain {
-  title: string;
-  description: string;
-}
-
-export interface SiteComparisonCell {
-  label: string;
-  tone: 'strong' | 'mid' | 'weak';
-}
-
-export interface SiteComparisonRow {
-  capability: string;
-  values: SiteComparisonCell[];
-}
-
-export interface SiteLinkCard {
-  title: string;
-  description: string;
-  href: string;
-  action: string;
-}
-
-export interface SiteFaqItem {
-  question: string;
-  answer: string;
-}
-
-export interface SiteRoadmapItem {
-  phase: string;
-  title: string;
-  description: string;
-  status: string;
-  tone: 'success' | 'warning' | 'info';
-}
-
-interface SiteMetaCopy {
+export interface SiteMetaCopy {
   title: string;
   description: string;
   ogTitle: string;
   ogDescription: string;
 }
 
-interface SiteNavCopy {
-  story: string;
-  pains: string;
-  comparison: string;
+export interface SiteNavCopy {
+  products: string;
+  problem: string;
+  solution: string;
+  traction: string;
+  edge: string;
+  cloud: string;
   roadmap: string;
+  team: string;
   contact: string;
+  deck: string;
+  pilot: string;
   github: string;
   telegram: string;
   linkedin: string;
-  pilot: string;
   menu: string;
   close: string;
 }
 
-interface SiteHeroCopy {
+export interface SiteHeroCopy {
   eyebrow: string;
   title: string;
   subtitle: string;
+  sloganLabel: string;
+  slogan: string;
   primaryCta: string;
   secondaryCta: string;
-  badges: string[];
-  imageBadge: string;
-  imageStat: string;
-  imageAlt: string;
+  tertiaryCta: string;
+  chips: string[];
 }
 
-interface SiteSectionCopy {
-  story: string;
-  storyDescription: string;
-  pains: string;
-  painsDescription: string;
-  comparison: string;
-  comparisonDescription: string;
-  roadmap: string;
-  roadmapDescription: string;
-  community: string;
-  communityDescription: string;
-  faq: string;
-  faqDescription: string;
+export interface SiteProduct {
+  name: string;
+  subtitle: string;
+  description: string;
+  bullets: string[];
 }
 
-interface SiteLabelCopy {
-  poweredBy: string;
-  comparisonColumns: string[];
-  footerSummary: string;
-  footerNote: string;
-  rights: string;
+export interface SiteProblemItem {
+  title: string;
+  description: string;
 }
 
-interface SiteUiCopy {
-  liveLabel: string;
-  proofLabel: string;
-  proofTitle: string;
-  proofDescription: string;
-  storyQuote: string;
-  capabilityLabel: string;
-  socialLabel: string;
-  brandGuideLabel: string;
-  faqKicker: string;
+export interface SiteSolutionStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
+export interface SiteTractionStat {
+  value: string;
+  label: string;
+}
+
+export interface SiteRoadmapItem {
+  phase: string;
+  title: string;
+  description: string;
+}
+
+export interface SiteDownloadItem {
+  title: string;
+  description: string;
+  href: string;
+}
+
+export interface SiteContactMethod {
+  title: string;
+  description: string;
+  href: string;
+  action: string;
+}
+
+export interface SiteFormCopy {
+  title: string;
+  description: string;
+  nameLabel: string;
+  companyLabel: string;
+  emailLabel: string;
+  messageLabel: string;
+  submitLabel: string;
+  helper: string;
+  success: string;
+  error: string;
+}
+
+export interface SiteUiCopy {
+  partnersLabel: string;
+  tractionNote: string;
+  problemVisualLabel: string;
+  solutionVisualLabel: string;
+  teamBadge: string;
+  downloadsLabel: string;
+  contactLinksLabel: string;
+  thinkPadLabel: string;
+  thinkPadDescription: string;
 }
 
 export interface SiteCopy {
   meta: SiteMetaCopy;
   nav: SiteNavCopy;
   hero: SiteHeroCopy;
-  sections: SiteSectionCopy;
-  labels: SiteLabelCopy;
+  heroVisual: {
+    headline: string;
+    subline: string;
+    cardA: string;
+    cardB: string;
+    cardC: string;
+  };
+  products: {
+    kicker: string;
+    title: string;
+    description: string;
+    items: SiteProduct[];
+  };
+  problem: {
+    kicker: string;
+    title: string;
+    description: string;
+    items: SiteProblemItem[];
+  };
+  solution: {
+    kicker: string;
+    title: string;
+    description: string;
+    steps: SiteSolutionStep[];
+    semanticTitle: string;
+    semanticDescription: string;
+  };
+  traction: {
+    kicker: string;
+    title: string;
+    description: string;
+    stats: SiteTractionStat[];
+  };
+  edge: {
+    kicker: string;
+    title: string;
+    description: string;
+    bullets: string[];
+    footer: string;
+  };
+  cloud: {
+    kicker: string;
+    title: string;
+    description: string;
+    bullets: string[];
+  };
+  roadmap: {
+    kicker: string;
+    title: string;
+    description: string;
+    items: SiteRoadmapItem[];
+  };
+  team: {
+    kicker: string;
+    title: string;
+    description: string;
+    leaderName: string;
+    leaderRole: string;
+    expertise: string[];
+  };
+  downloads: SiteDownloadItem[];
+  contactMethods: SiteContactMethod[];
+  form: SiteFormCopy;
   ui: SiteUiCopy;
-  metrics: SiteMetric[];
-  storyCards: SiteStoryCard[];
-  pains: SitePain[];
-  comparisonRows: SiteComparisonRow[];
-  roadmap: SiteRoadmapItem[];
-  communityCards: SiteLinkCard[];
-  faq: SiteFaqItem[];
 }
 
 const SITE_COPY: Record<Language, SiteCopy> = {
   en: {
     meta: {
-      title: 'RoboQC | Cognitive Quality Inspector',
+      title: 'RomeoFlexVision | The Open Execution Layer for Physical AI',
       description:
-        'RoboQC is the cognitive robot-inspector powered by Romeo FlexVision. Catch station-2 defects in real time instead of discovering them at test #5.',
-      ogTitle: 'RoboQC | Powered by Romeo FlexVision',
+        'RomeoFlexVision is the open execution layer for physical AI, and RoboQC brings that stack into AI-powered visual quality control for electronics assembly.',
+      ogTitle: 'RomeoFlexVision | Open Execution Layer for Physical AI',
       ogDescription:
-        'The robot-camera that never sleeps. Inline quality control for station-level defects.',
+        'No CAD. No Cloud. No ML Team. Synchronized Physical Action with RoboQC for inline quality control.',
     },
     nav: {
-      story: 'Why RoboQC',
-      pains: '5 Pain Points',
-      comparison: 'Comparison',
+      products: 'Products',
+      problem: 'Problem',
+      solution: 'Solution',
+      traction: 'Traction',
+      edge: 'Tech Edge',
+      cloud: 'Google Cloud',
       roadmap: 'Roadmap',
+      team: 'Team',
       contact: 'Contact',
+      deck: 'Download Pitch Deck',
+      pilot: 'Book a Pilot',
       github: 'GitHub',
       telegram: 'Telegram',
       linkedin: 'LinkedIn',
-      pilot: 'Open pilot chat',
       menu: 'Menu',
       close: 'Close',
     },
     hero: {
-      eyebrow: 'Powered by Romeo FlexVision',
-      title: 'RoboQC. Your camera-robot on every station.',
-      subtitle: 'Inline quality control. We catch 90% of errors in real time.',
-      primaryCta: 'Open pilot chat',
-      secondaryCta: 'See the comparison',
-      badges: ['24/7 inline monitoring', 'Station #2 response loop', 'Evidence before escalation'],
-      imageBadge: 'Robot camera. Never sleeps.',
-      imageStat: 'Station #2 alert in seconds',
-      imageAlt: 'Romeo inspection robot on a production line',
+      eyebrow: 'RomeoFlexVision',
+      title: 'The Open Execution Layer for Physical AI',
+      subtitle:
+        'RoboQC brings that stack into AI-powered visual quality control for electronics assembly, catching defects inline instead of waiting for end-of-line failure.',
+      sloganLabel: 'Core slogan',
+      slogan:
+        'No CAD. No Cloud. No ML Team. Synchronized Physical Action.',
+      primaryCta: 'Download Pitch Deck',
+      secondaryCta: 'Book a Pilot',
+      tertiaryCta: 'Google Cloud Partnership',
+      chips: ['Physical AI', 'Edge-native QC', 'Hebrew-ready site', 'Editable corporate landing'],
     },
-    sections: {
-      story: 'A QC robot for the exact moment defects are born',
-      storyDescription:
-        'RoboQC works on the station itself: camera, evidence, and escalation loop in one operator-facing surface.',
-      pains: '5 pains RoboQC removes overnight',
-      painsDescription:
-        'The goal is simple: stop paying for defects discovered too late, without proof frames and without a clean handoff to the line.',
-      comparison: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
-      comparisonDescription:
-        'RoboQC is positioned around inline defect capture and operator evidence, not just guidance, analytics, or after-the-fact reporting.',
-      roadmap: 'Rollout roadmap',
-      roadmapDescription:
-        'A practical path from one pilot station to multi-station inline quality coverage.',
-      community: 'Pilot launch, repositories, and public touchpoints',
-      communityDescription:
-        'Use Telegram for a fast pilot intro, GitHub for the build surface, and LinkedIn for external positioning.',
-      faq: 'FAQ',
-      faqDescription: 'Short answers for operators, engineering managers, and pilot sponsors.',
+    heroVisual: {
+      headline: 'RoboQC + RomeoFlexVision',
+      subline: 'A dark physical-AI surface built from the two pitch decks.',
+      cardA: 'Inline visual quality control for electronics assembly',
+      cardB: 'Neutral execution layer across heterogeneous hardware',
+      cardC: 'Sub-200ms edge inference with few-shot deployment',
     },
-    labels: {
-      poweredBy: 'Powered by Romeo FlexVision',
-      comparisonColumns: ['RoboQC', 'LightGuide', 'Arkite', 'Drishti', 'Retrocausal'],
-      footerSummary:
-        'RoboQC is a cognitive quality-control robot built on top of the Romeo FlexVision stack.',
-      footerNote:
-        'The robot-camera that catches defects on station #2 instead of discovering them at test #5.',
-      rights: '(c) 2026 RoboQC. All rights reserved.',
+    products: {
+      kicker: 'Products',
+      title: 'Two layers. One industrial story.',
+      description:
+        'RomeoFlexVision is the execution layer. RoboQC is the applied quality-control product that operators and factories feel first.',
+      items: [
+        {
+          name: 'RomeoFlexVision',
+          subtitle: 'Open Execution Layer for Physical AI',
+          description:
+            'The neutral bridge that coordinates perception, reasoning, and action across heterogeneous industrial hardware.',
+          bullets: [
+            'Import -> Annotate -> Train -> Deploy',
+            'Built for on-prem, multi-vendor industrial execution',
+            'Designed to avoid hardware deadlocks and vendor lock-in',
+          ],
+        },
+        {
+          name: 'RoboQC',
+          subtitle: 'AI-Powered Visual Quality Control for Electronics Assembly',
+          description:
+            'The camera-first quality-control product that catches station-level defects before they become expensive end-of-line failures.',
+          bullets: [
+            'Catch the defect on station #2, not on test #5',
+            'Visual proof with frame, trace, and operator decision support',
+            'Edge-native inline QA for high-density electronics assembly',
+          ],
+        },
+      ],
     },
-    ui: {
-      liveLabel: 'RoboQC live',
-      proofLabel: 'Inline proof',
-      proofTitle: 'Frame, trace, decision',
-      proofDescription:
-        'Catch the defect where it starts, with evidence the line can use right away.',
-      storyQuote: '"The robot-camera that never sleeps."',
-      capabilityLabel: 'Capability',
-      socialLabel: 'Links',
-      brandGuideLabel: 'Brand guide',
-      faqKicker: 'FAQ',
+    problem: {
+      kicker: 'Problem',
+      title: 'The factory floor is still split by coordination gaps and late discovery.',
+      description:
+        'The two decks describe the same industrial trap from different angles: closed ecosystems create hardware friction, while reactive QC makes every missed defect more expensive.',
+      items: [
+        {
+          title: 'Coordination Gap',
+          description:
+            'Physical AI systems still break between perception and action, especially when multiple hardware nodes disagree about what is happening.',
+        },
+        {
+          title: 'Proprietary Gravity Wells',
+          description:
+            'Closed vendor stacks lock factories into isolated hardware decisions instead of letting them coordinate the best available tools.',
+        },
+        {
+          title: 'QC Cost Explosion',
+          description:
+            'A defect born on station #2 can be cheap to fix immediately, but expensive to rework when it is discovered only at station #5.',
+        },
+      ],
     },
-    metrics: [
-      { label: 'Errors caught in real time', value: 90, suffix: '%' },
-      { label: 'Monitoring coverage', value: 24, suffix: '/7' },
-      { label: 'Primary pilot station', value: 2, suffix: '' },
-      { label: 'Seconds to operator alert', value: 8, suffix: 's' },
+    solution: {
+      kicker: 'Solution',
+      title: 'A deployment path from raw evidence to synchronized physical action.',
+      description:
+        'RomeoFlexVision provides the execution pattern, while RoboQC applies it to inline inspection, operator evidence, and physical escalation.',
+      steps: [
+        {
+          step: '01',
+          title: 'Import',
+          description: 'Bring in production evidence, station context, and the first real defect scenarios.',
+        },
+        {
+          step: '02',
+          title: 'Annotate',
+          description: 'Create operator-readable labels and visual ground truth without requiring a giant ML program.',
+        },
+        {
+          step: '03',
+          title: 'Train',
+          description: 'Use few-shot learning and edge-ready models to reach useful detection quickly.',
+        },
+        {
+          step: '04',
+          title: 'Deploy',
+          description: 'Run the model inline on the edge and trigger evidence-backed operator action.',
+        },
+      ],
+      semanticTitle: 'Semantic Conflict Resolution',
+      semanticDescription:
+        'The action layer is not just a webhook. It is the final industrial verdict that resolves competing inputs and triggers the PLC or downstream physical move.',
+    },
+    traction: {
+      kicker: 'Traction',
+      title: 'The narrative is already moving from deck to factory conversations.',
+      description:
+        'The current traction story combines partner credibility, real investigations, and live-pilot timing for 2026.',
+      stats: [
+        { value: 'NVIDIA', label: 'Inception Partner' },
+        { value: '5', label: 'Pilot factories' },
+        { value: '100+', label: 'Investigations completed' },
+        { value: 'Q2 2026', label: 'Pilots live' },
+      ],
+    },
+    edge: {
+      kicker: 'Tech Edge',
+      title: 'A practical edge stack for dense industrial inspection.',
+      description:
+        'The RoboQC deck makes the deployment case clearly: real inline response requires low latency, on-prem execution, and fast startup without CAD dependencies.',
+      bullets: [
+        'Sub-200ms latency on an RTX 3060/4060 edge node',
+        '100% edge-native and framed for fast Docker-based deployment',
+        'No CAD requirement and few-shot learning from 10-30 golden samples',
+        'PatchCore for anomaly detection plus Florence-2 VLM for semantic reasoning',
+      ],
+      footer:
+        'Hardware density is exceeding human inspection capabilities, while edge AI cost/performance has finally unlocked real-time physical deployment.',
+    },
+    cloud: {
+      kicker: 'Google Cloud',
+      title: 'How Google Cloud can accelerate our growth',
+      description:
+        'This block is structured as a partnership narrative for the site: how cloud support helps the team move faster, stay visible, and prepare broader edge rollout.',
+      bullets: [
+        'Vertex AI for rapid experiment loops, model evaluation, and partner demos',
+        'Google startup credits to shorten iteration cycles during the pilot phase',
+        'GKE and edge-container deployment language for scalable industrial rollout',
+        'Israel Cloud AI events and partner visibility to support business development',
+      ],
+    },
+    roadmap: {
+      kicker: 'Roadmap',
+      title: 'A 12-week roadmap from pilot station to rollout plan.',
+      description:
+        'The site now needs a roadmap that feels credible to operators, partners, and sponsors: one station first, then evidence, then wider deployment.',
+      items: [
+        {
+          phase: 'Weeks 1-3',
+          title: 'Select the wedge and collect golden samples',
+          description:
+            'Lock the first pilot station, confirm the defect family, and gather the initial 10-30 golden samples.',
+        },
+        {
+          phase: 'Weeks 4-6',
+          title: 'Import, annotate, and benchmark edge inference',
+          description:
+            'Build the first labeled loop, validate the visual model, and confirm sub-200ms target behavior on the edge node.',
+        },
+        {
+          phase: 'Weeks 7-9',
+          title: 'Deploy RoboQC inline with operator evidence',
+          description:
+            'Run the system on the line, deliver frame-trace-decision evidence, and tune the escalation path for operators.',
+        },
+        {
+          phase: 'Weeks 10-12',
+          title: 'Prepare expansion and board-level narrative',
+          description:
+            'Package the KPI story, identify the next stations, and turn the pilot into a repeatable rollout plan for Q2 2026.',
+        },
+      ],
+    },
+    team: {
+      kicker: 'Team',
+      title: 'Built by operators of the problem, not only observers of the market.',
+      description:
+        'The founder card is intentionally lean here because the repository does not include a verified portrait asset. The focus stays on expertise and execution credibility.',
+      leaderName: 'Alexander Lyubarev',
+      leaderRole: 'Founder, RomeoFlexVision / RoboQC',
+      expertise: [
+        'Physical AI execution layers and industrial coordination logic',
+        'Inline quality control for dense electronics and server-rack assembly',
+        'Edge-native deployment, product strategy, and technical storytelling',
+      ],
+    },
+    downloads: [
+      {
+        title: 'Combined Pitch Deck',
+        description:
+          'Merged deck for fast partner conversations, investor intros, and customer walkthroughs.',
+        href: SITE_LINKS.combinedDeck,
+      },
+      {
+        title: 'RomeoFlexVision Physical AI Deck',
+        description:
+          'Execution-layer narrative, coordination gap, neutral bridge, and defensibility matrix.',
+        href: SITE_LINKS.physicalAiDeck,
+      },
+      {
+        title: 'RoboQC Precision Assembly AI Deck',
+        description:
+          'Inline QC story, cost-to-rework logic, edge stack, wedge market, and rollout narrative.',
+        href: SITE_LINKS.roboqcDeck,
+      },
     ],
-    storyCards: [
-      {
-        title: 'Camera-first inspection',
-        description:
-          'The system watches the station itself, so quality teams react where the process actually drifts.',
-      },
-      {
-        title: 'Evidence before escalation',
-        description:
-          'Every alert ships with a frame, context, and confidence so the line sees what changed.',
-      },
-      {
-        title: 'Designed for the line',
-        description:
-          'The product is framed around operator action, not just offline analytics or reporting decks.',
-      },
-    ],
-    pains: [
-      {
-        title: 'Defects found too late',
-        description: 'RoboQC pulls discovery forward to the station instead of waiting for late tests.',
-      },
-      {
-        title: 'No proof frame',
-        description: 'Each alert can carry visual evidence instead of a vague signal or spreadsheet note.',
-      },
-      {
-        title: 'Tired manual inspection',
-        description: 'The robot-camera keeps watching even when shift attention drops.',
-      },
-      {
-        title: 'Slow escalation',
-        description: 'Operators get a usable signal immediately while the part is still in the process.',
-      },
-      {
-        title: 'Weak root-cause trace',
-        description: 'Alerts stay tied to the station context so engineering can review real defect history.',
-      },
-    ],
-    comparisonRows: [
-      {
-        capability: 'Inline defect catch on the station',
-        values: [
-          { label: 'Built for it', tone: 'strong' },
-          { label: 'Guidance-heavy', tone: 'weak' },
-          { label: 'Assembly focus', tone: 'weak' },
-          { label: 'Analytics focus', tone: 'mid' },
-          { label: 'Optimization focus', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Evidence frame with traceability',
-        values: [
-          { label: 'Operator ready', tone: 'strong' },
-          { label: 'Partial', tone: 'mid' },
-          { label: 'Partial', tone: 'mid' },
-          { label: 'Analytics first', tone: 'mid' },
-          { label: 'Not core', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Fast pilot on one station',
-        values: [
-          { label: 'Pilot-first', tone: 'strong' },
-          { label: 'Requires program setup', tone: 'mid' },
-          { label: 'Requires rollout design', tone: 'mid' },
-          { label: 'Data-heavy setup', tone: 'weak' },
-          { label: 'Broader optimization scope', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Camera + escalation loop in one surface',
-        values: [
-          { label: 'Unified', tone: 'strong' },
-          { label: 'Guidance-centric', tone: 'weak' },
-          { label: 'Workflow-centric', tone: 'mid' },
-          { label: 'Reporting-centric', tone: 'weak' },
-          { label: 'Model-centric', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Designed around station #2, not test #5',
-        values: [
-          { label: 'Core message', tone: 'strong' },
-          { label: 'Not core', tone: 'weak' },
-          { label: 'Not core', tone: 'weak' },
-          { label: 'Not core', tone: 'weak' },
-          { label: 'Not core', tone: 'weak' },
-        ],
-      },
-    ],
-    roadmap: [
-      {
-        phase: 'Now',
-        title: 'Single-station pilot',
-        description:
-          'Connect one camera loop, one defect family, and one operator workflow to prove value quickly.',
-        status: 'Ready for pilot',
-        tone: 'success',
-      },
-      {
-        phase: 'Next',
-        title: 'Evidence pack and reporting loop',
-        description:
-          'Standardize frame capture, confidence, trace, and escalation notes into one usable package.',
-        status: 'In rollout',
-        tone: 'info',
-      },
-      {
-        phase: 'Next',
-        title: 'Root-cause review by station',
-        description:
-          'Aggregate repeated defects by station, shift, and part family so engineering sees the real failure point.',
-        status: 'Active analytics',
-        tone: 'info',
-      },
-      {
-        phase: 'Later',
-        title: 'Multi-station orchestration',
-        description:
-          'Expand the same evidence loop across multiple stations without scaling manual inspection headcount.',
-        status: 'Expansion stage',
-        tone: 'warning',
-      },
-    ],
-    communityCards: [
-      {
-        title: 'GitHub',
-        description: 'Repository, landing source, and the current public build surface for RoboQC.',
-        href: SITE_LINKS.github,
-        action: 'Open GitHub',
-      },
+    contactMethods: [
       {
         title: 'Telegram Bot',
-        description: 'Fastest public entry point for pilot intros, demos, and inbound requests.',
+        description: 'Fastest route for pilot intros, product questions, and live follow-up.',
         href: SITE_LINKS.telegram,
-        action: 'Open Telegram',
+        action: 'Open bot',
+      },
+      {
+        title: 'GitHub',
+        description: 'Repository, deployment history, and the public build surface for the site.',
+        href: SITE_LINKS.github,
+        action: 'Open repository',
       },
       {
         title: 'LinkedIn',
-        description: 'External positioning updates and company narrative around Romeo FlexVision.',
+        description: 'Company narrative, partnership framing, and external visibility.',
         href: SITE_LINKS.linkedin,
         action: 'Open LinkedIn',
       },
     ],
-    faq: [
-      {
-        question: 'What is RoboQC in one sentence?',
-        answer:
-          'RoboQC is a cognitive robot-inspector for inline quality control, powered by the Romeo FlexVision vision stack.',
-      },
-      {
-        question: 'What happens during a pilot?',
-        answer:
-          'A pilot usually focuses on one station, one camera loop, and one defect family so the team can prove value fast.',
-      },
-      {
-        question: 'Why mention station #2 and test #5?',
-        answer:
-          'Because the product is framed around catching the defect where it is created, not where it becomes expensive.',
-      },
-      {
-        question: 'Does the site open a real product app?',
-        answer:
-          'Not yet. The public site is currently a clean corporate landing that routes pilots and conversations through Telegram.',
-      },
-    ],
-  },
-  ru: {
-    meta: {
-      title: 'RoboQC | Когнитивный QC-робот',
+    form: {
+      title: "Write me & let's inspire!",
       description:
-        'RoboQC — когнитивный робот-инспектор качества на базе Romeo FlexVision. Ловит ошибки на станции №2 в реальном времени, а не на тесте №5.',
-      ogTitle: 'RoboQC | powered by Romeo FlexVision',
-      ogDescription:
-        'Робот-камера, которая никогда не спит. Inline-контроль качества на уровне станции.',
-    },
-    nav: {
-      story: 'Почему RoboQC',
-      pains: '5 болей',
-      comparison: 'Сравнение',
-      roadmap: 'Роадмап',
-      contact: 'Контакты',
-      github: 'GitHub',
-      telegram: 'Telegram',
-      linkedin: 'LinkedIn',
-      pilot: 'Открыть пилотный чат',
-      menu: 'Меню',
-      close: 'Закрыть',
-    },
-    hero: {
-      eyebrow: 'Powered by Romeo FlexVision',
-      title: 'RoboQC. Твой робот-камера на каждой станции.',
-      subtitle: 'Inline-контроль качества. 90% ошибок ловим в реальном времени.',
-      primaryCta: 'Открыть пилотный чат',
-      secondaryCta: 'Смотреть сравнение',
-      badges: ['24/7 inline-мониторинг', 'Контур реакции на станции №2', 'Доказательство до эскалации'],
-      imageBadge: 'Робот-камера. Никогда не спит.',
-      imageStat: 'Алерт со станции №2 за секунды',
-      imageAlt: 'Робот Romeo на производственной линии',
-    },
-    sections: {
-      story: 'QC-робот для момента, когда дефект только рождается',
-      storyDescription:
-        'RoboQC работает прямо на станции: камера, доказательство и контур эскалации в одной поверхности для оператора.',
-      pains: '5 болей, которые RoboQC забирает за одну ночь',
-      painsDescription:
-        'Задача простая: перестать платить за дефекты, которые находят слишком поздно, без proof-frame и без нормальной передачи в линию.',
-      comparison: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
-      comparisonDescription:
-        'RoboQC сфокусирован на inline-поимке дефекта и доказательстве для оператора, а не только на инструкциях, аналитике или отчётности постфактум.',
-      roadmap: 'Роадмап запуска',
-      roadmapDescription:
-        'Практичный путь от пилота на одной станции к покрытию нескольких станций без перестройки всего производства.',
-      community: 'Пилот, репозитории и публичные точки входа',
-      communityDescription:
-        'Telegram даёт быстрый вход в пилот, GitHub показывает текущую сборку, а LinkedIn держит внешний позиционинг.',
-      faq: 'FAQ',
-      faqDescription: 'Короткие ответы для операторов, инженеров и спонсоров пилота.',
-    },
-    labels: {
-      poweredBy: 'Powered by Romeo FlexVision',
-      comparisonColumns: ['RoboQC', 'LightGuide', 'Arkite', 'Drishti', 'Retrocausal'],
-      footerSummary:
-        'RoboQC — когнитивный робот контроля качества, построенный на технологическом стеке Romeo FlexVision.',
-      footerNote:
-        'Робот-камера, который ловит дефекты на станции №2, а не обнаруживает их только на тесте №5.',
-      rights: '(c) 2026 RoboQC. Все права защищены.',
+        'This form copies your brief and opens the Telegram bot, so even without a backend we still have a usable inbound flow on the live site.',
+      nameLabel: 'Name',
+      companyLabel: 'Company',
+      emailLabel: 'Email',
+      messageLabel: 'What do you want to inspect?',
+      submitLabel: 'Copy brief and open Telegram',
+      helper: 'We will copy your request to the clipboard, then open the bot.',
+      success: 'Brief copied. Telegram is opening in a new tab.',
+      error: 'Telegram opened, but clipboard access was blocked. Please copy your request manually.',
     },
     ui: {
-      liveLabel: 'RoboQC в линии',
-      proofLabel: 'Inline-доказательство',
-      proofTitle: 'Кадр, trace, решение',
-      proofDescription:
-        'Ловим дефект там, где он появляется, и сразу даём линии понятное доказательство для действия.',
-      storyQuote: '"Робот-камера, которая никогда не спит."',
-      capabilityLabel: 'Возможность',
-      socialLabel: 'Ссылки',
-      brandGuideLabel: 'Бренд-гайд',
-      faqKicker: 'FAQ',
+      partnersLabel: 'Partners and signals',
+      tractionNote: '"Physical AI is the next frontier."',
+      problemVisualLabel: 'Cost explosion in reactive QC',
+      solutionVisualLabel: 'Execution layer from import to action',
+      teamBadge: 'Founder card',
+      downloadsLabel: 'Downloads',
+      contactLinksLabel: 'Public routes',
+      thinkPadLabel: 'ThinkPad milestone',
+      thinkPadDescription:
+        'Portable demo kit for meetings, events, and fast pilot storytelling outside the factory floor.',
     },
-    metrics: [
-      { label: 'Ошибок ловим в реальном времени', value: 90, suffix: '%' },
-      { label: 'Покрытие мониторинга', value: 24, suffix: '/7' },
-      { label: 'Базовая пилотная станция', value: 2, suffix: '' },
-      { label: 'Секунды до алерта оператору', value: 8, suffix: 'с' },
-    ],
-    storyCards: [
-      {
-        title: 'Инспекция начинается с камеры',
-        description:
-          'Система смотрит прямо на станцию, поэтому команда качества реагирует там, где процесс реально уходит от нормы.',
-      },
-      {
-        title: 'Сначала доказательство',
-        description:
-          'Каждый алерт несёт кадр, контекст и confidence, а не абстрактный сигнал без объяснения.',
-      },
-      {
-        title: 'Спроектировано под линию',
-        description:
-          'Продукт заточен под действие оператора, а не под красивую аналитику после смены.',
-      },
-    ],
-    pains: [
-      {
-        title: 'Дефекты находят слишком поздно',
-        description: 'RoboQC переносит момент обнаружения на станцию, а не ждёт поздний тест.',
-      },
-      {
-        title: 'Нет proof-frame',
-        description: 'Каждый алерт может нести визуальное доказательство, а не просто строку в таблице.',
-      },
-      {
-        title: 'Усталый ручной контроль',
-        description: 'Робот-камера продолжает смотреть, даже когда у смены падает концентрация.',
-      },
-      {
-        title: 'Медленная эскалация',
-        description: 'Оператор получает пригодный к действию сигнал, пока деталь ещё находится в процессе.',
-      },
-      {
-        title: 'Слабый root-cause trace',
-        description:
-          'Алерты остаются привязанными к контексту станции, чтобы инженерия видела реальную историю дефекта.',
-      },
-    ],
-    comparisonRows: [
-      {
-        capability: 'Inline-поимка дефекта на станции',
-        values: [
-          { label: 'Ключевой сценарий', tone: 'strong' },
-          { label: 'Больше про инструкции', tone: 'weak' },
-          { label: 'Больше про сборку', tone: 'weak' },
-          { label: 'Больше про аналитику', tone: 'mid' },
-          { label: 'Больше про оптимизацию', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Кадр-доказательство и traceability',
-        values: [
-          { label: 'Готово для оператора', tone: 'strong' },
-          { label: 'Частично', tone: 'mid' },
-          { label: 'Частично', tone: 'mid' },
-          { label: 'Сначала аналитика', tone: 'mid' },
-          { label: 'Не core', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Быстрый пилот на одной станции',
-        values: [
-          { label: 'Pilot-first', tone: 'strong' },
-          { label: 'Нужна программа внедрения', tone: 'mid' },
-          { label: 'Нужен rollout-дизайн', tone: 'mid' },
-          { label: 'Тяжёлый data-setup', tone: 'weak' },
-          { label: 'Широкий scope', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Камера и эскалация в одном контуре',
-        values: [
-          { label: 'Единая поверхность', tone: 'strong' },
-          { label: 'Instruction-centric', tone: 'weak' },
-          { label: 'Workflow-centric', tone: 'mid' },
-          { label: 'Reporting-centric', tone: 'weak' },
-          { label: 'Model-centric', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'Логика station #2, а не test #5',
-        values: [
-          { label: 'Основа позиционинга', tone: 'strong' },
-          { label: 'Не core', tone: 'weak' },
-          { label: 'Не core', tone: 'weak' },
-          { label: 'Не core', tone: 'weak' },
-          { label: 'Не core', tone: 'weak' },
-        ],
-      },
-    ],
-    roadmap: [
-      {
-        phase: 'Сейчас',
-        title: 'Пилот на одной станции',
-        description:
-          'Подключаем одну камеру, одно семейство дефектов и один операторский контур, чтобы быстро доказать ценность.',
-        status: 'Готово к пилоту',
-        tone: 'success',
-      },
-      {
-        phase: 'Следом',
-        title: 'Evidence pack и контур отчётности',
-        description:
-          'Собираем frame capture, confidence, trace и escalation notes в один пакет, пригодный для линии.',
-        status: 'В развёртывании',
-        tone: 'info',
-      },
-      {
-        phase: 'Следом',
-        title: 'Root-cause review по станциям',
-        description:
-          'Собираем повторяемые дефекты по станциям, сменам и семействам деталей, чтобы инженерия видела реальную точку срыва.',
-        status: 'Активная аналитика',
-        tone: 'info',
-      },
-      {
-        phase: 'Дальше',
-        title: 'Оркестрация нескольких станций',
-        description:
-          'Расширяем тот же evidence loop на несколько станций без наращивания ручного инспекционного контура.',
-        status: 'Этап масштабирования',
-        tone: 'warning',
-      },
-    ],
-    communityCards: [
-      {
-        title: 'GitHub',
-        description: 'Репозиторий, исходники лендинга и текущая публичная сборка RoboQC.',
-        href: SITE_LINKS.github,
-        action: 'Открыть GitHub',
-      },
-      {
-        title: 'Telegram Bot',
-        description: 'Самая быстрая публичная точка входа для пилота, демо и входящих запросов.',
-        href: SITE_LINKS.telegram,
-        action: 'Открыть Telegram',
-      },
-      {
-        title: 'LinkedIn',
-        description: 'Внешние апдейты позиционирования и narrative вокруг Romeo FlexVision.',
-        href: SITE_LINKS.linkedin,
-        action: 'Открыть LinkedIn',
-      },
-    ],
-    faq: [
-      {
-        question: 'Что такое RoboQC в одном предложении?',
-        answer:
-          'RoboQC — когнитивный робот-инспектор для inline-контроля качества, работающий на vision-стеке Romeo FlexVision.',
-      },
-      {
-        question: 'Что входит в пилот?',
-        answer:
-          'Обычно это одна станция, один контур камеры и одно семейство дефектов, чтобы быстро доказать ценность без лишней сложности.',
-      },
-      {
-        question: 'Почему акцент на станции №2 и тесте №5?',
-        answer:
-          'Потому что продукт построен вокруг идеи ловить дефект там, где он рождается, а не там, где он уже стал дорогим.',
-      },
-      {
-        question: 'Открывается ли сейчас реальное продуктовое приложение?',
-        answer:
-          'Пока нет. Публичный сайт сейчас специально упрощён до корпоративного лендинга и ведёт в пилотный Telegram-контур.',
-      },
-    ],
   },
   he: {
     meta: {
-      title: 'RoboQC | רובוט QC קוגניטיבי',
+      title: 'RomeoFlexVision | שכבת הביצוע הפתוחה ל-Physical AI',
       description:
-        'RoboQC הוא רובוט-מפקח איכות קוגניטיבי המבוסס על Romeo FlexVision. תופס שגיאות בתחנה 2 בזמן אמת, ולא רק בבדיקה 5.',
-      ogTitle: 'RoboQC | powered by Romeo FlexVision',
-      ogDescription: 'הרובוט-מצלמה שלא ישן לעולם. בקרת איכות inline ברמת התחנה.',
+        'RomeoFlexVision היא שכבת הביצוע הפתוחה ל-Physical AI, ו-RoboQC מביאה את הסטאק הזה לבקרת איכות חזותית בזמן אמת עבור הרכבת אלקטרוניקה.',
+      ogTitle: 'RomeoFlexVision | שכבת הביצוע הפתוחה ל-Physical AI',
+      ogDescription:
+        'בלי CAD. בלי ענן. בלי צוות ML. פעולה פיזית מסונכרנת עם RoboQC לבקרת איכות inline.',
     },
     nav: {
-      story: 'למה RoboQC',
-      pains: '5 כאבים',
-      comparison: 'השוואה',
-      roadmap: 'מפת פריסה',
-      contact: 'קשר',
+      products: 'מוצרים',
+      problem: 'בעיה',
+      solution: 'פתרון',
+      traction: 'טרקשן',
+      edge: 'יתרון טכני',
+      cloud: 'Google Cloud',
+      roadmap: 'מפת דרך',
+      team: 'צוות',
+      contact: 'יצירת קשר',
+      deck: 'הורדת דק',
+      pilot: 'לתאם פיילוט',
       github: 'GitHub',
       telegram: 'Telegram',
       linkedin: 'LinkedIn',
-      pilot: 'לפתוח צ׳אט פיילוט',
       menu: 'תפריט',
       close: 'סגור',
     },
     hero: {
-      eyebrow: 'Powered by Romeo FlexVision',
-      title: 'RoboQC. הרובוט-מצלמה שלך בכל תחנה.',
-      subtitle: 'בקרת איכות inline. אנחנו תופסים 90% מהשגיאות בזמן אמת.',
-      primaryCta: 'לפתוח צ׳אט פיילוט',
-      secondaryCta: 'לראות את ההשוואה',
-      badges: ['ניטור inline 24/7', 'לולאת תגובה מתחנה 2', 'הוכחה לפני הסלמה'],
-      imageBadge: 'רובוט-מצלמה. לא ישן לעולם.',
-      imageStat: 'התראה מתחנה 2 בתוך שניות',
-      imageAlt: 'רובוט Romeo על קו ייצור',
+      eyebrow: 'RomeoFlexVision',
+      title: 'שכבת הביצוע הפתוחה ל-Physical AI',
+      subtitle:
+        'RoboQC מביאה את הסטאק הזה לבקרת איכות חזותית עבור הרכבת אלקטרוניקה, ותופסת פגמים inline במקום להמתין לכשל בקצה הקו.',
+      sloganLabel: 'סלוגן',
+      slogan: 'בלי CAD. בלי ענן. בלי צוות ML. פעולה פיזית מסונכרנת.',
+      primaryCta: 'הורדת דק',
+      secondaryCta: 'לתאם פיילוט',
+      tertiaryCta: 'שותפות Google Cloud',
+      chips: ['Physical AI', 'QC קצה', 'אתר באנגלית + עברית', 'לנדינג תאגידי עריך'],
     },
-    sections: {
-      story: 'רובוט QC לרגע שבו הפגם נולד',
-      storyDescription:
-        'RoboQC עובד על התחנה עצמה: מצלמה, הוכחה ולולאת הסלמה במשטח אחד שפונה למפעיל.',
-      pains: '5 כאבים ש-RoboQC לוקח בלילה אחד',
-      painsDescription:
-        'המטרה פשוטה: להפסיק לשלם על פגמים שמתגלים מאוחר מדי, בלי פריים הוכחה ובלי מסירה נקייה לקו.',
-      comparison: 'Romeo FlexVision vs LightGuide, Arkite, Drishti, Retrocausal',
-      comparisonDescription:
-        'RoboQC ממוצב סביב תפיסת פגם inline והוכחה למפעיל, לא רק סביב הדרכה, אנליטיקה או דיווח בדיעבד.',
-      roadmap: 'מפת הפריסה',
-      roadmapDescription:
-        'מסלול מעשי מפיילוט בתחנה אחת לכיסוי inline של כמה תחנות בלי לתכנן מחדש את כל המפעל.',
-      community: 'פיילוט, מאגרים ונקודות המגע הציבוריות',
-      communityDescription:
-        'Telegram נותן כניסה מהירה לפיילוט, GitHub מציג את הבילד הנוכחי, ו-LinkedIn מחזיק את המיצוב החיצוני.',
-      faq: 'שאלות נפוצות',
-      faqDescription: 'תשובות קצרות למפעילים, למהנדסים ולמממני פיילוט.',
+    heroVisual: {
+      headline: 'RoboQC + RomeoFlexVision',
+      subline: 'משטח פיזיקלי-טכנולוגי כהה שנבנה משני הדקים שסופקו.',
+      cardA: 'בקרת איכות חזותית inline להרכבת אלקטרוניקה',
+      cardB: 'שכבת ביצוע ניטרלית על חומרה הטרוגנית',
+      cardC: 'אינפרנס קצה תת-200ms עם Few-shot deployment',
     },
-    labels: {
-      poweredBy: 'Powered by Romeo FlexVision',
-      comparisonColumns: ['RoboQC', 'LightGuide', 'Arkite', 'Drishti', 'Retrocausal'],
-      footerSummary:
-        'RoboQC הוא רובוט בקרת איכות קוגניטיבי שנבנה על גבי הסטאק של Romeo FlexVision.',
-      footerNote:
-        'הרובוט-מצלמה שתופס פגמים בתחנה 2 במקום לגלות אותם רק בבדיקה 5.',
-      rights: '(c) 2026 RoboQC. כל הזכויות שמורות.',
+    products: {
+      kicker: 'מוצרים',
+      title: 'שתי שכבות. סיפור תעשייתי אחד.',
+      description:
+        'RomeoFlexVision היא שכבת הביצוע. RoboQC היא שכבת המוצר היישומית שמרגישים קודם בקו ובמפעל.',
+      items: [
+        {
+          name: 'RomeoFlexVision',
+          subtitle: 'שכבת ביצוע פתוחה ל-Physical AI',
+          description:
+            'הגשר הניטרלי שמתאם בין תפיסה, reasoning ופעולה על גבי חומרה תעשייתית הטרוגנית.',
+          bullets: [
+            'Import -> Annotate -> Train -> Deploy',
+            'מותאם ל-on-prem ולביצוע תעשייתי רב-ספקי',
+            'נועד למנוע deadlocks של חומרה ונעילה אצל ספק יחיד',
+          ],
+        },
+        {
+          name: 'RoboQC',
+          subtitle: 'בקרת איכות חזותית מבוססת AI להרכבת אלקטרוניקה',
+          description:
+            'מוצר QC מבוסס מצלמה שתופס פגמי תחנה לפני שהם הופכים לכשל יקר בסוף הקו.',
+          bullets: [
+            'לתפוס את הפגם בתחנה 2, לא רק בבדיקה 5',
+            'הוכחה חזותית עם frame, trace ותמיכה בקבלת החלטה למפעיל',
+            'בקרת איכות inline ו-edge-native לסביבות אלקטרוניקה צפופות',
+          ],
+        },
+      ],
     },
-    ui: {
-      liveLabel: 'RoboQC בזמן אמת',
-      proofLabel: 'הוכחת inline',
-      proofTitle: 'פריים, עקבה, החלטה',
-      proofDescription:
-        'תופסים את הפגם במקום שבו הוא נוצר, עם הוכחה שהקו יכול לפעול עליה מיד.',
-      storyQuote: '"הרובוט-מצלמה שלא ישן לעולם."',
-      capabilityLabel: 'יכולת',
-      socialLabel: 'קישורים',
-      brandGuideLabel: 'מדריך מותג',
-      faqKicker: 'שאלות נפוצות',
+    problem: {
+      kicker: 'בעיה',
+      title: 'רצפת הייצור עדיין נשברת על פערי תיאום וגילוי מאוחר.',
+      description:
+        'שני הדקים מתארים את אותה מלכודת תעשייתית משתי זוויות: אקוסיסטמות סגורות יוצרות חיכוך חומרה, ו-QC תגובתי מייקר כל פגם שמפספסים.',
+      items: [
+        {
+          title: 'פער תיאום',
+          description:
+            'מערכות Physical AI עדיין נתקעות בין תפיסה לפעולה, במיוחד כאשר כמה nodes לא מסכימים על מה קורה בפועל.',
+        },
+        {
+          title: 'בורות כבידה קנייניים',
+          description:
+            'סטאקים סגורים נועלים את המפעל להחלטות חומרה מבודדות במקום לאפשר תיאום בין הכלים הטובים ביותר.',
+        },
+        {
+          title: 'פיצוץ עלויות ב-QC',
+          description:
+            'פגם שנולד בתחנה 2 יכול להיות זול לתיקון מיד, אבל יקר מאוד לעיבוד חוזר אם מתגלה רק בתחנה 5.',
+        },
+      ],
     },
-    metrics: [
-      { label: 'מהשגיאות נתפסות בזמן אמת', value: 90, suffix: '%' },
-      { label: 'כיסוי ניטור', value: 24, suffix: '/7' },
-      { label: 'תחנת הפיילוט הראשית', value: 2, suffix: '' },
-      { label: 'שניות עד התראת מפעיל', value: 8, suffix: 'ש׳' },
+    solution: {
+      kicker: 'פתרון',
+      title: 'מסלול הטמעה מראיה גולמית עד פעולה פיזית מסונכרנת.',
+      description:
+        'RomeoFlexVision מספקת את דפוס הביצוע, ו-RoboQC מיישמת אותו לבדיקת inline, הוכחה למפעיל והסלמה פיזית.',
+      steps: [
+        {
+          step: '01',
+          title: 'Import',
+          description: 'מביאים evidence ייצור, הקשר תחנה ותרחישי פגם ראשונים מהעולם האמיתי.',
+        },
+        {
+          step: '02',
+          title: 'Annotate',
+          description: 'יוצרים תיוגים קריאים למפעיל ו-ground truth חזותי בלי לבנות תוכנית ML ענקית.',
+        },
+        {
+          step: '03',
+          title: 'Train',
+          description: 'משתמשים ב-few-shot learning ובמודלים מוכנים ל-edge כדי להגיע מהר לזיהוי שימושי.',
+        },
+        {
+          step: '04',
+          title: 'Deploy',
+          description: 'מריצים את המודל inline על ה-edge ומפעילים פעולה מבוססת evidence לקו.',
+        },
+      ],
+      semanticTitle: 'Semantic Conflict Resolution',
+      semanticDescription:
+        'שכבת הפעולה איננה רק webhook. זו ההכרעה התעשייתית הסופית שפותרת קלטים סותרים ומפעילה את ה-PLC או את המהלך הפיזי הבא.',
+    },
+    traction: {
+      kicker: 'טרקשן',
+      title: 'הנרטיב כבר נע מדק לשיחות אמיתיות עם מפעלים.',
+      description:
+        'סיפור הטרקשן הנוכחי משלב אמינות שותפים, חקירות שבוצעו בפועל, ותזמון פיילוטים חיים ל-2026.',
+      stats: [
+        { value: 'NVIDIA', label: 'שותף Inception' },
+        { value: '5', label: 'מפעלי פיילוט' },
+        { value: '100+', label: 'חקירות הושלמו' },
+        { value: 'Q2 2026', label: 'פיילוטים חיים' },
+      ],
+    },
+    edge: {
+      kicker: 'יתרון טכני',
+      title: 'סטאק קצה פרקטי לבדיקת תעשייה צפופה.',
+      description:
+        'הדק של RoboQC מציג את המקרה בצורה ברורה: תגובת inline אמיתית דורשת latency נמוך, ביצוע on-prem והתחלה מהירה בלי תלות ב-CAD.',
+      bullets: [
+        'Latency תת-200ms על edge node מסוג RTX 3060/4060',
+        '100% edge-native וממוסגר להטמעת Docker מהירה',
+        'ללא צורך ב-CAD ועם few-shot learning מ-10-30 golden samples',
+        'PatchCore לזיהוי אנומליות יחד עם Florence-2 VLM להבנה סמנטית',
+      ],
+      footer:
+        'צפיפות החומרה כבר עולה על יכולת הבדיקה האנושית, ויחס העלות-ביצועים של edge AI פתח סוף סוף פריסה פיזית בזמן אמת.',
+    },
+    cloud: {
+      kicker: 'Google Cloud',
+      title: 'איך Google Cloud יכולה להאיץ את הצמיחה שלנו',
+      description:
+        'הבלוק הזה מוצג באתר כנרטיב שותפות: איך תמיכת cloud עוזרת לצוות לזוז מהר יותר, להישאר גלוי, ולהכין rollout רחב יותר ל-edge.',
+      bullets: [
+        'Vertex AI ללולאות ניסוי מהירות, הערכת מודלים ודמואים לשותפים',
+        'קרדיטים לסטארטאפים כדי לקצר את קצב האיטרציה בשלב הפיילוט',
+        'שפת GKE ו-edge containers עבור rollout תעשייתי בקנה מידה',
+        'אירועי Israel Cloud AI ונראות שותפים לצורך business development',
+      ],
+    },
+    roadmap: {
+      kicker: 'מפת דרך',
+      title: 'מפת דרך של 12 שבועות מתחנת פיילוט עד תוכנית rollout.',
+      description:
+        'מפת הדרך צריכה להישמע אמינה למפעילים, לשותפים ולספונסרים: תחנה אחת קודם, אחר כך evidence, ואז פריסה רחבה יותר.',
+      items: [
+        {
+          phase: 'שבועות 1-3',
+          title: 'בחירת ה-wedge ואיסוף golden samples',
+          description:
+            'נועלים תחנת פיילוט ראשונה, מאשרים משפחת פגמים, ואוספים את 10-30 הדוגמאות הראשונות.',
+        },
+        {
+          phase: 'שבועות 4-6',
+          title: 'Import, annotate ו-benchmark לקצה',
+          description:
+            'בונים לולאת labeling ראשונה, מאמתים את המודל החזותי, ומוודאים התנהגות תת-200ms על edge node.',
+        },
+        {
+          phase: 'שבועות 7-9',
+          title: 'פריסת RoboQC inline עם evidence למפעיל',
+          description:
+            'מריצים את המערכת על הקו, מספקים evidence מסוג frame-trace-decision, ומכוונים את מסלול ההסלמה.',
+        },
+        {
+          phase: 'שבועות 10-12',
+          title: 'הכנת הרחבה ונרטיב ברמת הנהלה',
+          description:
+            'אורזים את סיפור ה-KPI, מזהים את התחנות הבאות, והופכים את הפיילוט לתוכנית rollout שניתנת לשכפול ל-Q2 2026.',
+        },
+      ],
+    },
+    team: {
+      kicker: 'צוות',
+      title: 'נבנה על ידי מי שמפעילים את הבעיה, לא רק מתבוננים בה.',
+      description:
+        'כרטיס המייסד נשאר כאן רזה בכוונה כי בריפו אין כרגע פורטרט מאומת. המיקוד נשאר במומחיות ובאמינות הביצוע.',
+      leaderName: 'Alexander Lyubarev',
+      leaderRole: 'Founder, RomeoFlexVision / RoboQC',
+      expertise: [
+        'שכבות ביצוע ל-Physical AI ולוגיקת תיאום תעשייתית',
+        'בקרת איכות inline להרכבת אלקטרוניקה צפופה ו-server racks',
+        'פריסת edge-native, אסטרטגיית מוצר וסטוריטלינג טכני',
+      ],
+    },
+    downloads: [
+      {
+        title: 'דק משולב',
+        description:
+          'דק מאוחד לשיחות שותפים, אינטרואים למשקיעים והליכה מהירה על הסיפור המלא.',
+        href: SITE_LINKS.combinedDeck,
+      },
+      {
+        title: 'RomeoFlexVision Physical AI Deck',
+        description:
+          'נרטיב שכבת הביצוע, פער התיאום, ה-neutral bridge ומטריצת ההגנה הארכיטקטונית.',
+        href: SITE_LINKS.physicalAiDeck,
+      },
+      {
+        title: 'RoboQC Precision Assembly AI Deck',
+        description:
+          'סיפור ה-inline QC, לוגיקת עלות לתיקון, סטאק ה-edge, ה-wedge market ונרטיב rollout.',
+        href: SITE_LINKS.roboqcDeck,
+      },
     ],
-    storyCards: [
-      {
-        title: 'בדיקה שמתחילה במצלמה',
-        description:
-          'המערכת מביטה ישירות על התחנה, ולכן צוות האיכות מגיב בדיוק במקום שבו התהליך מתחיל לסטות.',
-      },
-      {
-        title: 'קודם הוכחה',
-        description:
-          'כל התראה מגיעה עם פריים, הקשר ו-confidence, לא רק עם אות מופשט שקשה לפעול עליו.',
-      },
-      {
-        title: 'בנוי לקו הייצור',
-        description:
-          'המוצר ממוסגר סביב פעולת המפעיל, לא סביב אנליטיקה יפה שמגיעה אחרי המשמרת.',
-      },
-    ],
-    pains: [
-      {
-        title: 'הפגמים מתגלים מאוחר מדי',
-        description: 'RoboQC מזיז את רגע הגילוי בחזרה לתחנה במקום לחכות לבדיקה מאוחרת.',
-      },
-      {
-        title: 'אין פריים הוכחה',
-        description: 'כל התראה יכולה להגיע עם הוכחה ויזואלית ולא רק עם שורה בגיליון.',
-      },
-      {
-        title: 'בדיקה ידנית מתעייפת',
-        description: 'הרובוט-מצלמה ממשיך להסתכל גם כשהקשב של המשמרת יורד.',
-      },
-      {
-        title: 'הסלמה איטית',
-        description: 'המפעיל מקבל אות שאפשר לפעול עליו בזמן שהחלק עדיין בתהליך.',
-      },
-      {
-        title: 'עקבת שורש בעיה חלשה',
-        description: 'ההתראות נשארות קשורות להקשר התחנה כדי שההנדסה תראה היסטוריית פגם אמיתית.',
-      },
-    ],
-    comparisonRows: [
-      {
-        capability: 'תפיסת פגם inline על התחנה',
-        values: [
-          { label: 'תרחיש ליבה', tone: 'strong' },
-          { label: 'ממוקד הדרכה', tone: 'weak' },
-          { label: 'ממוקד הרכבה', tone: 'weak' },
-          { label: 'ממוקד אנליטיקה', tone: 'mid' },
-          { label: 'ממוקד אופטימיזציה', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'פריים הוכחה ו-traceability',
-        values: [
-          { label: 'מוכן למפעיל', tone: 'strong' },
-          { label: 'חלקי', tone: 'mid' },
-          { label: 'חלקי', tone: 'mid' },
-          { label: 'קודם אנליטיקה', tone: 'mid' },
-          { label: 'לא ליבה', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'פיילוט מהיר על תחנה אחת',
-        values: [
-          { label: 'Pilot-first', tone: 'strong' },
-          { label: 'דורש תכנית הטמעה', tone: 'mid' },
-          { label: 'דורש תכנון rollout', tone: 'mid' },
-          { label: 'הקמת data כבדה', tone: 'weak' },
-          { label: 'scope רחב', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'מצלמה ולולאת הסלמה במשטח אחד',
-        values: [
-          { label: 'מאוחד', tone: 'strong' },
-          { label: 'ממוקד הוראות', tone: 'weak' },
-          { label: 'ממוקד workflow', tone: 'mid' },
-          { label: 'ממוקד דיווח', tone: 'weak' },
-          { label: 'ממוקד מודל', tone: 'weak' },
-        ],
-      },
-      {
-        capability: 'לוגיקת תחנה 2 ולא בדיקה 5',
-        values: [
-          { label: 'ליבת המסר', tone: 'strong' },
-          { label: 'לא ליבה', tone: 'weak' },
-          { label: 'לא ליבה', tone: 'weak' },
-          { label: 'לא ליבה', tone: 'weak' },
-          { label: 'לא ליבה', tone: 'weak' },
-        ],
-      },
-    ],
-    roadmap: [
-      {
-        phase: 'עכשיו',
-        title: 'פיילוט על תחנה אחת',
-        description:
-          'מחברים מצלמה אחת, משפחת פגמים אחת וערוץ מפעיל אחד כדי להוכיח ערך מהר.',
-        status: 'מוכן לפיילוט',
-        tone: 'success',
-      },
-      {
-        phase: 'השלב הבא',
-        title: 'חבילת הוכחה ולולאת דיווח',
-        description:
-          'מאחדים frame capture, confidence, trace והערות הסלמה לחבילה אחת שאפשר להפעיל על הקו.',
-        status: 'בפריסה',
-        tone: 'info',
-      },
-      {
-        phase: 'השלב הבא',
-        title: 'סקירת שורש בעיה לפי תחנה',
-        description:
-          'אוספים פגמים חוזרים לפי תחנה, משמרת ומשפחת חלקים כדי שההנדסה תראה את נקודת הכשל האמיתית.',
-        status: 'אנליטיקה פעילה',
-        tone: 'info',
-      },
-      {
-        phase: 'אחר כך',
-        title: 'אורקסטרציה של כמה תחנות',
-        description:
-          'מרחיבים את אותה לולאת evidence לכמה תחנות בלי להגדיל את כוח האדם לבדיקה ידנית.',
-        status: 'שלב הרחבה',
-        tone: 'warning',
-      },
-    ],
-    communityCards: [
-      {
-        title: 'GitHub',
-        description: 'המאגר, קוד המקור של הלנדינג והבילד הציבורי הנוכחי של RoboQC.',
-        href: SITE_LINKS.github,
-        action: 'פתח GitHub',
-      },
+    contactMethods: [
       {
         title: 'Telegram Bot',
-        description: 'נקודת הכניסה הציבורית המהירה ביותר לפיילוט, לדמו ולפניות נכנסות.',
+        description: 'הנתיב המהיר ביותר לפיילוט, שאלות מוצר ומעקב חי.',
         href: SITE_LINKS.telegram,
-        action: 'פתח Telegram',
+        action: 'פתיחת הבוט',
+      },
+      {
+        title: 'GitHub',
+        description: 'הריפו, היסטוריית הדיפלוי ומשטח הבנייה הציבורי של האתר.',
+        href: SITE_LINKS.github,
+        action: 'פתיחת הריפו',
       },
       {
         title: 'LinkedIn',
-        description: 'עדכוני מיצוב קצרים ונרטיב חיצוני סביב Romeo FlexVision.',
+        description: 'נרטיב החברה, שותפויות ונראות חיצונית.',
         href: SITE_LINKS.linkedin,
-        action: 'פתח LinkedIn',
+        action: 'פתיחת LinkedIn',
       },
     ],
-    faq: [
-      {
-        question: 'מה זה RoboQC במשפט אחד?',
-        answer:
-          'RoboQC הוא רובוט-מפקח קוגניטיבי לבקרת איכות inline, שפועל על גבי vision stack של Romeo FlexVision.',
-      },
-      {
-        question: 'מה כולל הפיילוט?',
-        answer:
-          'בדרך כלל מדובר בתחנה אחת, לולאת מצלמה אחת ומשפחת פגמים אחת כדי להוכיח ערך מהר ובלי מורכבות מיותרת.',
-      },
-      {
-        question: 'למה מזכירים תחנה 2 ובדיקה 5?',
-        answer:
-          'כי המוצר ממוסגר סביב תפיסת הפגם במקום שבו הוא נוצר, לא במקום שבו הוא כבר יקר.',
-      },
-      {
-        question: 'האם האתר פותח כרגע אפליקציית מוצר אמיתית?',
-        answer:
-          'עדיין לא. האתר הציבורי פושט כרגע ללנדינג תאגידי נקי שמוביל לשיחת פיילוט דרך Telegram.',
-      },
-    ],
+    form: {
+      title: 'Write me & let’s inspire!',
+      description:
+        'הטופס מעתיק את הבריף שלך ופותח את Telegram, כך שגם בלי backend יש לנו זרימת inbound שימושית באתר החי.',
+      nameLabel: 'שם',
+      companyLabel: 'חברה',
+      emailLabel: 'אימייל',
+      messageLabel: 'מה תרצה לבדוק?',
+      submitLabel: 'להעתיק בריף ולפתוח Telegram',
+      helper: 'נעתיק את הבקשה ללוח ולאחר מכן נפתח את הבוט.',
+      success: 'הבריף הועתק. Telegram נפתח בלשונית חדשה.',
+      error: 'Telegram נפתח, אבל הגישה ללוח נחסמה. יש להעתיק את הבקשה ידנית.',
+    },
+    ui: {
+      partnersLabel: 'שותפים וסיגנלים',
+      tractionNote: '"Physical AI is the next frontier."',
+      problemVisualLabel: 'פיצוץ עלויות ב-QC תגובתי',
+      solutionVisualLabel: 'שכבת ביצוע מ-import עד action',
+      teamBadge: 'כרטיס מייסד',
+      downloadsLabel: 'הורדות',
+      contactLinksLabel: 'נתיבים ציבוריים',
+      thinkPadLabel: 'ThinkPad milestone',
+      thinkPadDescription:
+        'ערכת דמו ניידת לפגישות, אירועים וסטוריטלינג מהיר של הפיילוט מחוץ לרצפת הייצור.',
+    },
   },
 };
 

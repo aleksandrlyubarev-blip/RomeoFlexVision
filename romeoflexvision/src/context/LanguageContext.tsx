@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 
-export type Language = 'en' | 'ru' | 'he';
+export type Language = 'en' | 'he';
 
 const LANGUAGE_STORAGE_KEY = 'roboqc-language';
 
@@ -17,7 +17,6 @@ export const LANGUAGE_META: Record<
   { label: string; nativeLabel: string; locale: string; dir: 'ltr' | 'rtl' }
 > = {
   en: { label: 'EN', nativeLabel: 'English', locale: 'en-US', dir: 'ltr' },
-  ru: { label: 'RU', nativeLabel: 'Русский', locale: 'ru-RU', dir: 'ltr' },
   he: { label: 'HE', nativeLabel: 'עברית', locale: 'he-IL', dir: 'rtl' },
 };
 
@@ -36,12 +35,12 @@ function resolveInitialLanguage(): Language {
   }
 
   const searchLanguage = new URLSearchParams(window.location.search).get('lang');
-  if (searchLanguage === 'en' || searchLanguage === 'ru' || searchLanguage === 'he') {
+  if (searchLanguage === 'en' || searchLanguage === 'he') {
     return searchLanguage;
   }
 
   const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (stored === 'en' || stored === 'ru' || stored === 'he') {
+  if (stored === 'en' || stored === 'he') {
     return stored;
   }
 

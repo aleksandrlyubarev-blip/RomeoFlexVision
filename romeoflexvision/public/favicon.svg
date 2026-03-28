@@ -1,29 +1,19 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="18" y1="12" x2="112" y2="118" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#172033" />
-      <stop offset="1" stop-color="#0B1220" />
+    <linearGradient id="bg" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220" />
+      <stop offset="1" stop-color="#060B16" />
     </linearGradient>
-    <linearGradient id="ring" x1="41" y1="33" x2="94" y2="90" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4B82F1" />
-      <stop offset="1" stop-color="#265CD1" />
+    <linearGradient id="stroke" x1="28" y1="28" x2="96" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#42D8FF" />
+      <stop offset="1" stop-color="#8BE8FF" />
     </linearGradient>
   </defs>
   <rect x="4" y="4" width="120" height="120" rx="32" fill="url(#bg)" />
-  <path
-    d="M36 48C36 42.4772 40.4772 38 46 38H77C82.5228 38 87 42.4772 87 48V71C87 82.598 77.598 92 66 92H57C45.402 92 36 82.598 36 71V48Z"
-    fill="#F8FAFC"
-  />
-  <path
-    d="M85 48H92.5C99.4036 48 105 53.5964 105 60.5C105 67.4036 99.4036 73 92.5 73H85"
-    stroke="#F8FAFC"
-    stroke-width="7"
-    stroke-linecap="round"
-  />
-  <path d="M48 29C50.4 22 54.5 18 60 16" stroke="#8EB3FF" stroke-width="6" stroke-linecap="round" />
-  <path d="M66 29C68 23.5 71.4 19.8 76 18" stroke="#8EB3FF" stroke-width="6" stroke-linecap="round" />
-  <circle cx="63.5" cy="60" r="18" stroke="url(#ring)" stroke-width="8" />
-  <path d="M73.5 70L83 80" stroke="#265CD1" stroke-width="8" stroke-linecap="round" />
-  <circle cx="80.5" cy="43.5" r="6.5" fill="#265CD1" />
-  <rect x="73" y="39" width="15" height="9" rx="4.5" fill="#1F2937" />
+  <text x="24" y="54" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="34" font-style="italic" font-weight="800">
+    RF
+  </text>
+  <path d="M76 42C92 42 104 52 112 64C104 76 92 86 76 86C60 86 48 76 40 64C48 52 60 42 76 42Z" stroke="url(#stroke)" stroke-width="5" />
+  <path d="M76 50C86 50 94 56 99 64C94 72 86 78 76 78C66 78 58 72 53 64C58 56 66 50 76 50Z" stroke="url(#stroke)" stroke-width="4" />
+  <circle cx="76" cy="64" r="7" fill="#FFD95C" />
 </svg>
