@@ -543,43 +543,45 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
         </section>
 
         <RevealBlock id="story" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.story}
-              title={copy.sections.story}
-              description={copy.sections.storyDescription}
-            />
+          <div className="mx-auto max-w-7xl">
+            <div className="landing-section-shell landing-section-shell-accent space-y-10">
+              <SectionHeader
+                kicker={copy.nav.story}
+                title={copy.sections.story}
+                description={copy.sections.storyDescription}
+              />
 
-            <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-              <div className="grid gap-5 md:grid-cols-3">
-                {copy.storyCards.map((card, index) => (
-                  <article key={card.title} className="rfv-card rounded-[2rem] p-6">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
-                      {storyIcons[index] ?? <Radar size={20} />}
-                    </div>
-                    <h3 className="mt-5 text-xl font-semibold text-text-primary">{card.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
-                  </article>
-                ))}
-              </div>
+              <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+                <div className="grid gap-5 md:grid-cols-3">
+                  {copy.storyCards.map((card, index) => (
+                    <article key={card.title} className="rfv-card landing-story-card rounded-[2rem] p-6">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent-blue/20 bg-accent-blue/10 text-accent-blue">
+                        {storyIcons[index] ?? <Radar size={20} />}
+                      </div>
+                      <h3 className="mt-5 text-xl font-semibold text-text-primary">{card.title}</h3>
+                      <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
+                    </article>
+                  ))}
+                </div>
 
-              <div className="rfv-card rounded-[2rem] p-7">
-                <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
-                <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{ui.storyQuote}</div>
-                <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
-                    <Github size={16} />
-                    GitHub
-                  </a>
-                  <a href={brandGuideHref} className="rfv-pill">
-                    <ShieldCheck size={16} />
-                    {ui.brandGuideLabel}
-                  </a>
-                  <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
-                    <MessageCircle size={16} />
-                    {SITE_LINKS.telegramHandle}
-                  </a>
+                <div className="rfv-card landing-story-quote rounded-[2rem] p-7">
+                  <div className="text-xs uppercase tracking-[0.24em] text-text-muted">{copy.labels.poweredBy}</div>
+                  <div className="mt-4 text-3xl font-semibold leading-tight text-text-primary">{ui.storyQuote}</div>
+                  <p className="mt-4 text-base leading-7 text-text-secondary">{copy.labels.footerNote}</p>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <a href={SITE_LINKS.github} target="_blank" rel="noreferrer" className="rfv-pill">
+                      <Github size={16} />
+                      GitHub
+                    </a>
+                    <a href={brandGuideHref} className="rfv-pill">
+                      <ShieldCheck size={16} />
+                      {ui.brandGuideLabel}
+                    </a>
+                    <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="rfv-pill">
+                      <MessageCircle size={16} />
+                      {SITE_LINKS.telegramHandle}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -587,70 +589,80 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
         </RevealBlock>
 
         <RevealBlock id="pains" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.pains}
-              title={copy.sections.pains}
-              description={copy.sections.painsDescription}
-            />
+          <div className="mx-auto max-w-7xl">
+            <div className="landing-section-shell space-y-10">
+              <SectionHeader
+                kicker={copy.nav.pains}
+                title={copy.sections.pains}
+                description={copy.sections.painsDescription}
+              />
 
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-              {copy.pains.map((pain, index) => (
-                <article key={pain.title} className="rfv-card rounded-[2rem] p-6">
-                  <div className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-blue">
-                    0{index + 1}
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-text-primary">{pain.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">{pain.description}</p>
-                </article>
-              ))}
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+                {copy.pains.map((pain, index) => (
+                  <article key={pain.title} className="rfv-card landing-pain-card rounded-[2rem] p-6">
+                    <div className="landing-pain-index">0{index + 1}</div>
+                    <h3 className="mt-4 text-lg font-semibold text-text-primary">{pain.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-text-secondary">{pain.description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </RevealBlock>
 
         <RevealBlock id="comparison" className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto max-w-7xl space-y-10">
-            <SectionHeader
-              kicker={copy.nav.comparison}
-              title={copy.sections.comparison}
-              description={copy.sections.comparisonDescription}
-            />
+          <div className="mx-auto max-w-7xl">
+            <div className="landing-section-shell landing-section-shell-plain space-y-10">
+              <SectionHeader
+                kicker={copy.nav.comparison}
+                title={copy.sections.comparison}
+                description={copy.sections.comparisonDescription}
+              />
 
-            <div className="rfv-card overflow-hidden rounded-[2rem]">
-              <div className="overflow-x-auto">
-                <table className="min-w-full border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-200/90">
-                      <th className="min-w-[260px] px-6 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
-                        {ui.capabilityLabel}
-                      </th>
-                      {copy.labels.comparisonColumns.map((column) => (
-                        <th
-                          key={column}
-                          className="min-w-[140px] px-4 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted"
-                        >
-                          {column}
+              <div className="rfv-card landing-comparison-card overflow-hidden rounded-[2rem]">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-slate-200/90">
+                        <th className="min-w-[260px] px-6 py-5 text-left text-xs uppercase tracking-[0.22em] text-text-muted">
+                          {ui.capabilityLabel}
                         </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {copy.comparisonRows.map((row) => (
-                      <tr key={row.capability} className="border-b border-slate-200/70 last:border-b-0">
-                        <td className="px-6 py-5 text-sm font-medium text-text-primary">{row.capability}</td>
-                        {row.values.map((cell, index) => (
-                          <td key={`${row.capability}-${index}`} className="px-4 py-5">
-                            <span
-                              className={`inline-flex rounded-full border px-3 py-1.5 text-xs font-medium ${comparisonToneClass(cell.tone)}`}
-                            >
-                              {cell.label}
-                            </span>
-                          </td>
+                        {copy.labels.comparisonColumns.map((column, index) => (
+                          <th
+                            key={column}
+                            className={`min-w-[140px] px-4 py-5 text-left text-xs uppercase tracking-[0.22em] ${
+                              index === 0
+                                ? 'landing-comparison-header-highlight'
+                                : 'text-text-muted'
+                            }`}
+                          >
+                            {column}
+                          </th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {copy.comparisonRows.map((row) => (
+                        <tr key={row.capability} className="border-b border-slate-200/70 last:border-b-0">
+                          <td className="px-6 py-5 text-sm font-medium text-text-primary">{row.capability}</td>
+                          {row.values.map((cell, index) => (
+                            <td key={`${row.capability}-${index}`} className="px-4 py-5">
+                              <span
+                                className={`inline-flex rounded-full border px-3 py-1.5 text-xs font-medium ${
+                                  index === 0
+                                    ? 'landing-comparison-cell-highlight'
+                                    : comparisonToneClass(cell.tone)
+                                }`}
+                              >
+                                {cell.label}
+                              </span>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -704,57 +716,61 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
         </RevealBlock>
 
         <RevealBlock className="px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rfv-card rounded-[2rem] p-7">
-              <div className="rfv-kicker">{copy.labels.poweredBy}</div>
-              <h2 className="mt-5 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
-                {copy.sections.community}
-              </h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-                {copy.sections.communityDescription}
-              </p>
+          <div className="mx-auto max-w-7xl">
+            <div className="landing-section-shell space-y-10">
+              <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="rfv-card landing-community-panel rounded-[2rem] p-7">
+                  <div className="rfv-kicker">{copy.labels.poweredBy}</div>
+                  <h2 className="mt-5 text-3xl font-semibold tracking-tight text-text-primary sm:text-4xl">
+                    {copy.sections.community}
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
+                    {copy.sections.communityDescription}
+                  </p>
 
-              <div className="mt-8 space-y-4">
-                {copy.hero.badges.map((badge) => (
-                  <div key={badge} className="flex gap-3 text-sm leading-7 text-text-secondary">
-                    <span className="mt-2 h-2.5 w-2.5 rounded-full bg-accent-blue" />
-                    <span>{badge}</span>
+                  <div className="mt-8 space-y-4">
+                    {copy.hero.badges.map((badge) => (
+                      <div key={badge} className="flex gap-3 text-sm leading-7 text-text-secondary">
+                        <span className="mt-2 h-2.5 w-2.5 rounded-full bg-accent-blue" />
+                        <span>{badge}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+
+                  <button onClick={handlePilotLaunch} className="btn-primary mt-8 inline-flex items-center gap-2 px-5 py-3 text-sm">
+                    <MessageCircle size={16} />
+                    {copy.nav.pilot}
+                  </button>
+                </div>
+
+                <div className="grid gap-4">
+                  {copy.communityCards.map((card) => (
+                    <a
+                      key={card.title}
+                      href={card.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rfv-card landing-community-card rounded-[2rem] p-6 transition-transform duration-200 hover:-translate-y-1"
+                    >
+                      <div className="flex items-center gap-3">
+                        {card.title === 'GitHub' ? (
+                          <Github size={20} className="text-accent-blue" />
+                        ) : card.title === 'LinkedIn' ? (
+                          <Linkedin size={20} className="text-accent-blue" />
+                        ) : (
+                          <MessageCircle size={20} className="text-accent-blue" />
+                        )}
+                        <div className="text-lg font-semibold text-text-primary">{card.title}</div>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
+                      <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent-blue">
+                        {card.action}
+                        <ArrowRight size={16} />
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
-
-              <button onClick={handlePilotLaunch} className="btn-primary mt-8 inline-flex items-center gap-2 px-5 py-3 text-sm">
-                <MessageCircle size={16} />
-                {copy.nav.pilot}
-              </button>
-            </div>
-
-            <div className="grid gap-4">
-              {copy.communityCards.map((card) => (
-                <a
-                  key={card.title}
-                  href={card.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rfv-card rounded-[2rem] p-6 transition-transform duration-200 hover:-translate-y-1"
-                >
-                  <div className="flex items-center gap-3">
-                    {card.title === 'GitHub' ? (
-                      <Github size={20} className="text-accent-blue" />
-                    ) : card.title === 'LinkedIn' ? (
-                      <Linkedin size={20} className="text-accent-blue" />
-                    ) : (
-                      <MessageCircle size={20} className="text-accent-blue" />
-                    )}
-                    <div className="text-lg font-semibold text-text-primary">{card.title}</div>
-                  </div>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">{card.description}</p>
-                  <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent-blue">
-                    {card.action}
-                    <ArrowRight size={16} />
-                  </div>
-                </a>
-              ))}
             </div>
           </div>
         </RevealBlock>

@@ -499,6 +499,111 @@
     line-height: 1.2;
   }
 
+  .landing-section-shell {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(219, 231, 246, 0.96);
+    border-radius: 2rem;
+    padding: 2rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      0 26px 58px rgba(15, 23, 42, 0.06);
+  }
+
+  .landing-section-shell::before {
+    content: '';
+    position: absolute;
+    inset: auto;
+    pointer-events: none;
+    border-radius: 999px;
+    width: 20rem;
+    height: 20rem;
+    right: -7rem;
+    top: -8rem;
+    background: radial-gradient(circle, rgba(38, 92, 209, 0.1), transparent 70%);
+  }
+
+  .landing-section-shell-accent {
+    background:
+      radial-gradient(circle at top left, rgba(38, 92, 209, 0.12), transparent 34%),
+      linear-gradient(180deg, rgba(246, 249, 255, 0.98), rgba(255, 255, 255, 0.96));
+  }
+
+  .landing-section-shell-plain {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+  }
+
+  .landing-story-card,
+  .landing-story-quote,
+  .landing-pain-card,
+  .landing-community-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .landing-story-card::before,
+  .landing-pain-card::before,
+  .landing-community-card::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    top: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(38, 92, 209, 0.84), rgba(143, 179, 255, 0.18));
+    opacity: 0.8;
+  }
+
+  .landing-story-quote {
+    background:
+      radial-gradient(circle at top right, rgba(38, 92, 209, 0.12), transparent 32%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.96));
+  }
+
+  .landing-pain-card {
+    min-height: 15rem;
+  }
+
+  .landing-pain-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3rem;
+    height: 2rem;
+    border-radius: 999px;
+    border: 1px solid rgba(38, 92, 209, 0.16);
+    background: rgba(38, 92, 209, 0.1);
+    color: #265cd1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .landing-comparison-card {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 249, 255, 0.96));
+  }
+
+  .landing-comparison-header-highlight {
+    color: #1d4ed8;
+  }
+
+  .landing-comparison-cell-highlight {
+    border-color: rgba(38, 92, 209, 0.24);
+    background: rgba(38, 92, 209, 0.1);
+    color: #1d4ed8;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .landing-community-panel {
+    background:
+      radial-gradient(circle at top right, rgba(38, 92, 209, 0.12), transparent 34%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.96));
+  }
+
   .landing-footer {
     border-top: 1px solid rgba(203, 213, 225, 0.9);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(245, 248, 255, 0.94));
@@ -576,6 +681,16 @@
     color: #1d4ed8;
     border-color: rgba(38, 92, 209, 0.26);
     transform: translateY(-1px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .landing-section-shell {
+    padding: 1.5rem;
+  }
+
+  .landing-pain-card {
+    min-height: auto;
   }
 }
 
