@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { VoiceInterface } from '../components/VoiceInterface';
 import { useLanguage } from '../context/LanguageContext';
 import { getSiteContent, SITE_LINKS } from '../data/siteContent';
 
@@ -921,6 +922,8 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
           </div>
         </div>
       </footer>
+
+      <VoiceInterface />
     </div>
   );
 }
