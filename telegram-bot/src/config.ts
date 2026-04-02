@@ -89,9 +89,10 @@ export function loadConfig(): AppConfig {
       name: 'RoboQC Bot',
       oneLiner: 'Public Telegram entrypoint for the RoboQC landing.',
       summary:
-        'I help visitors understand what RoboQC is, open the live landing, review the product line, and jump to GitHub or LinkedIn.',
+        'I help visitors understand what RoboQC is, answer English product questions about RoboQC and Romeo FlexVision, open the live landing, review the product line, and jump to GitHub or LinkedIn.',
       capabilities: [
         'Explain the RoboQC positioning and pilot story',
+        'Answer English questions about edge deployment, station-level defects, and the open execution layer',
         'Open the live landing and demo surface',
         'List RoboQC Inspector, Andrew Analytic, Romeo PhD, and Bassito',
         'Route visitors to GitHub, LinkedIn, and public contact surfaces',

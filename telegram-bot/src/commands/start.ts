@@ -1,6 +1,7 @@
 import { Markup } from 'telegraf';
 import type { AppConfig } from '../config.js';
 import type { RomeoBot } from '../bot.js';
+import { buildHelpMessage } from './help.js';
 
 export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
   bot.start(async (ctx) => {
@@ -10,7 +11,10 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
       'Use this bot to:',
       '- open the live landing and pilot page',
       '- review the RoboQC product line and repositories',
+      '- ask English questions about RoboQC and Romeo FlexVision',
       '- jump to GitHub, LinkedIn, and public contact routes',
+      '',
+      'Example: "Why do you focus on station #2 instead of station #5?"',
       '',
       'Available commands: /help /demo /products /github /contact',
     ].join('\n');
@@ -54,6 +58,6 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
 
   bot.action('help_menu', async (ctx) => {
     await ctx.answerCbQuery();
-    await ctx.reply('Quick commands:\n/start\n/help\n/demo\n/products\n/github\n/contact');
+    await ctx.reply(buildHelpMessage());
   });
 }

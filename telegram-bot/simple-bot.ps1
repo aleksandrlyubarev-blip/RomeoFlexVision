@@ -142,6 +142,7 @@ $BotName is the public entrypoint for the RoboQC landing.
 
 I can:
 - explain what RoboQC is
+- answer English questions about RoboQC and Romeo FlexVision
 - show the live landing and pilot surface
 - list the RoboQC product line
 - route you to GitHub, LinkedIn, and public contact surfaces
@@ -155,6 +156,171 @@ function Get-ProductsText {
     $lines += "  $($product.url)"
   }
   return ($lines -join "`n")
+}
+
+function Get-HelpText {
+  return @"
+Available commands:
+/start - open the main navigation
+/help - command list and example questions
+/about - explain what RoboQC is
+/demo - open the live landing
+/products - list the RoboQC product line
+/github - open GitHub surfaces
+/contact - show public contact routes
+
+Ask in English, for example:
+- What is RoboQC?
+- Why do you focus on station #2 instead of station #5?
+- Do I need CAD, cloud, or an ML team?
+- How many samples do I need to start?
+- What is Romeo FlexVision?
+- How fast is inference on the edge?
+"@
+}
+
+function Normalize-QuestionText {
+  param([string]$Text)
+  return (($Text.ToLowerInvariant() -replace '[^a-z0-9#]+', ' ') -replace '\s+', ' ').Trim()
+}
+
+function Test-AllTerms {
+  param(
+    [string]$NormalizedText,
+    [string[]]$Terms
+  )
+
+  foreach ($term in $Terms) {
+    if (-not $NormalizedText.Contains($term)) {
+      return $false
+    }
+  }
+
+  return $true
+}
+
+function Get-EnglishQuestionReply {
+  param([string]$Text)
+
+  $normalized = Normalize-QuestionText -Text $Text
+  if (-not $normalized) {
+    return $null
+  }
+
+  $matchers = @(
+    @{
+      Terms = @(@("what is", "roboqc"), @("tell me about", "roboqc"), @("what does", "roboqc"), @("roboqc", "quality control"))
+      Reply = @"
+RoboQC is an AI-powered visual quality-control system for electronics assembly.
+
+It watches the line inline, catches defects the moment they are created, and sends evidence early enough for operators to act before the problem reaches end-of-line test.
+
+Public landing: $SiteUrl
+"@
+    },
+    @{
+      Terms = @(@("station 2", "station 5"), @("station #2", "station #5"), @("cost to rework"), @("reactive", "qc"), @("rework", "station 5"), @("missing screw"), @("misaligned connector"))
+      Reply = @"
+The RoboQC thesis is simple: catch the defect at station #2, not at station #5.
+
+In the deck, a missing screw or misaligned connector is roughly a $10 fix when it is born at station #2, but it can become about $1,000 of rework if it escapes to end-of-line test.
+
+That is why RoboQC is built for inline prevention instead of reactive QA.
+"@
+    },
+    @{
+      Terms = @(@("how does", "roboqc"), @("how", "roboqc", "work"), @("inline prevention"), @("edge native"), @("defect detected"), @("camera", "station 2"))
+      Reply = @"
+RoboQC places vision at the station where the defect is likely to appear, not only at the end of the line.
+
+A camera observes the process, the edge node detects the defect in real time, and the operator gets a frame, trace, and decision while the unit is still recoverable.
+
+The goal is evidence-first action, not a late spreadsheet after the shift is over.
+"@
+    },
+    @{
+      Terms = @(@("no cad"), @("need cad"), @("need cloud"), @("no cloud"), @("ml team"), @("need an ml team"), @("on prem"), @("on premise"), @("on prem capability"))
+      Reply = @"
+RoboQC is designed to remove adoption friction on the factory floor.
+
+The positioning in the materials is: no CAD, no cloud, and no dedicated ML team required for the initial deployment.
+
+It is meant to run on-prem on an edge node so a plant can start with real inspection instead of a long infrastructure program.
+"@
+    },
+    @{
+      Terms = @(@("how many", "samples"), @("golden samples"), @("few shot"), @("training samples"), @("how much data"), @("10 30"))
+      Reply = @"
+The current product story is few-shot deployment rather than giant dataset collection.
+
+The deck points to roughly 10 to 30 golden samples to get started, using the way human inspectors learn what 'good' looks like in the real world.
+
+That is positioned as an alternative to waiting for complex CAD-driven setup.
+"@
+    },
+    @{
+      Terms = @(@("latency"), @("inference"), @("200ms"), @("edge node"), @("rtx 3060"), @("rtx 4060"), @("hardware"), @("tensorrt"))
+      Reply = @"
+The reference deployment in the deck uses an RTX 3060 or 4060 edge node.
+
+With TensorRT and 4-bit quantization, the target is sub-200ms inference, which is the range needed for real inline intervention instead of post-process reporting.
+"@
+    },
+    @{
+      Terms = @(@("what is", "romeoflexvision"), @("what is", "romeo flexvision"), @("romeo flexvision"), @("romeoflexvision"), @("open execution layer"), @("physical ai"))
+      Reply = @"
+Romeo FlexVision is the open execution layer behind RoboQC.
+
+Its role is to bridge perception, reasoning, and physical action across heterogeneous industrial hardware, without locking the plant into a closed vendor stack.
+
+In the materials, it is positioned as the neutral bridge for physical AI: import, annotate, train, deploy, and then trigger real action on the floor.
+"@
+    },
+    @{
+      Terms = @(@("semantic conflict"), @("action layer"), @("plc"), @("webhook"), @("physical move"), @("conflict resolution"))
+      Reply = @"
+The action layer is about turning perception into a safe physical decision.
+
+In the RoboQC deck, semantic conflict resolution combines inputs from different nodes, resolves the final verdict, and then triggers the PLC or downstream control path.
+
+The point is that execution is not just a webhook. It is the verdict that causes the physical move.
+"@
+    },
+    @{
+      Terms = @(@("open source"), @("vendor lock"), @("lock in"), @("multi vendor"), @("neutral switzerland"), @("moat"), @("walled gardens"))
+      Reply = @"
+Romeo FlexVision is positioned around an open-source core and multi-vendor coordination.
+
+The strategic argument is that factories do not want a black-box controller sitting in front of a multi-million-dollar line.
+
+By keeping the core open and hardware-neutral, the platform aims to reduce vendor lock-in and become the trusted routing layer between vision, PLCs, robotic arms, and third-party AMRs.
+"@
+    },
+    @{
+      Terms = @(@("pilot"), @("q2 pilot"), @("use cases"), @("industries"), @("ems"), @("data center"), @("telecom"), @("automotive electronics"), @("server racks"))
+      Reply = @"
+The near-term wedge is electronics manufacturing and data-center hardware, especially dense server-rack assembly where one cable or component mistake is expensive.
+
+From there, the deck expands to telecom equipment and later to automotive electronics and industrial systems.
+
+The pilot narrative is grounded in real-world inspection of physical server racks, not abstract lab demos.
+"@
+    },
+    @{
+      Terms = @(@("product line"), @("what products"), @("which products"), @("products"), @("repos"))
+      Reply = Get-ProductsText
+    }
+  )
+
+  foreach ($matcher in $matchers) {
+    foreach ($termGroup in $matcher.Terms) {
+      if (Test-AllTerms -NormalizedText $normalized -Terms $termGroup) {
+        return $matcher.Reply
+      }
+    }
+  }
+
+  return $null
 }
 
 function Is-Greeting {
@@ -202,11 +368,11 @@ function Handle-TextMessage {
 
   switch -Regex ($trimmed) {
     '^/start(@\w+)?$' {
-      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the RoboQC landing, inspect products, and ask what I do." -ReplyMarkup (Build-MainKeyboard)
+      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the RoboQC landing, inspect products, and ask English questions about RoboQC and Romeo FlexVision.`n`nExample: Why do you focus on station #2 instead of station #5?" -ReplyMarkup (Build-MainKeyboard)
       return
     }
     '^/help(@\w+)?$' {
-      Send-Message -ChatId $ChatId -Text "/start`n/about`n/demo`n/products`n/github`n/contact"
+      Send-Message -ChatId $ChatId -Text (Get-HelpText)
       return
     }
     '^/about(@\w+)?$' {
@@ -232,7 +398,7 @@ function Handle-TextMessage {
   }
 
   if (Is-Greeting -Text $trimmed) {
-    Send-Message -ChatId $ChatId -Text "Hello. I am $BotName. Ask me what I do or use /about." -ReplyMarkup (Build-MainKeyboard)
+    Send-Message -ChatId $ChatId -Text "Hello. I am $BotName. Ask me in English about RoboQC or use /about." -ReplyMarkup (Build-MainKeyboard)
     return
   }
 
@@ -241,7 +407,13 @@ function Handle-TextMessage {
     return
   }
 
-  Send-Message -ChatId $ChatId -Text "I am $BotName. Ask me who I am, what I do, or use /about /demo /products /github /contact."
+  $knowledgeReply = Get-EnglishQuestionReply -Text $trimmed
+  if ($knowledgeReply) {
+    Send-Message -ChatId $ChatId -Text $knowledgeReply -ReplyMarkup (Build-MainKeyboard)
+    return
+  }
+
+  Send-Message -ChatId $ChatId -Text "I am $BotName. Ask me in English about RoboQC, Romeo FlexVision, station #2, edge deployment, few-shot samples, or use /about /help /demo /products /github /contact." -ReplyMarkup (Build-MainKeyboard)
 }
 
 Invoke-TelegramMethod -Method "deleteWebhook" -Body @{} | Out-Null
