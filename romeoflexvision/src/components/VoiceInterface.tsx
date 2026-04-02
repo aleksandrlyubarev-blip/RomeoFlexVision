@@ -249,7 +249,6 @@ export function VoiceInterface() {
       //    ScriptProcessorNode runs at 16 kHz (inputCtx sample rate)
       //    bufferSize 4096 → ~256 ms chunks — acceptable for streaming
       const source = inputCtx.createMediaStreamSource(stream);
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
       const processor = inputCtx.createScriptProcessor(4096, 1, 1);
       processorRef.current = processor;
 
