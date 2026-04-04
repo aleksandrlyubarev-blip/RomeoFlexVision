@@ -33,6 +33,10 @@ export interface AppConfig {
   webhookDomain: string | null;
   telegramWebhookPath: string;
   telegramWebhookSecret: string | null;
+  leadCapturePath: string;
+  leadNotifyChatIds: string[];
+  leadAllowedOrigins: string[];
+  leadRateLimitPerMinute: number;
   botProfile: BotProfile;
   links: ProjectLinks;
 }
@@ -67,6 +71,38 @@ function normalizeBaseUrl(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url;
 }
 
+function parseCsvList(value: string | undefined): string[] {
+  return (value ?? '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parsePositiveInt(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value ?? String(fallback), 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    throw new Error(`Invalid numeric value: ${value}`);
+  }
+  return parsed;
+}
+
+function normalizeOriginList(origins: string[], publicBaseUrl: string): string[] {
+  const defaults = [publicBaseUrl, 'http://localhost:5173', 'http://127.0.0.1:5173'];
+  const combined = origins.length > 0 ? origins : defaults;
+
+  return Array.from(
+    new Set(
+      combined.map((origin) => {
+        try {
+          return new URL(origin).origin;
+        } catch {
+          throw new Error(`Invalid origin URL: ${origin}`);
+        }
+      }),
+    ),
+  );
+}
+
 export function loadConfig(): AppConfig {
   const publicBaseUrl = normalizeBaseUrl(
     process.env.PUBLIC_BASE_URL?.trim() || 'https://romeoflexvision.com',
@@ -85,6 +121,10 @@ export function loadConfig(): AppConfig {
     webhookDomain: webhookDomain ? normalizeBaseUrl(webhookDomain) : null,
     telegramWebhookPath: normalizePath(process.env.TELEGRAM_WEBHOOK_PATH),
     telegramWebhookSecret: optionalEnv('TELEGRAM_WEBHOOK_SECRET'),
+    leadCapturePath: normalizePath(process.env.LEAD_CAPTURE_PATH ?? '/api/leads'),
+    leadNotifyChatIds: parseCsvList(process.env.LEAD_NOTIFY_CHAT_IDS),
+    leadAllowedOrigins: normalizeOriginList(parseCsvList(process.env.LEAD_ALLOWED_ORIGINS), publicBaseUrl),
+    leadRateLimitPerMinute: parsePositiveInt(process.env.LEAD_RATE_LIMIT_PER_MINUTE, 10),
     botProfile: {
       name: 'RoboQC Bot',
       oneLiner: 'Public Telegram entrypoint for the RoboQC landing.',

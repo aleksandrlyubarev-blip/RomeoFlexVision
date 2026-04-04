@@ -19,6 +19,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 import { VoiceInterface } from '../components/VoiceInterface';
 import { useLanguage } from '../context/LanguageContext';
 import { getSiteContent, SITE_LINKS } from '../data/siteContent';
+import { submitLeadCapture } from '../lib/leadCapture';
 
 interface LandingProps {
   onPilotLaunch: () => void;
@@ -232,8 +233,12 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
     company: '',
     email: '',
     message: '',
+    website: '',
   });
-  const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>(
+    'idle'
+  );
+  const [formFeedback, setFormFeedback] = useState('');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -267,34 +272,43 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
       }));
       if (formStatus !== 'idle') {
         setFormStatus('idle');
+        setFormFeedback('');
       }
     };
 
   const handleLeadSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const summary = [
-      'RomeoFlexVision / RoboQC lead',
-      `Name: ${formState.name || '-'}`,
-      `Company: ${formState.company || '-'}`,
-      `Email: ${formState.email || '-'}`,
-      'Request:',
-      formState.message || '-',
-    ].join('\n');
-
-    let clipboardWorked = false;
-
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(summary);
-        clipboardWorked = true;
-      } catch {
-        clipboardWorked = false;
-      }
-    }
-
-    setFormStatus(clipboardWorked ? 'success' : 'error');
     onPilotLaunch();
+
+    setFormStatus('submitting');
+    setFormFeedback('');
+
+    try {
+      await submitLeadCapture({
+        name: formState.name,
+        company: formState.company,
+        email: formState.email,
+        message: formState.message,
+        website: formState.website,
+        language,
+        pageUrl: window.location.href,
+        source: 'romeoflexvision.com',
+      });
+
+      setFormState({
+        name: '',
+        company: '',
+        email: '',
+        message: '',
+        website: '',
+      });
+      setFormStatus('success');
+      setFormFeedback(copy.form.success);
+    } catch (error) {
+      setFormStatus('error');
+      const details = error instanceof Error ? ` ${error.message}` : '';
+      setFormFeedback(`${copy.form.error}${details}`);
+    }
   };
 
   return (
@@ -814,17 +828,32 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <label className="site-field">
                       <span>{copy.form.nameLabel}</span>
-                      <input value={formState.name} onChange={handleFormChange('name')} />
+                      <input
+                        value={formState.name}
+                        onChange={handleFormChange('name')}
+                        autoComplete="name"
+                        required
+                      />
                     </label>
                     <label className="site-field">
                       <span>{copy.form.companyLabel}</span>
-                      <input value={formState.company} onChange={handleFormChange('company')} />
+                      <input
+                        value={formState.company}
+                        onChange={handleFormChange('company')}
+                        autoComplete="organization"
+                      />
                     </label>
                   </div>
 
                   <label className="site-field">
                     <span>{copy.form.emailLabel}</span>
-                    <input value={formState.email} onChange={handleFormChange('email')} type="email" />
+                    <input
+                      value={formState.email}
+                      onChange={handleFormChange('email')}
+                      type="email"
+                      autoComplete="email"
+                      required
+                    />
                   </label>
 
                   <label className="site-field">
@@ -833,20 +862,34 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                       value={formState.message}
                       onChange={handleFormChange('message')}
                       rows={5}
+                      required
                     />
                   </label>
 
+                  <input
+                    tabIndex={-1}
+                    autoComplete="off"
+                    className="hidden"
+                    aria-hidden="true"
+                    value={formState.website}
+                    onChange={handleFormChange('website')}
+                  />
+
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="text-sm leading-7 text-slate-400">{copy.form.helper}</div>
-                    <button type="submit" className="site-button site-button-primary inline-flex items-center gap-2">
+                    <button
+                      type="submit"
+                      disabled={formStatus === 'submitting'}
+                      className="site-button site-button-primary inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-70"
+                    >
                       <MessageCircle size={16} />
-                      {copy.form.submitLabel}
+                      {formStatus === 'submitting' ? copy.form.submittingLabel : copy.form.submitLabel}
                     </button>
                   </div>
 
-                  {formStatus !== 'idle' && (
+                  {formStatus !== 'idle' && formStatus !== 'submitting' && (
                     <div className="rounded-[1.2rem] border border-cyan-400/20 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
-                      {formStatus === 'success' ? copy.form.success : copy.form.error}
+                      {formFeedback}
                     </div>
                   )}
                 </form>

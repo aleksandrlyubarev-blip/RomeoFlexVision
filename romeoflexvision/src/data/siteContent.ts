@@ -99,6 +99,7 @@ export interface SiteFormCopy {
   emailLabel: string;
   messageLabel: string;
   submitLabel: string;
+  submittingLabel: string;
   helper: string;
   success: string;
   error: string;
@@ -444,15 +445,16 @@ const SITE_COPY: Record<Language, SiteCopy> = {
     form: {
       title: "Write me & let's inspire!",
       description:
-        'This form copies your brief and opens the Telegram bot, so even without a backend we still have a usable inbound flow on the live site.',
+        'Send your pilot brief into the RoboQC inbox and open Telegram in parallel, so the team gets a real lead and you get an immediate operator route.',
       nameLabel: 'Name',
       companyLabel: 'Company',
       emailLabel: 'Email',
       messageLabel: 'What do you want to inspect?',
-      submitLabel: 'Copy brief and open Telegram',
-      helper: 'We will copy your request to the clipboard, then open the bot.',
-      success: 'Brief copied. Telegram is opening in a new tab.',
-      error: 'Telegram opened, but clipboard access was blocked. Please copy your request manually.',
+      submitLabel: 'Send brief and open Telegram',
+      submittingLabel: 'Sending brief...',
+      helper: 'We send this request to the pilot inbox and open the bot in a new tab.',
+      success: 'Lead sent to the pilot inbox. Telegram is open in a new tab.',
+      error: 'Lead was not delivered to the pilot inbox. Telegram opened as a fallback.',
     },
     ui: {
       partnersLabel: 'Partners and signals',
@@ -723,15 +725,16 @@ const SITE_COPY: Record<Language, SiteCopy> = {
     form: {
       title: 'Write me & let’s inspire!',
       description:
-        'הטופס מעתיק את הבריף שלך ופותח את Telegram, כך שגם בלי backend יש לנו זרימת inbound שימושית באתר החי.',
+        'שלח את הבריף שלך ישירות ל-inbox של RoboQC ובמקביל פתח את Telegram, כך שהצוות מקבל ליד אמיתי ואתה מקבל ערוץ מהיר לשיחה.',
       nameLabel: 'שם',
       companyLabel: 'חברה',
       emailLabel: 'אימייל',
       messageLabel: 'מה תרצה לבדוק?',
-      submitLabel: 'להעתיק בריף ולפתוח Telegram',
-      helper: 'נעתיק את הבקשה ללוח ולאחר מכן נפתח את הבוט.',
-      success: 'הבריף הועתק. Telegram נפתח בלשונית חדשה.',
-      error: 'Telegram נפתח, אבל הגישה ללוח נחסמה. יש להעתיק את הבקשה ידנית.',
+      submitLabel: 'לשלוח בריף ולפתוח Telegram',
+      submittingLabel: 'שולח בריף...',
+      helper: 'אנחנו שולחים את הבקשה ל-inbox של הפיילוט ופותחים את הבוט בלשונית חדשה.',
+      success: 'הליד נשלח ל-inbox של הפיילוט. Telegram פתוח בלשונית חדשה.',
+      error: 'הליד לא נמסר ל-inbox של הפיילוט. Telegram נפתח כנתיב גיבוי.',
     },
     ui: {
       partnersLabel: 'שותפים וסיגנלים',

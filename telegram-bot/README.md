@@ -11,6 +11,7 @@ The bot is intentionally lightweight:
 - `/products` lists the current RoboQC product line
 - `/github` opens the GitHub surfaces
 - `/contact` routes users to public contact points
+- `POST /api/leads` accepts landing-form leads and forwards them to configured Telegram admin chats
 
 ## Modes
 
@@ -46,6 +47,40 @@ Optional production variables:
 - `TELEGRAM_WEBHOOK_PATH`
 - `TELEGRAM_WEBHOOK_SECRET`
 - `PUBLIC_BASE_URL`
+- `LEAD_CAPTURE_PATH`
+- `LEAD_NOTIFY_CHAT_IDS`
+- `LEAD_ALLOWED_ORIGINS`
+- `LEAD_RATE_LIMIT_PER_MINUTE`
+
+## Lead capture endpoint
+
+The service can also act as the public lead-ingestion backend for the landing.
+
+Required extra environment variable:
+
+- `LEAD_NOTIFY_CHAT_IDS`
+
+Optional:
+
+- `LEAD_CAPTURE_PATH` defaults to `/api/leads`
+- `LEAD_ALLOWED_ORIGINS` defaults to `PUBLIC_BASE_URL`, `http://localhost:5173`, `http://127.0.0.1:5173`
+- `LEAD_RATE_LIMIT_PER_MINUTE` defaults to `10`
+
+Example request:
+
+```bash
+curl -X POST http://localhost:8080/api/leads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alex",
+    "company": "Romeo FlexVision",
+    "email": "alex@example.com",
+    "message": "Need a pilot for electronics assembly QC",
+    "language": "en",
+    "pageUrl": "https://romeoflexvision.com/",
+    "source": "romeoflexvision.com"
+  }'
+```
 
 ## Security
 

@@ -2,6 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { createBot, syncBotMetadata } from './bot.js';
 import { loadConfig } from './config.js';
+import { registerLeadCaptureRoutes } from './leads.js';
 
 async function main(): Promise<void> {
   const config = loadConfig();
@@ -28,6 +29,8 @@ async function main(): Promise<void> {
       mode: config.webhookDomain ? 'webhook' : 'polling',
     });
   });
+
+  registerLeadCaptureRoutes(app, bot, config);
 
   if (config.webhookDomain) {
     app.post(config.telegramWebhookPath, async (req: Request, res: Response) => {
