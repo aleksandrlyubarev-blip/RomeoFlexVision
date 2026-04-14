@@ -9,6 +9,7 @@ RoboQC - это новый публичный продуктовый слой п
 - `romeoflexvision/` - Vite/React-лендинг RoboQC
 - `telegram-bot/` - публичная Telegram-точка входа для демо и пилота
 - `docs/` - архитектурная документация (агент «Бригада» и др.)
+- `docs/mongodb-memory-bootstrap.md` - первый шаг интеграции MongoDB-памяти (LangGraph checkpoints → long-term memory)
 - `.github/workflows/` - деплой фронтенда и синхронизация `scene-ops.json`
 
 ## Новое позиционирование
