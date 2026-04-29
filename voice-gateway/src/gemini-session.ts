@@ -65,7 +65,7 @@ export class GeminiSession extends EventEmitter {
         }
       });
 
-      ws.once('error', (err: Error) => {
+      ws.on('error', (err: Error) => {
         this.setState('error');
         this.emit('error', err);
         reject(err);
