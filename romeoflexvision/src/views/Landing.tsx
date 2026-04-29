@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AgentAvatar from '../components/AgentAvatar';
 import { AGENTS } from '../data/agents';
 import type { View } from '../types';
@@ -62,12 +62,27 @@ function heatColor(v: number): string {
 export default function Landing({ onNavigate, onRegister }: LandingProps) {
   const [demoActive, setDemoActive] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
+  const demoTimeoutRef = useRef<number | null>(null);
+
+  // Clear pending demo timeout on unmount to avoid setState-after-unmount.
+  useEffect(() => {
+    return () => {
+      if (demoTimeoutRef.current !== null) {
+        window.clearTimeout(demoTimeoutRef.current);
+        demoTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const handleDemoRun = () => {
     setDemoLoading(true);
-    setTimeout(() => {
+    if (demoTimeoutRef.current !== null) {
+      window.clearTimeout(demoTimeoutRef.current);
+    }
+    demoTimeoutRef.current = window.setTimeout(() => {
       setDemoLoading(false);
       setDemoActive(true);
+      demoTimeoutRef.current = null;
     }, 1800);
   };
 

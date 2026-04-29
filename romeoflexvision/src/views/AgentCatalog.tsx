@@ -22,6 +22,8 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
   const [copied, setCopied] = useState(false);
   const [editDesc, setEditDesc] = useState(agent.description);
   const [editing, setEditing] = useState(false);
+  const testTimeoutRef = useRef<number | null>(null);
+  const copyTimeoutRef = useRef<number | null>(null);
 
   // Reset local state whenever a different agent is shown
   useEffect(() => {
@@ -30,12 +32,31 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
     setEditDesc(agent.description);
     setEditing(false);
   }, [agent.id, agent.description]);
+
+  // Clear any pending timeouts on unmount to avoid setState-after-unmount.
+  useEffect(() => {
+    return () => {
+      if (testTimeoutRef.current !== null) {
+        window.clearTimeout(testTimeoutRef.current);
+        testTimeoutRef.current = null;
+      }
+      if (copyTimeoutRef.current !== null) {
+        window.clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
   const statusColor = STATUS_COLORS[agent.status];
 
   const handleTest = () => {
     setTestPhase('running');
-    setTimeout(() => {
+    if (testTimeoutRef.current !== null) {
+      window.clearTimeout(testTimeoutRef.current);
+    }
+    testTimeoutRef.current = window.setTimeout(() => {
       setTestPhase(Math.random() > 0.15 ? 'passed' : 'failed');
+      testTimeoutRef.current = null;
     }, 1400);
   };
 
@@ -43,7 +64,13 @@ function AgentDetail({ agent, onClose }: AgentDetailProps) {
     const payload = JSON.stringify({ id: `${agent.id}-copy`, name: agent.name, nameRu: agent.nameRu }, null, 2);
     navigator.clipboard.writeText(payload).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimeoutRef.current !== null) {
+      window.clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = window.setTimeout(() => {
+      setCopied(false);
+      copyTimeoutRef.current = null;
+    }, 2000);
   };
 
   const handleEditSave = () => setEditing(false);

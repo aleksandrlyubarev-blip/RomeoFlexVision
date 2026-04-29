@@ -32,7 +32,7 @@ function bassitoStatusBadge(status: SceneOpsSnapshot['bassitoJobs'][number]['sta
 
 export default function SceneOpsPanel({ snapshot }: SceneOpsPanelProps) {
   const queueState = queueStateLabel(snapshot.scene.queueState);
-  const driftSec = snapshot.scene.targetDurationSec - snapshot.scene.actualDurationSec;
+  const driftSec = snapshot.scene.actualDurationSec - snapshot.scene.targetDurationSec;
 
   return (
     <div className="glass-panel p-5 space-y-5">
