@@ -48,7 +48,7 @@ const wss = new WebSocketServer({ server, path: '/voice' });
 function isOriginAllowed(req: IncomingMessage): boolean {
   const origin = req.headers.origin;
   if (!origin) return true; // Allow non-browser clients (monitoring, curl)
-  return ALLOWED_ORIGINS.some((allowed) => origin === allowed || origin.startsWith(allowed));
+  return ALLOWED_ORIGINS.includes(origin);
 }
 
 wss.on('connection', (clientWs: WebSocket, req: IncomingMessage) => {
