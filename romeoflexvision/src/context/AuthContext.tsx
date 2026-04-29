@@ -47,11 +47,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Load existing session on mount
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(({ data }) => {
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('getSession failed:', err);
+        setLoading(false);
+      });
 
     // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
