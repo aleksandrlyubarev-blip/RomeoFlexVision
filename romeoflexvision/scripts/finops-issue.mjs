@@ -3,8 +3,23 @@ import path from "node:path"
 
 const root = process.cwd()
 const metricsPath = process.env.METRICS_PATH || "finops/request-metrics.json"
-const limit = Number(process.env.FINOPS_COST_ALERT_USD || 0.25)
-const cacheFloor = Number(process.env.FINOPS_CACHE_HIT_FLOOR || 0.8)
+
+// `Number(env)` returns NaN for non-numeric values, and any comparison with NaN
+// is false — which would silently fire alerts on every run. Reject NaN explicitly
+// so that an invalid env var falls back to the documented default.
+function envNumber(name, fallback) {
+  const raw = process.env[name]
+  if (raw === undefined || raw === "") return fallback
+  const parsed = Number(raw)
+  if (!Number.isFinite(parsed)) {
+    console.warn(`Invalid ${name}=${raw}; using default ${fallback}.`)
+    return fallback
+  }
+  return parsed
+}
+
+const limit = envNumber("FINOPS_COST_ALERT_USD", 0.25)
+const cacheFloor = envNumber("FINOPS_CACHE_HIT_FLOOR", 0.8)
 
 const fullPath = path.join(root, metricsPath)
 if (!fs.existsSync(fullPath)) {

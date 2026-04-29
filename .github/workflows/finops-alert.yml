@@ -27,5 +27,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          METRICS_PATH: ${{ github.event.inputs.metrics-path || 'finops/request-metrics.json' }}
-        run: node scripts/finops-issue.mjs
+          METRICS_PATH: ${{ github.event.inputs.metrics-path || 'romeoflexvision/finops/request-metrics.json' }}
+        run: node romeoflexvision/scripts/finops-issue.mjs
