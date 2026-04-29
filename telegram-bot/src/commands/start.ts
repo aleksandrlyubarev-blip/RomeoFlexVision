@@ -2,8 +2,13 @@ import type { Context } from 'telegraf';
 import { Markup } from 'telegraf';
 import { LINKS } from '../config.js';
 
+function escapeMarkdown(s: string): string {
+  return s.replace(/([_*`\[])/g, '\\$1');
+}
+
 export async function handleStart(ctx: Context): Promise<void> {
-  const name = ctx.from?.first_name ?? 'there';
+  const rawName = ctx.from?.first_name ?? 'there';
+  const name = escapeMarkdown(rawName);
 
   await ctx.reply(
     `👋 Hi ${name}! Welcome to *RomeoFlexVision* — an agentic AI ecosystem for data science and automated media production.\n\n` +

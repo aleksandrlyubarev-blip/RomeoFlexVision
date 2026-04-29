@@ -21,11 +21,25 @@ export function createBot(): Telegraf {
   bot.command('contact', handleContact);
   bot.command('demo', handleDemo);
 
-  // Echo unknown commands back with a hint
+  // Wire inline keyboard callbacks from /start
+  bot.action('products', async (ctx) => {
+    await ctx.answerCbQuery();
+    await handleProducts(ctx);
+  });
+  bot.action('contact', async (ctx) => {
+    await ctx.answerCbQuery();
+    await handleContact(ctx);
+  });
+
+  // Only respond with the "unknown command" hint for messages that look
+  // like commands; stay silent on natural text to avoid noise.
   bot.on('text', async (ctx) => {
-    await ctx.reply(
-      'Unknown command. Use /help to see available commands.',
-    );
+    const text = ctx.message?.text;
+    if (text?.startsWith('/')) {
+      await ctx.reply(
+        'Unknown command. Use /help to see available commands.',
+      );
+    }
   });
 
   bot.catch((err, ctx) => {
