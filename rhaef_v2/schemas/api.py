@@ -51,3 +51,24 @@ class StatsResponse(BaseModel):
     fallbacks: int
     langsmith_tracing_v2: bool
     timestamp: str
+
+
+class TimelineEvent(BaseModel):
+    model_config = ConfigDict(strict=True)
+    request_id: str
+    event: str
+    payload: dict[str, Any]
+    timestamp: str
+
+
+class ExecutionRecordResponse(BaseModel):
+    model_config = ConfigDict(strict=True)
+    request_id: str
+    status: str
+    decision: str
+    policy_code: str
+    category: str
+    fallback_used: bool
+    retries_used: int
+    started_at: str
+    finished_at: str

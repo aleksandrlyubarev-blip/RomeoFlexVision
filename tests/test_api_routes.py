@@ -4,6 +4,7 @@ from rhaef_v2.api.routes import APIServices, build_stats, execute_run
 from rhaef_v2.core.model_router import ModelRouter, TaskCategory
 from rhaef_v2.core.policies import FrictionPolicyEngine
 from rhaef_v2.schemas.api import APIError, RunRequest
+from rhaef_v2.storage.execution_store import InMemoryExecutionStore
 
 
 class FakeResponse:
@@ -19,7 +20,7 @@ def failing_client(**kwargs):
 
 
 def build_services(client=fake_client) -> APIServices:
-    return APIServices(model_router=ModelRouter(client=client), policy_engine=FrictionPolicyEngine(), idempotency_cache={})
+    return APIServices(model_router=ModelRouter(client=client), policy_engine=FrictionPolicyEngine(), idempotency_cache={}, execution_store=InMemoryExecutionStore())
 
 
 def test_run_route_blocks_critical():
@@ -62,3 +63,11 @@ def test_routing_failure_returns_api_error():
     resp = asyncio.run(execute_run(req, services))
     assert isinstance(resp, APIError)
     assert resp.code == "MODEL_ROUTING_FAILED"
+
+
+def test_timeline_endpoint_has_events():
+    services = build_services()
+    req = RunRequest(request_id='tl1', messages=[{'role':'user','content':'x'}], category=TaskCategory.ROUTINE)
+    asyncio.run(execute_run(req, services))
+    timeline = services.execution_store.get_timeline('tl1')
+    assert len(timeline) >= 2
