@@ -1,19 +1,19 @@
-# RoboQC - Когнитивный QC-робот (Romeo FlexVision)
+# RHAEF v2 — RomeoFlex Hybrid Agentic Execution Framework
 
-RoboQC - это новый публичный продуктовый слой поверх Romeo FlexVision: робот-камера для inline-контроля качества, который ловит ошибку на станции №2, а не на тесте №5.
+**Максимальное качество при минимальных затратах + intentional friction**
 
-Лендинг живёт в [romeoflexvision](./romeoflexvision) и публикуется на [romeoflexvision.com](https://romeoflexvision.com/). Бренд-ассеты для новой версии лежат в `romeoflexvision/public/assets/brand`.
+Гибридная агентская система мая 2026:
+- **Claude Opus 4.7** — главный reasoner + coder
+- **GPT-5.5 Pro** — vision + execution
+- **Grok-4** — оркестратор + видео-генерация
+- **Qwen 3.6-Plus** — всё остальное (OpenRouter + GCP local)
 
-## Что внутри репозитория
+**Философия:** Agent-legible code + deliberate slowdown в critical местах.
 
-- `romeoflexvision/` - Vite/React-лендинг RoboQC
-- `telegram-bot/` - публичная Telegram-точка входа для демо и пилота
-- `docs/` - архитектурная документация (агент «Бригада» и др.)
-- `.github/workflows/` - деплой фронтенда и синхронизация `scene-ops.json`
+Статус: **В разработке под Codex Cloud**
 
-## Новое позиционирование
 
-- Главный бренд: `RoboQC`
-- Технология внутри: `Romeo FlexVision`
-- Основной narrative: «Робот-камера, которая никогда не спит»
-- Основной CTA: `Запустить RoboQC-пилот`
+## Roadmap
+
+- Sprint 3: Reliability hardening (idempotency, policy codes, fallback metrics, retry-before-fallback).
+- Sprint 4: Persistent execution store, timeline API, policy profiles, structured logs, HTTP integration tests.
