@@ -18,6 +18,9 @@ workspace/archive/*
 __pycache__/
 *.pyc
 
+# Локальные снимки/архивы офиса
+backups/
+
 # Локальные секреты / креды
 *.key
 *.pem

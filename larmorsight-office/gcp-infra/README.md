@@ -5,9 +5,11 @@ Terraform-скелет для развёртывания облачных коп
 с навыками, секрет с Anthropic API key в Secret Manager и (опционально) Cloud
 Scheduler для периодического запуска.
 
-> **Статус: skeleton.** HCL валиден (`terraform validate`), но рассчитан на ваш
-> реальный GCP-проект и собранный образ рантайма. `terraform apply` ничего не
-> ломает, но создаёт ресурсы (и расходы) — применяйте осознанно.
+> **Статус: рабочая основа.** HCL валиден (`terraform validate`); рантайм
+> сотрудника (`employee-runtime/`) реальный (FastAPI + Anthropic Messages API,
+> prompt caching, модель `claude-opus-4-7`). Рассчитано на ваш реальный
+> GCP-проект и собранный образ. `terraform apply` создаёт ресурсы (и расходы) —
+> применяйте осознанно.
 
 ## Что создаётся
 
@@ -42,6 +44,7 @@ terraform apply        # создаёт бакет, секрет, сервисы
 ```bash
 cd ..
 ./deploy-to-gcp.sh research-analyst       # синхронизирует навыки + apply с этим сотрудником
+./scripts/sync-skills.sh --all            # только синхронизация навыков (без terraform apply)
 # или вручную:
 gsutil -m rsync -r -d employees/research-analyst gs://<project_id>-larmorsight-skills/employees/research-analyst
 ```
@@ -50,21 +53,41 @@ gsutil -m rsync -r -d employees/research-analyst gs://<project_id>-larmorsight-s
 
 ## Образ рантайма сотрудника
 
-`employee-runtime/` содержит **плейсхолдер** (`server.py` — заглушка, отвечает
-текстом; `Dockerfile` на `python:3.11-slim`). Замените на реальный рантайм
-(загрузка `SKILL.md` из Cloud Storage по `LARMORSIGHT_SKILLS_BUCKET` /
-`LARMORSIGHT_SKILL_PATH`, чтение `ANTHROPIC_API_KEY` из окружения, вызовы
-Anthropic API, осмысленный HTTP-API). Сборка:
+`employee-runtime/` — рабочий рантайм:
+- `app.py` — FastAPI-сервис. На старте подтягивает навык из Cloud Storage
+  (`global-instructions.md` + `employees/<name>/SKILL.md` + `employees/<name>/references/`
+  + общие `references/brand/...`, `references/company/...`) по переменным
+  `LARMORSIGHT_SKILLS_BUCKET` / `LARMORSIGHT_SKILL_PATH`, собирает «замороженный»
+  системный промпт. `POST /run` (`{"task": "...", "context": "..."}`) вызывает
+  Anthropic Messages API с prompt caching, моделью `claude-opus-4-7`, adaptive
+  thinking и стримингом; `GET /healthz` — проверка живости. `ANTHROPIC_API_KEY`
+  инъектится из Secret Manager (см. ниже). Тюнинг через env: `LARMORSIGHT_MODEL`,
+  `LARMORSIGHT_EFFORT`, `LARMORSIGHT_THINKING`, `LARMORSIGHT_MAX_TOKENS`.
+- `requirements.txt` — `anthropic`, `google-cloud-storage`, `fastapi`, `uvicorn`, `pydantic`.
+- `Dockerfile` — `python:3.11-slim`, `uvicorn app:app` на `$PORT`.
+
+Сборка и публикация образа — через `cloudbuild.yaml` (рекомендуется) или вручную:
 
 ```bash
 gcloud artifacts repositories create larmorsight \
   --repository-format=docker --location=us-central1
+
+# вариант A — Cloud Build по конфигу (из larmorsight-office/gcp-infra):
+gcloud builds submit --config cloudbuild.yaml \
+  --substitutions=_REGION=us-central1,_REPO=larmorsight,_TAG=latest .
+
+# вариант B — напрямую:
 gcloud builds submit \
   --tag us-central1-docker.pkg.dev/PROJECT_ID/larmorsight/larmorsight-employee:latest \
-  larmorsight-office/gcp-infra/employee-runtime
+  employee-runtime
+
 # затем в terraform.tfvars:
 # employee_image = "us-central1-docker.pkg.dev/PROJECT_ID/larmorsight/larmorsight-employee:latest"
 ```
+
+Локальный прогон рантайма: `pip install -r employee-runtime/requirements.txt && \
+LARMORSIGHT_EMPLOYEE=research-analyst ANTHROPIC_API_KEY=... python employee-runtime/app.py`
+(без `LARMORSIGHT_SKILLS_BUCKET` сервис стартует с базовыми инструкциями и сообщает об этом в ответе).
 
 ## Секрет Anthropic API key
 
@@ -85,9 +108,13 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
   не удалится, пока в нём есть объекты — это намеренно).
 - Рекомендуется отдельно настроить Budget Alert в биллинге проекта.
 
-## TODO (вне текущего скелета)
-- [ ] Реальный образ рантажа сотрудника (`employee-runtime/`).
-- [ ] CI/CD: Cloud Build trigger на сборку образа + `terraform plan/apply` в pipeline.
+## TODO (на будущее)
+- [x] Реальный образ рантайма сотрудника (`employee-runtime/app.py`).
+- [x] CI: сборка/публикация образа (`cloudbuild.yaml`).
+- [ ] Cloud Build **trigger** (авто-сборка на push) + `terraform plan/apply` в pipeline
+      (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`).
 - [ ] Backend для state в GCS (закомментирован в `providers.tf`).
 - [ ] Бюджеты/алерты (`google_billing_budget`), детальные дашборды Cloud Monitoring.
+- [ ] Аутентификация вызовов `POST /run` (сейчас Cloud Run-сервис приватный по умолчанию;
+      `enable_scheduler` уже использует OIDC сервис-аккаунта сотрудника).
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

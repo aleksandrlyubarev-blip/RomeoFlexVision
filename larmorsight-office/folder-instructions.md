@@ -44,5 +44,13 @@ Storage, Secret Manager, опционально Cloud Scheduler). `*.tfvars` и 
 в `.gitignore`; коммитится только `*.tfvars.example`.
 
 ## `deploy-to-gcp.sh`
-CLI-скелет: `./deploy-to-gcp.sh <employee-name>` — синхронизирует навыки
-сотрудника в GCS и применяет Terraform для его Cloud Run-сервиса.
+CLI: `./deploy-to-gcp.sh <employee-name>` — синхронизирует навыки сотрудника в
+GCS и применяет Terraform для его Cloud Run-сервиса.
+
+## `scripts/`
+Вспомогательные shell-скрипты: `sync-skills.sh` (синхронизация навыков в Cloud
+Storage без `terraform apply`; используется командой `/sync-with-gcp`),
+`backup-office.sh` (архив пакета офиса, опционально в Cloud Storage).
+
+## `CHANGELOG.md`
+Краткая человекочитаемая сводка изменений пакета офиса (версионирование — git).

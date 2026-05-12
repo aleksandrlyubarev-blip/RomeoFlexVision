@@ -4,9 +4,10 @@
 (плагины с навыками), общие slash-команды, единый брендбук и инструменты
 развёртывания тех же сотрудников в облаке Google Cloud Platform по требованию.
 
-> Статус: **v0.1 — локальный офис + GCP-скелет.** Терраформ-инфраструктура
-> валидна, но рассчитана на ваш реальный GCP-проект и собранный образ
-> контейнера — `terraform apply` и сборка образа в этот пакет не входят.
+> Статус: **v0.2 — локальный офис + рабочий рантайм для Cloud Run + CI.** Terraform
+> валиден, рантайм сотрудника реальный (FastAPI + Anthropic API, prompt caching,
+> модель `claude-opus-4-7`). Рассчитано на ваш реальный GCP-проект и собранный
+> образ; сам `terraform apply` / деплой в этот пакет не входят. См. `CHANGELOG.md`.
 
 ## Что внутри
 
@@ -15,8 +16,12 @@ larmorsight-office/
 ├── .claude-plugin/plugin.json   # манифест плагина
 ├── global-instructions.md       # тон и стандарты для всех сотрудников
 ├── folder-instructions.md       # что и куда складывать
-├── deploy-to-gcp.sh             # развернуть одного сотрудника в GCP (скелет)
+├── CHANGELOG.md                 # сводка изменений пакета
+├── deploy-to-gcp.sh             # развернуть одного сотрудника в GCP (CLI)
 ├── commands/                    # офисные slash-команды
+├── scripts/                     # вспомогательные shell-скрипты
+│   ├── sync-skills.sh           #   синхронизация навыков в Cloud Storage
+│   └── backup-office.sh         #   снимок/архив пакета офиса
 ├── employees/                   # AI-сотрудники (по папке на роль)
 │   ├── research-analyst/
 │   ├── content-strategist/
@@ -26,7 +31,9 @@ larmorsight-office/
 │   └── custom/                  # шаблон для ваших собственных сотрудников
 ├── references/                  # брендбук, шаблоны, описание компании
 ├── workspace/                   # активные и архивные рабочие задачи
-└── gcp-infra/                   # Terraform: Cloud Run + Cloud Storage + Secret Manager
+└── gcp-infra/                   # Terraform (Cloud Run + Cloud Storage + Secret Manager),
+    ├── employee-runtime/        #   рантайм сотрудника (app.py, requirements.txt, Dockerfile)
+    └── cloudbuild.yaml          #   CI: сборка и публикация образа сотрудника
 ```
 
 ## Быстрый старт (локально)
@@ -50,16 +57,22 @@ larmorsight-office/
 
 ```bash
 cd larmorsight-office/gcp-infra
-cp terraform.tfvars.example terraform.tfvars   # заполнить project_id, region, image
-terraform init
-terraform plan
+cp terraform.tfvars.example terraform.tfvars   # заполнить project_id, region
 
-# Развернуть конкретного сотрудника в Cloud Run:
+# Собрать и запушить образ рантайма сотрудника (один раз / в CI):
+gcloud artifacts repositories create larmorsight --repository-format=docker --location=us-central1
+gcloud builds submit --config cloudbuild.yaml .          # см. cloudbuild.yaml
+# затем впишите получившийся образ как employee_image в terraform.tfvars
+
+terraform init && terraform plan
+
+# Развернуть конкретного сотрудника в Cloud Run (синхронизирует навыки + terraform apply):
 cd ..
 ./deploy-to-gcp.sh research-analyst
 ```
 
 В Claude Code то же самое: `/deploy-to-gcp research-analyst`, `/sync-with-gcp`.
+Только синхронизация навыков без деплоя: `./scripts/sync-skills.sh --all`. Снимок офиса: `./scripts/backup-office.sh`.
 
 ## Принципы
 

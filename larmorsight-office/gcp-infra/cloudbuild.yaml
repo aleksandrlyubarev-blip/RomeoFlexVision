@@ -1,0 +1,46 @@
+# Cloud Build: сборка и публикация образа рантайма AI-сотрудника LarmorSight
+# в Artifact Registry.
+#
+# Запуск (из каталога larmorsight-office/gcp-infra):
+#   gcloud builds submit --config cloudbuild.yaml \
+#     --substitutions=_REGION=us-central1,_REPO=larmorsight,_TAG=latest .
+#
+# Предполагается, что репозиторий Artifact Registry уже создан:
+#   gcloud artifacts repositories create larmorsight \
+#     --repository-format=docker --location=us-central1
+#
+# После публикации укажите получившийся образ как employee_image в terraform.tfvars
+# (или раскомментируйте шаг terraform-apply ниже).
+
+substitutions:
+  _REGION: us-central1
+  _REPO: larmorsight
+  _IMAGE: larmorsight-employee
+  _TAG: latest
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}'
+      - employee-runtime
+
+  # (Опционально) применить Terraform после публикации образа. Раскомментируйте,
+  # настройте backend/доступы и убедитесь, что terraform.tfvars доступен сборщику.
+  # - id: terraform-apply
+  #   name: hashicorp/terraform:1.9
+  #   entrypoint: sh
+  #   args:
+  #     - -c
+  #     - >-
+  #       terraform init -input=false &&
+  #       terraform apply -auto-approve -input=false
+  #       -var="employee_image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}"
+
+images:
+  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
