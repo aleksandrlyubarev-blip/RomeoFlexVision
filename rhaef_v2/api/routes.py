@@ -97,6 +97,7 @@ async def execute_run(payload: RunRequest, services: APIServices) -> RunResponse
 def build_stats(services: APIServices) -> StatsResponse:
     data = services.model_router.get_stats()
     data["policy_profile"] = services.policy_engine.settings.policy_profile
+    data["storage_backend"] = services.policy_engine.settings.storage_backend
     data.update(services.execution_store.metrics())
     return StatsResponse(request_id=str(uuid4()), **data)
 

@@ -51,6 +51,7 @@ class StatsResponse(BaseModel):
     fallbacks: int
     langsmith_tracing_v2: bool
     policy_profile: str
+    storage_backend: str
     blocked_runs: int
     timestamp: str
 
