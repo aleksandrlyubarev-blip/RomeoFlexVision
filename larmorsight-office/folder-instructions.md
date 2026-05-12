@@ -22,7 +22,8 @@
 
 ## `commands/`
 Офисные slash-команды, доступные независимо от роли: `/list-employees`,
-`/deploy-to-gcp`, `/sync-with-gcp`, `/new-employee`, `/performance-review`.
+`/deploy-to-gcp`, `/sync-with-gcp`, `/new-employee`, `/performance-review`,
+`/ask-employee` (вызов `/run` у развёрнутого в облаке сотрудника).
 
 ## `references/`
 Общие материалы офиса:
@@ -50,7 +51,9 @@ GCS и применяет Terraform для его Cloud Run-сервиса.
 ## `scripts/`
 Вспомогательные shell-скрипты: `sync-skills.sh` (синхронизация навыков в Cloud
 Storage без `terraform apply`; используется командой `/sync-with-gcp`),
-`backup-office.sh` (архив пакета офиса, опционально в Cloud Storage).
+`call-employee.sh` (вызов `/run` у развёрнутого сотрудника по OIDC; используется
+командой `/ask-employee`), `backup-office.sh` (архив пакета офиса, опционально в
+Cloud Storage).
 
 ## `CHANGELOG.md`
 Краткая человекочитаемая сводка изменений пакета офиса (версионирование — git).

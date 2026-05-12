@@ -1,0 +1,59 @@
+name: larmorsight-office CI
+
+on:
+  push:
+    paths:
+      - 'larmorsight-office/**'
+      - '.github/workflows/larmorsight-office-ci.yml'
+  pull_request:
+    paths:
+      - 'larmorsight-office/**'
+      - '.github/workflows/larmorsight-office-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: larmorsight-office
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate plugin manifest
+        run: python -m json.tool .claude-plugin/plugin.json > /dev/null
+
+      - name: Compile employee runtime
+        run: python -m py_compile gcp-infra/employee-runtime/app.py
+
+      - name: Shell scripts syntax check
+        run: |
+          for f in deploy-to-gcp.sh scripts/*.sh; do
+            echo "bash -n $f"
+            bash -n "$f"
+          done
+
+      - name: shellcheck (advisory)
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -S warning deploy-to-gcp.sh scripts/*.sh || true
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.9.8'
+
+      - name: terraform fmt (advisory)
+        continue-on-error: true
+        run: terraform -chdir=gcp-infra fmt -check -recursive -diff
+
+      - name: terraform validate
+        run: |
+          terraform -chdir=gcp-infra init -backend=false -input=false
+          terraform -chdir=gcp-infra validate

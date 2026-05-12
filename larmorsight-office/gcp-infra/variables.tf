@@ -45,6 +45,29 @@ variable "allow_unauthenticated" {
   default     = false
 }
 
+variable "invoker_members" {
+  type        = list(string)
+  description = <<-EOT
+    IAM-принципалы, которым выдаётся roles/run.invoker на сервисы сотрудников
+    (M2M-вызовы /run через OIDC). Например:
+    ["serviceAccount:caller@PROJECT.iam.gserviceaccount.com", "user:me@example.com"].
+    Cloud Scheduler уже получает доступ через OIDC сервис-аккаунта сотрудника.
+  EOT
+  default     = []
+}
+
+variable "billing_account" {
+  type        = string
+  description = "ID биллинг-аккаунта (например \"012345-6789AB-CDEF01\") для бюджетного алерта. Пусто => бюджет не создаётся."
+  default     = ""
+}
+
+variable "budget_amount_usd" {
+  type        = number
+  description = "Месячный бюджет в USD для алерта (если billing_account задан)."
+  default     = 50
+}
+
 variable "employee_cpu" {
   type        = string
   description = "Лимит CPU для контейнера сотрудника."

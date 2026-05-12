@@ -34,6 +34,12 @@ variable "allow_unauthenticated" {
   default     = false
 }
 
+variable "invoker_members" {
+  type        = list(string)
+  description = "IAM-принципалы, которым выдаётся roles/run.invoker на этот сервис."
+  default     = []
+}
+
 variable "cpu" {
   type        = string
   description = "Лимит CPU."

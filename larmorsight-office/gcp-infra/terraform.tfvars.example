@@ -22,6 +22,14 @@ active_employees = ["research-analyst"]
 # enable_scheduler       = false
 # schedule_cron          = "0 9 * * 1"   # каждый понедельник 09:00 UTC
 
+# Кто может вызывать /run у сотрудников (Cloud Run-сервисы по умолчанию приватные).
+# Нужно для scripts/call-employee.sh и команды /ask-employee:
+# invoker_members = ["user:me@example.com"]
+
+# Бюджетный алерт по проекту (нужны права billing.budgets.* на биллинг-аккаунте):
+# billing_account   = "012345-6789AB-CDEF01"
+# budget_amount_usd = 50
+
 # Ключ Anthropic лучше не хранить в этом файле, а завести версию секрета вручную:
 #   gcloud secrets versions add larmorsight-anthropic-api-key --data-file=- <<< "$ANTHROPIC_API_KEY"
 # anthropic_api_key = "sk-ant-..."

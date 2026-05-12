@@ -15,11 +15,12 @@ Scheduler для периодического запуска.
 
 | Ресурс | Назначение |
 |---|---|
-| `google_project_service` | включает API: Run, Storage, Secret Manager, Artifact Registry, Cloud Build, Cloud Scheduler |
+| `google_project_service` | включает API: Run, Storage, Secret Manager, Artifact Registry, Cloud Build, Cloud Scheduler, Billing Budgets |
 | `google_storage_bucket.skills` | бакет `<project_id>-larmorsight-skills` с навыками сотрудников (versioning вкл.) |
 | `google_secret_manager_secret.anthropic_api_key` | секрет `larmorsight-anthropic-api-key` |
-| `module.ai_employee` (for_each по `active_employees`) | на сотрудника: сервис-аккаунт, IAM (storage read, secret accessor), Cloud Run v2-сервис, опц. публичный invoker |
-| `google_cloud_scheduler_job.employee_ping` | опц. (`enable_scheduler = true`): POST на `<url>/run` по `schedule_cron` |
+| `module.ai_employee` (for_each по `active_employees`) | на сотрудника: сервис-аккаунт, IAM (storage read, secret accessor), Cloud Run v2-сервис, invoker для `invoker_members` (+ опц. публичный invoker при `allow_unauthenticated`) |
+| `google_cloud_scheduler_job.employee_ping` | опц. (`enable_scheduler = true`): POST на `<url>/run` по `schedule_cron`, OIDC сервис-аккаунта сотрудника |
+| `google_billing_budget.larmorsight` | опц. (если задан `billing_account`): месячный бюджет `budget_amount_usd` с алертами 50/90/100% |
 
 ## Предпосылки
 - Terraform ≥ 1.9, `gcloud` (Google Cloud SDK), `gsutil`, `jq`.
@@ -89,6 +90,26 @@ gcloud builds submit \
 LARMORSIGHT_EMPLOYEE=research-analyst ANTHROPIC_API_KEY=... python employee-runtime/app.py`
 (без `LARMORSIGHT_SKILLS_BUCKET` сервис стартует с базовыми инструкциями и сообщает об этом в ответе).
 
+## Вызов /run у развёрнутого сотрудника
+
+Cloud Run-сервисы приватные. Чтобы вызывать их (скриптом или командой `/ask-employee`),
+выдайте `roles/run.invoker` нужным принципалам через `invoker_members` в `terraform.tfvars`:
+
+```hcl
+invoker_members = ["user:me@example.com", "serviceAccount:caller@PROJECT.iam.gserviceaccount.com"]
+```
+
+затем:
+
+```bash
+cd ..
+./scripts/call-employee.sh research-analyst "Кратко: что такое RHAEF v2 и для чего он?"
+# скрипт сам найдёт URL (terraform output employee_urls / gcloud run services describe),
+# возьмёт identity token из gcloud и сделает POST /run.
+```
+
+Из Claude Code: `/ask-employee research-analyst <задача>`.
+
 ## Секрет Anthropic API key
 
 Не храните ключ в `terraform.tfvars`. Заведите версию секрета вручную (или из CI):
@@ -103,18 +124,20 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
 ## Контроль расходов
 - `min_instance_count = 0` — сервисы скейлятся в ноль, когда не используются.
 - `employee_max_instances` ограничивает потолок инстансов.
+- Бюджетный алерт: задайте `billing_account` (и при желании `budget_amount_usd`) —
+  Terraform создаст `google_billing_budget` с порогами 50/90/100%. Нужны права
+  `billing.budgets.*` на биллинг-аккаунте.
 - Снести сотрудника из облака: уберите его из `active_employees` и `terraform apply`.
 - Полностью убрать инфраструктуру: `terraform destroy` (бакет с `force_destroy = false`
   не удалится, пока в нём есть объекты — это намеренно).
-- Рекомендуется отдельно настроить Budget Alert в биллинге проекта.
 
 ## TODO (на будущее)
 - [x] Реальный образ рантайма сотрудника (`employee-runtime/app.py`).
-- [x] CI: сборка/публикация образа (`cloudbuild.yaml`).
+- [x] CI: сборка/публикация образа (`cloudbuild.yaml`) + валидация офиса (`.github/workflows/`).
+- [x] Аутентификация вызовов `POST /run` (`invoker_members` → `roles/run.invoker`; сервисы приватные по умолчанию).
+- [x] Бюджетный алерт (`google_billing_budget`, опционально через `billing_account`).
 - [ ] Cloud Build **trigger** (авто-сборка на push) + `terraform plan/apply` в pipeline
       (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`).
 - [ ] Backend для state в GCS (закомментирован в `providers.tf`).
-- [ ] Бюджеты/алерты (`google_billing_budget`), детальные дашборды Cloud Monitoring.
-- [ ] Аутентификация вызовов `POST /run` (сейчас Cloud Run-сервис приватный по умолчанию;
-      `enable_scheduler` уже использует OIDC сервис-аккаунта сотрудника).
+- [ ] Детальные дашборды Cloud Monitoring / алерты на ошибки сервисов.
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

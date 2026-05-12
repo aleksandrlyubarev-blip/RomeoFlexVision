@@ -6,6 +6,27 @@
 ## [Unreleased]
 - —
 
+## 0.3.0
+### Добавлено
+- **Аутентификация вызовов `/run`** — переменная `invoker_members` в `gcp-infra`:
+  выдаёт `roles/run.invoker` указанным принципалам на каждый Cloud Run-сервис
+  сотрудника (M2M через OIDC). Cloud Run-сервисы остаются приватными по умолчанию.
+- **`scripts/call-employee.sh`** — вызвать `/run` у развёрнутого сотрудника:
+  находит URL (`terraform output employee_urls` / `gcloud run services describe`),
+  получает identity token, делает `POST /run`, печатает ответ.
+- **`/ask-employee <employee> <task>`** — slash-команда поверх `call-employee.sh`.
+- **Бюджетный алерт** — опциональный `google_billing_budget` (создаётся, если задан
+  `billing_account`) с порогами 50/90/100%; `budget_amount_usd` (по умолчанию 50).
+  Включён API `billingbudgets.googleapis.com`.
+- **CI офиса** — `.github/workflows/larmorsight-office-ci.yml`: валидирует `plugin.json`,
+  компилирует `app.py`, проверяет синтаксис shell-скриптов, `terraform fmt`/`validate`
+  (на изменения в `larmorsight-office/**`).
+
+### Изменено
+- Модуль `ai-employee` получил переменную `invoker_members` и соответствующие IAM-биндинги.
+- `terraform.tfvars.example`, README офиса и `gcp-infra/README.md`, `folder-instructions.md` — обновлены.
+- `plugin.json` → `0.3.0`.
+
 ## 0.2.0
 ### Добавлено
 - **Рабочий рантайм AI-сотрудника для Cloud Run** — `gcp-infra/employee-runtime/app.py`:

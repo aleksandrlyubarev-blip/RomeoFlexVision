@@ -102,3 +102,14 @@ resource "google_cloud_run_v2_service_iam_member" "invoker" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+
+# Явно перечисленные принципалы могут вызывать сервис (M2M через OIDC).
+resource "google_cloud_run_v2_service_iam_member" "invokers" {
+  for_each = toset(var.invoker_members)
+
+  project  = var.project_id
+  location = google_cloud_run_v2_service.employee.location
+  name     = google_cloud_run_v2_service.employee.name
+  role     = "roles/run.invoker"
+  member   = each.value
+}

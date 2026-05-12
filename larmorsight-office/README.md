@@ -4,10 +4,12 @@
 (плагины с навыками), общие slash-команды, единый брендбук и инструменты
 развёртывания тех же сотрудников в облаке Google Cloud Platform по требованию.
 
-> Статус: **v0.2 — локальный офис + рабочий рантайм для Cloud Run + CI.** Terraform
-> валиден, рантайм сотрудника реальный (FastAPI + Anthropic API, prompt caching,
-> модель `claude-opus-4-7`). Рассчитано на ваш реальный GCP-проект и собранный
-> образ; сам `terraform apply` / деплой в этот пакет не входят. См. `CHANGELOG.md`.
+> Статус: **v0.3 — локальный офис + рабочий рантайм для Cloud Run + CI + аутентификация вызовов.**
+> Terraform валиден, рантайм сотрудника реальный (FastAPI + Anthropic API, prompt
+> caching, модель `claude-opus-4-7`), Cloud Run-сервисы приватные (доступ через
+> `invoker_members`), есть опциональный бюджетный алерт и CI офиса. Рассчитано на
+> ваш реальный GCP-проект и собранный образ; сам `terraform apply` / деплой в этот
+> пакет не входят. См. `CHANGELOG.md`.
 
 ## Что внутри
 
@@ -18,9 +20,11 @@ larmorsight-office/
 ├── folder-instructions.md       # что и куда складывать
 ├── CHANGELOG.md                 # сводка изменений пакета
 ├── deploy-to-gcp.sh             # развернуть одного сотрудника в GCP (CLI)
-├── commands/                    # офисные slash-команды
+├── commands/                    # офисные slash-команды (/list-employees, /deploy-to-gcp,
+│                                #   /sync-with-gcp, /new-employee, /performance-review, /ask-employee)
 ├── scripts/                     # вспомогательные shell-скрипты
 │   ├── sync-skills.sh           #   синхронизация навыков в Cloud Storage
+│   ├── call-employee.sh         #   вызвать /run у развёрнутого сотрудника (OIDC)
 │   └── backup-office.sh         #   снимок/архив пакета офиса
 ├── employees/                   # AI-сотрудники (по папке на роль)
 │   ├── research-analyst/
@@ -31,9 +35,11 @@ larmorsight-office/
 │   └── custom/                  # шаблон для ваших собственных сотрудников
 ├── references/                  # брендбук, шаблоны, описание компании
 ├── workspace/                   # активные и архивные рабочие задачи
-└── gcp-infra/                   # Terraform (Cloud Run + Cloud Storage + Secret Manager),
+└── gcp-infra/                   # Terraform (Cloud Run + Cloud Storage + Secret Manager + опц. бюджет),
     ├── employee-runtime/        #   рантайм сотрудника (app.py, requirements.txt, Dockerfile)
     └── cloudbuild.yaml          #   CI: сборка и публикация образа сотрудника
+
+# CI офиса: ../.github/workflows/larmorsight-office-ci.yml (валидация при изменениях в larmorsight-office/**)
 ```
 
 ## Быстрый старт (локально)
@@ -73,6 +79,15 @@ cd ..
 
 В Claude Code то же самое: `/deploy-to-gcp research-analyst`, `/sync-with-gcp`.
 Только синхронизация навыков без деплоя: `./scripts/sync-skills.sh --all`. Снимок офиса: `./scripts/backup-office.sh`.
+
+**Спросить развёрнутого сотрудника** (Cloud Run-сервисы приватные — выдайте себе доступ
+через `invoker_members` в `gcp-infra/terraform.tfvars`):
+
+```bash
+./scripts/call-employee.sh research-analyst "Кратко: что такое RHAEF v2?"
+```
+
+В Claude Code: `/ask-employee research-analyst <задача>`.
 
 ## Принципы
 
