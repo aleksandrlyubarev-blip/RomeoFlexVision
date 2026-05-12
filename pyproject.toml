@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rhaef-v2"
+version = "2.0.0"
+description = "RomeoFlex Hybrid Agentic Execution Framework"
+requires-python = ">=3.11"
+dependencies = [
+    "litellm>=1.60",
+    "langgraph>=0.2.50",
+    "pydantic>=2.10",
+    "langsmith",
+    "python-dotenv",
+    "fastapi",
+    "uvicorn",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+include = ["rhaef_v2*"]
+
+[tool.ruff]
+line-length = 120
