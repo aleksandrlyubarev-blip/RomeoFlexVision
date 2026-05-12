@@ -1,0 +1,17 @@
+{
+  "name": "larmorsight-office",
+  "version": "0.1.0",
+  "description": "LarmorSight AI Office — AI-сотрудники (плагины с навыками), офисные slash-команды и развёртывание сотрудников в GCP по требованию.",
+  "author": {
+    "name": "LarmorSight"
+  },
+  "homepage": "https://github.com/aleksandrlyubarev-blip/RomeoFlexVision/tree/main/larmorsight-office",
+  "keywords": [
+    "larmorsight",
+    "ai-office",
+    "agents",
+    "gcp",
+    "cloud-run"
+  ],
+  "commands": "./commands"
+}
