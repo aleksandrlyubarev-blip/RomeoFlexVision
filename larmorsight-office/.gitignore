@@ -1,0 +1,27 @@
+# Terraform
+gcp-infra/.terraform/
+gcp-infra/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+
+# Workspace — рабочее пространство, не часть пакета офиса
+workspace/active/*
+workspace/archive/*
+!workspace/active/.gitkeep
+!workspace/archive/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+
+# Локальные секреты / креды
+*.key
+*.pem
+gcp-service-account*.json
+.env
+.env.*
+!.env.example

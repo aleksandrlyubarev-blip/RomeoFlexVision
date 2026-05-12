@@ -1,0 +1,27 @@
+# Скопируйте этот файл в terraform.tfvars и заполните под свой GCP-проект.
+# terraform.tfvars в .gitignore — секреты в репозиторий не коммитятся.
+
+project_id = "my-gcp-project-id"
+region     = "us-central1"
+
+# AI-сотрудники, которых разворачиваем в Cloud Run
+# (имена = папки в larmorsight-office/employees/):
+active_employees = ["research-analyst"]
+
+# Docker-образ рантайма сотрудника. Соберите из gcp-infra/employee-runtime/Dockerfile
+# и запушьте в Artifact Registry, затем раскомментируйте и укажите его здесь.
+# Пока строка ниже закомментирована, используется публичный hello-образ Cloud Run.
+# employee_image = "us-central1-docker.pkg.dev/my-gcp-project-id/larmorsight/larmorsight-employee:latest"
+
+# --- опционально ---
+# skills_bucket          = "my-gcp-project-id-larmorsight-skills"
+# allow_unauthenticated  = false
+# employee_cpu           = "1"
+# employee_memory        = "512Mi"
+# employee_max_instances = 3
+# enable_scheduler       = false
+# schedule_cron          = "0 9 * * 1"   # каждый понедельник 09:00 UTC
+
+# Ключ Anthropic лучше не хранить в этом файле, а завести версию секрета вручную:
+#   gcloud secrets versions add larmorsight-anthropic-api-key --data-file=- <<< "$ANTHROPIC_API_KEY"
+# anthropic_api_key = "sk-ant-..."
