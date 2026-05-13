@@ -1,0 +1,36 @@
+name: roboqc_data
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+    paths:
+      - "roboqc_data/**"
+      - ".github/workflows/roboqc_data.yml"
+  pull_request:
+    paths:
+      - "roboqc_data/**"
+      - ".github/workflows/roboqc_data.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./roboqc_data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package and cv extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[cv,brigada]
+          # opencv-python is X11-linked on CI runners; the headless build is
+          # the supported choice for non-GUI testing.
+          pip install opencv-python-headless
+      - name: Run tests
+        run: pytest -q

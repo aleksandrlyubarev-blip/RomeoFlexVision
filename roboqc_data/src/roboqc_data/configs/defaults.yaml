@@ -1,0 +1,17 @@
+seed: 0
+split:
+  train: 0.8
+  val: 0.1
+  test: 0.1
+datasets:
+  - name: mvtec_ad
+    root: /data/mvtec_ad
+brigada:
+  flat_mode: true
+  high_risk_classes: [leak, wrong_routing]
+  friction_count_threshold: 100
+train:
+  model: yolo_seg
+  epochs: 1
+export:
+  format: onnx
