@@ -4,12 +4,13 @@
 (плагины с навыками), общие slash-команды, единый брендбук и инструменты
 развёртывания тех же сотрудников в облаке Google Cloud Platform по требованию.
 
-> Статус: **v0.3 — локальный офис + рабочий рантайм для Cloud Run + CI + аутентификация вызовов.**
+> Статус: **v0.4 — локальный офис + рабочий рантайм для Cloud Run + CI/CD + аутентификация вызовов.**
 > Terraform валиден, рантайм сотрудника реальный (FastAPI + Anthropic API, prompt
 > caching, модель `claude-opus-4-7`), Cloud Run-сервисы приватные (доступ через
-> `invoker_members`), есть опциональный бюджетный алерт и CI офиса. Рассчитано на
-> ваш реальный GCP-проект и собранный образ; сам `terraform apply` / деплой в этот
-> пакет не входят. См. `CHANGELOG.md`.
+> `invoker_members`), есть опциональные бюджетный алерт, Artifact Registry и Cloud
+> Build trigger, плюс CI офиса в GitHub Actions. Рассчитано на ваш реальный
+> GCP-проект и собранный образ; сам `terraform apply` / деплой в этот пакет не
+> входят. См. `CHANGELOG.md`.
 
 ## Что внутри
 
@@ -35,9 +36,10 @@ larmorsight-office/
 │   └── custom/                  # шаблон для ваших собственных сотрудников
 ├── references/                  # брендбук, шаблоны, описание компании
 ├── workspace/                   # активные и архивные рабочие задачи
-└── gcp-infra/                   # Terraform (Cloud Run + Cloud Storage + Secret Manager + опц. бюджет),
+└── gcp-infra/                   # Terraform (Cloud Run + Cloud Storage + Secret Manager;
+    │                            #   опц.: бюджетный алерт, Artifact Registry, Cloud Build trigger)
     ├── employee-runtime/        #   рантайм сотрудника (app.py, requirements.txt, Dockerfile)
-    └── cloudbuild.yaml          #   CI: сборка и публикация образа сотрудника
+    └── cloudbuild.yaml          #   сборка и публикация образа сотрудника
 
 # CI офиса: ../.github/workflows/larmorsight-office-ci.yml (валидация при изменениях в larmorsight-office/**)
 ```

@@ -97,3 +97,44 @@ variable "schedule_cron" {
   description = "Cron-расписание периодического запуска (если enable_scheduler = true)."
   default     = "0 9 * * 1"
 }
+
+variable "artifact_repo" {
+  type        = string
+  description = "Имя репозитория Artifact Registry (Docker), куда публикуется образ рантайма сотрудника."
+  default     = "larmorsight"
+}
+
+variable "create_artifact_repo" {
+  type        = bool
+  description = "Создавать репозиторий Artifact Registry силами Terraform (иначе создайте его вручную: gcloud artifacts repositories create)."
+  default     = false
+}
+
+variable "enable_build_trigger" {
+  type        = bool
+  description = <<-EOT
+    Создавать Cloud Build trigger для авто-сборки образа сотрудника при push в GitHub
+    (использует gcp-infra/cloudbuild.yaml). Требует, чтобы репозиторий был ПОДКЛЮЧЁН
+    к Cloud Build (GitHub App) — это разовый шаг в консоли GCP, в Terraform для
+    1st-gen триггеров его сделать нельзя.
+  EOT
+  default     = false
+}
+
+variable "github_owner" {
+  type        = string
+  description = "Владелец GitHub-репозитория для Cloud Build trigger."
+  default     = "aleksandrlyubarev-blip"
+}
+
+variable "github_repo" {
+  type        = string
+  description = "Имя GitHub-репозитория для Cloud Build trigger."
+  default     = "RomeoFlexVision"
+}
+
+variable "build_branch" {
+  type        = string
+  description = "Ветка, push в которую запускает сборку образа сотрудника."
+  default     = "main"
+}

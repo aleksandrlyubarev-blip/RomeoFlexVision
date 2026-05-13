@@ -131,3 +131,51 @@ resource "google_cloud_scheduler_job" "employee_ping" {
 
   depends_on = [google_project_service.enabled]
 }
+
+# Опционально: репозиторий Artifact Registry для образа рантайма сотрудника.
+resource "google_artifact_registry_repository" "larmorsight" {
+  count = var.create_artifact_repo ? 1 : 0
+
+  repository_id = var.artifact_repo
+  location      = var.region
+  format        = "DOCKER"
+  description   = "LarmorSight AI employee runtime images"
+
+  depends_on = [google_project_service.enabled]
+}
+
+# Опционально: Cloud Build trigger — авто-сборка образа сотрудника при push в GitHub.
+# Требует, чтобы репозиторий был подключён к Cloud Build (GitHub App) в консоли GCP.
+resource "google_cloudbuild_trigger" "employee_image" {
+  count = var.enable_build_trigger ? 1 : 0
+
+  name        = "larmorsight-employee-image"
+  description = "LarmorSight: build & push the AI-employee runtime image on push"
+  project     = var.project_id
+
+  github {
+    owner = var.github_owner
+    name  = var.github_repo
+    push {
+      branch = "^${var.build_branch}$"
+    }
+  }
+
+  # Запускать только при изменении рантайма / конфига сборки.
+  included_files = [
+    "larmorsight-office/gcp-infra/employee-runtime/**",
+    "larmorsight-office/gcp-infra/cloudbuild.yaml",
+  ]
+
+  filename = "larmorsight-office/gcp-infra/cloudbuild.yaml"
+
+  substitutions = {
+    _REGION     = var.region
+    _REPO       = var.artifact_repo
+    _IMAGE      = "larmorsight-employee"
+    _TAG        = "latest"
+    _SOURCE_DIR = "larmorsight-office/gcp-infra/employee-runtime"
+  }
+
+  depends_on = [google_project_service.enabled]
+}

@@ -6,6 +6,23 @@
 ## [Unreleased]
 - —
 
+## 0.4.0
+### Добавлено
+- **Cloud Build trigger** — `google_cloudbuild_trigger` (опционально, `enable_build_trigger`):
+  при push в `build_branch` с изменениями в `larmorsight-office/gcp-infra/employee-runtime/**`
+  собирает и публикует образ сотрудника по `cloudbuild.yaml`. Переменные
+  `github_owner` / `github_repo` / `build_branch`. Требует подключения репозитория к
+  Cloud Build (GitHub App — разовый шаг в консоли).
+- **Репозиторий Artifact Registry** — `google_artifact_registry_repository` (опционально,
+  `create_artifact_repo`); переменная `artifact_repo` (по умолчанию `larmorsight`).
+- Выходы Terraform: `artifact_repo`, `build_trigger_id`.
+
+### Изменено
+- `cloudbuild.yaml`: каталог сборки вынесен в подстановку `_SOURCE_DIR` (по умолчанию
+  `employee-runtime` для ручного запуска из `gcp-infra/`; trigger передаёт полный путь
+  от корня репозитория). Закомментированный шаг `terraform-apply` поправлен (`cd` в `gcp-infra/`).
+- `terraform.tfvars.example`, README офиса и `gcp-infra/README.md` — обновлены; `plugin.json` → `0.4.0`.
+
 ## 0.3.0
 ### Добавлено
 - **Аутентификация вызовов `/run`** — переменная `invoker_members` в `gcp-infra`:

@@ -22,3 +22,13 @@ output "employee_service_accounts" {
   description = "Сервисные аккаунты сотрудников по имени."
   value       = { for name, mod in module.ai_employee : name => mod.service_account_email }
 }
+
+output "artifact_repo" {
+  description = "Имя репозитория Artifact Registry для образа сотрудника (null, если не управляется Terraform)."
+  value       = one(google_artifact_registry_repository.larmorsight[*].repository_id)
+}
+
+output "build_trigger_id" {
+  description = "ID Cloud Build trigger для образа сотрудника (null, если enable_build_trigger = false)."
+  value       = one(google_cloudbuild_trigger.employee_image[*].trigger_id)
+}

@@ -30,6 +30,14 @@ active_employees = ["research-analyst"]
 # billing_account   = "012345-6789AB-CDEF01"
 # budget_amount_usd = 50
 
+# CI/CD: репозиторий Artifact Registry и Cloud Build trigger.
+# artifact_repo        = "larmorsight"
+# create_artifact_repo = false   # true => Terraform создаст репозиторий Artifact Registry
+# enable_build_trigger = false   # true => Cloud Build trigger (репо должно быть подключено к Cloud Build!)
+# github_owner         = "aleksandrlyubarev-blip"
+# github_repo          = "RomeoFlexVision"
+# build_branch         = "main"
+
 # Ключ Anthropic лучше не хранить в этом файле, а завести версию секрета вручную:
 #   gcloud secrets versions add larmorsight-anthropic-api-key --data-file=- <<< "$ANTHROPIC_API_KEY"
 # anthropic_api_key = "sk-ant-..."

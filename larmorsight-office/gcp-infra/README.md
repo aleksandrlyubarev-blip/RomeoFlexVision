@@ -21,6 +21,8 @@ Scheduler для периодического запуска.
 | `module.ai_employee` (for_each по `active_employees`) | на сотрудника: сервис-аккаунт, IAM (storage read, secret accessor), Cloud Run v2-сервис, invoker для `invoker_members` (+ опц. публичный invoker при `allow_unauthenticated`) |
 | `google_cloud_scheduler_job.employee_ping` | опц. (`enable_scheduler = true`): POST на `<url>/run` по `schedule_cron`, OIDC сервис-аккаунта сотрудника |
 | `google_billing_budget.larmorsight` | опц. (если задан `billing_account`): месячный бюджет `budget_amount_usd` с алертами 50/90/100% |
+| `google_artifact_registry_repository.larmorsight` | опц. (`create_artifact_repo = true`): Docker-репозиторий `artifact_repo` для образа сотрудника |
+| `google_cloudbuild_trigger.employee_image` | опц. (`enable_build_trigger = true`): авто-сборка образа сотрудника при push в `build_branch` (по `cloudbuild.yaml`) |
 
 ## Предпосылки
 - Terraform ≥ 1.9, `gcloud` (Google Cloud SDK), `gsutil`, `jq`.
@@ -67,12 +69,17 @@ gsutil -m rsync -r -d employees/research-analyst gs://<project_id>-larmorsight-s
 - `requirements.txt` — `anthropic`, `google-cloud-storage`, `fastapi`, `uvicorn`, `pydantic`.
 - `Dockerfile` — `python:3.11-slim`, `uvicorn app:app` на `$PORT`.
 
-Сборка и публикация образа — через `cloudbuild.yaml` (рекомендуется) или вручную:
+Репозиторий Artifact Registry: создайте вручную или через Terraform
+(`create_artifact_repo = true`):
 
 ```bash
 gcloud artifacts repositories create larmorsight \
   --repository-format=docker --location=us-central1
+```
 
+Сборка и публикация образа:
+
+```bash
 # вариант A — Cloud Build по конфигу (из larmorsight-office/gcp-infra):
 gcloud builds submit --config cloudbuild.yaml \
   --substitutions=_REGION=us-central1,_REPO=larmorsight,_TAG=latest .
@@ -85,6 +92,14 @@ gcloud builds submit \
 # затем в terraform.tfvars:
 # employee_image = "us-central1-docker.pkg.dev/PROJECT_ID/larmorsight/larmorsight-employee:latest"
 ```
+
+**Авто-сборка (Cloud Build trigger).** Подключите репозиторий к Cloud Build
+(GitHub App, разовый шаг в консоли GCP), затем в `terraform.tfvars`:
+`enable_build_trigger = true` (+ при необходимости `github_owner` / `github_repo` /
+`build_branch`). Terraform создаст trigger `larmorsight-employee-image`, который при
+push в `build_branch` с изменениями в `larmorsight-office/gcp-infra/employee-runtime/**`
+запускает `cloudbuild.yaml` (триггер передаёт `_SOURCE_DIR=larmorsight-office/gcp-infra/employee-runtime`,
+т.к. сборка идёт из корня репозитория).
 
 Локальный прогон рантайма: `pip install -r employee-runtime/requirements.txt && \
 LARMORSIGHT_EMPLOYEE=research-analyst ANTHROPIC_API_KEY=... python employee-runtime/app.py`
@@ -136,8 +151,10 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
 - [x] CI: сборка/публикация образа (`cloudbuild.yaml`) + валидация офиса (`.github/workflows/`).
 - [x] Аутентификация вызовов `POST /run` (`invoker_members` → `roles/run.invoker`; сервисы приватные по умолчанию).
 - [x] Бюджетный алерт (`google_billing_budget`, опционально через `billing_account`).
-- [ ] Cloud Build **trigger** (авто-сборка на push) + `terraform plan/apply` в pipeline
-      (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`).
+- [x] Cloud Build **trigger** на push (`google_cloudbuild_trigger`, опционально через `enable_build_trigger`)
+      + опц. репозиторий Artifact Registry (`create_artifact_repo`).
+- [ ] `terraform plan/apply` внутри пайплайна (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`;
+      требует backend для state + сервис-аккаунт с правами).
 - [ ] Backend для state в GCS (закомментирован в `providers.tf`).
 - [ ] Детальные дашборды Cloud Monitoring / алерты на ошибки сервисов.
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

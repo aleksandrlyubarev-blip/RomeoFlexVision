@@ -1,22 +1,31 @@
 # Cloud Build: сборка и публикация образа рантайма AI-сотрудника LarmorSight
 # в Artifact Registry.
 #
-# Запуск (из каталога larmorsight-office/gcp-infra):
+# Запуск вручную (из каталога larmorsight-office/gcp-infra):
 #   gcloud builds submit --config cloudbuild.yaml \
 #     --substitutions=_REGION=us-central1,_REPO=larmorsight,_TAG=latest .
 #
-# Предполагается, что репозиторий Artifact Registry уже создан:
+# Этот же файл использует Cloud Build trigger из main.tf
+# (resource google_cloudbuild_trigger, переменная enable_build_trigger):
+# триггер запускается из корня репозитория, поэтому передаёт
+# _SOURCE_DIR=larmorsight-office/gcp-infra/employee-runtime.
+#
+# Предполагается, что репозиторий Artifact Registry уже создан (или создан
+# Terraform-ресурсом google_artifact_registry_repository при create_artifact_repo = true):
 #   gcloud artifacts repositories create larmorsight \
 #     --repository-format=docker --location=us-central1
 #
-# После публикации укажите получившийся образ как employee_image в terraform.tfvars
-# (или раскомментируйте шаг terraform-apply ниже).
+# После публикации укажите получившийся образ как employee_image в terraform.tfvars.
 
 substitutions:
   _REGION: us-central1
   _REPO: larmorsight
   _IMAGE: larmorsight-employee
   _TAG: latest
+  # Каталог с Dockerfile (контекст сборки), относительно корня источника:
+  #  - ручной запуск `... --config cloudbuild.yaml .` из gcp-infra/  => "employee-runtime"
+  #  - Cloud Build trigger (корень = корень репо)                    => "larmorsight-office/gcp-infra/employee-runtime"
+  _SOURCE_DIR: employee-runtime
 
 steps:
   - id: build
@@ -25,7 +34,7 @@ steps:
       - build
       - '-t'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}'
-      - employee-runtime
+      - '${_SOURCE_DIR}'
 
   # (Опционально) применить Terraform после публикации образа. Раскомментируйте,
   # настройте backend/доступы и убедитесь, что terraform.tfvars доступен сборщику.
@@ -35,6 +44,7 @@ steps:
   #   args:
   #     - -c
   #     - >-
+  #       cd larmorsight-office/gcp-infra &&
   #       terraform init -input=false &&
   #       terraform apply -auto-approve -input=false
   #       -var="employee_image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}"
