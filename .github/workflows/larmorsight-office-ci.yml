@@ -32,6 +32,12 @@ jobs:
       - name: Compile employee runtime
         run: python -m py_compile gcp-infra/employee-runtime/app.py
 
+      - name: Test employee runtime
+        working-directory: larmorsight-office/gcp-infra/employee-runtime
+        run: |
+          pip install -r requirements-dev.txt
+          pytest -q
+
       - name: Shell scripts syntax check
         run: |
           for f in deploy-to-gcp.sh scripts/*.sh; do

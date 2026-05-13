@@ -6,6 +6,21 @@
 ## [Unreleased]
 - —
 
+## 0.5.0
+### Добавлено
+- **Тесты рантайма сотрудника** — `gcp-infra/employee-runtime/test_app.py` (6 кейсов
+  на pytest + FastAPI TestClient): метаданные `/`, `/healthz`, формирование
+  системного промпта без подключённого GCS, валидация входа `/run`, корректный
+  вызов Anthropic SDK с prompt caching (`cache_control: ephemeral`) и adaptive
+  thinking, переопределение `max_tokens`. Anthropic-клиент мокается через
+  `monkeypatch`.
+- **`requirements-dev.txt`** (`pytest`, `httpx`) + `conftest.py` (готовит env).
+- **CI** — шаг `Test employee runtime` в `.github/workflows/larmorsight-office-ci.yml`:
+  `pip install -r requirements-dev.txt` + `pytest -q` в `employee-runtime/`.
+
+### Изменено
+- `plugin.json` → `0.5.0`.
+
 ## 0.4.0
 ### Добавлено
 - **Cloud Build trigger** — `google_cloudbuild_trigger` (опционально, `enable_build_trigger`):

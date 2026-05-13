@@ -105,6 +105,17 @@ push в `build_branch` с изменениями в `larmorsight-office/gcp-infr
 LARMORSIGHT_EMPLOYEE=research-analyst ANTHROPIC_API_KEY=... python employee-runtime/app.py`
 (без `LARMORSIGHT_SKILLS_BUCKET` сервис стартует с базовыми инструкциями и сообщает об этом в ответе).
 
+Тесты рантайма (pytest + FastAPI TestClient, Anthropic SDK мокается):
+
+```bash
+cd employee-runtime
+pip install -r requirements-dev.txt
+pytest -q
+```
+
+То же запускается в CI на каждое изменение в `larmorsight-office/**`
+(см. `.github/workflows/larmorsight-office-ci.yml`).
+
 ## Вызов /run у развёрнутого сотрудника
 
 Cloud Run-сервисы приватные. Чтобы вызывать их (скриптом или командой `/ask-employee`),

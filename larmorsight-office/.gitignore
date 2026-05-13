@@ -17,6 +17,7 @@ workspace/archive/*
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # Локальные снимки/архивы офиса
 backups/
