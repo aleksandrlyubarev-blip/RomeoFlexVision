@@ -6,7 +6,6 @@ import asyncio
 import json
 import random
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 import typer
@@ -55,12 +54,16 @@ def ingest(
     adapter = ADAPTERS[dataset]()
     manifest = adapter.build_manifest(root, SplitSpec(seed=seed))
     manifest_path, records_path = write_manifest_jsonl(manifest, out)
-    typer.echo(json.dumps({
-        "manifest": str(manifest_path),
-        "records": str(records_path),
-        "manifest_sha256": manifest.manifest_sha256,
-        "count": len(manifest.records),
-    }))
+    typer.echo(
+        json.dumps(
+            {
+                "manifest": str(manifest_path),
+                "records": str(records_path),
+                "manifest_sha256": manifest.manifest_sha256,
+                "count": len(manifest.records),
+            }
+        )
+    )
 
 
 @app.command()
@@ -83,18 +86,22 @@ def synth(
     )
     result = asyncio.run(BrigadaSynthesizer().generate(request))
     manifest_path, records_path = write_manifest_jsonl(result.manifest, out / "manifest")
-    typer.echo(json.dumps({
-        "manifest": str(manifest_path),
-        "records": str(records_path),
-        "manifest_sha256": result.manifest.manifest_sha256,
-        "artifacts": len(result.artifacts),
-    }))
+    typer.echo(
+        json.dumps(
+            {
+                "manifest": str(manifest_path),
+                "records": str(records_path),
+                "manifest_sha256": result.manifest.manifest_sha256,
+                "artifacts": len(result.artifacts),
+            }
+        )
+    )
 
 
 @app.command()
 def export(
     manifest: Path = typer.Option(..., exists=True, dir_okay=False, help="Path to manifest.json"),
-    records: Optional[Path] = typer.Option(None, help="Path to records.jsonl (defaults to sibling of manifest)"),
+    records: Path | None = typer.Option(None, help="Path to records.jsonl (defaults to sibling of manifest)"),
     format: str = typer.Option("coco", help="One of: coco, yolo_seg, anomalib"),
     out: Path = typer.Option(..., help="Output path (file for coco, dir for others)"),
 ) -> None:

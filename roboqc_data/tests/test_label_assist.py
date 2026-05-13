@@ -45,7 +45,7 @@ def test_label_assistant_review_queue_round_trips(tmp_path):
     records = LabelAssistant().propose(images, prompts)
     out = tmp_path / "queue.jsonl"
     write_review_queue(records, out)
-    lines = [json.loads(l) for l in out.read_text().splitlines() if l.strip()]
+    lines = [json.loads(line) for line in out.read_text().splitlines() if line.strip()]
     assert len(lines) == 1
     assert lines[0]["annotations"][0]["provenance"] == "grounded_sam2"
 

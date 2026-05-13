@@ -13,13 +13,11 @@ from __future__ import annotations
 import json
 
 import numpy as np
+from _fixtures import make_mvtec_ad_tree
 from PIL import Image
 from typer.testing import CliRunner
 
 from roboqc_data.cli.main import app
-
-from _fixtures import make_mvtec_ad_tree
-
 
 runner = CliRunner()
 
@@ -40,9 +38,12 @@ def test_ingest_then_synth_then_export(tmp_path):
         app,
         [
             "export",
-            "--manifest", str(manifest_dir / "manifest.json"),
-            "--format", "coco",
-            "--out", str(coco_out),
+            "--manifest",
+            str(manifest_dir / "manifest.json"),
+            "--format",
+            "coco",
+            "--out",
+            str(coco_out),
         ],
     )
     assert coco_export.exit_code == 0, coco_export.output
@@ -55,9 +56,12 @@ def test_ingest_then_synth_then_export(tmp_path):
         app,
         [
             "export",
-            "--manifest", str(manifest_dir / "manifest.json"),
-            "--format", "yolo_seg",
-            "--out", str(yolo_out),
+            "--manifest",
+            str(manifest_dir / "manifest.json"),
+            "--format",
+            "yolo_seg",
+            "--out",
+            str(yolo_out),
         ],
     )
     assert yolo_export.exit_code == 0, yolo_export.output
@@ -68,9 +72,12 @@ def test_ingest_then_synth_then_export(tmp_path):
         app,
         [
             "export",
-            "--manifest", str(manifest_dir / "manifest.json"),
-            "--format", "anomalib",
-            "--out", str(anomalib_out),
+            "--manifest",
+            str(manifest_dir / "manifest.json"),
+            "--format",
+            "anomalib",
+            "--out",
+            str(anomalib_out),
         ],
     )
     assert anomalib_export.exit_code == 0, anomalib_export.output
@@ -83,11 +90,16 @@ def test_ingest_then_synth_then_export(tmp_path):
         app,
         [
             "synth",
-            "--target", "screw_missing",
-            "--clean", str(clean),
-            "--count", "2",
-            "--seed", "5",
-            "--out", str(synth_out),
+            "--target",
+            "screw_missing",
+            "--clean",
+            str(clean),
+            "--count",
+            "2",
+            "--seed",
+            "5",
+            "--out",
+            str(synth_out),
         ],
     )
     assert synth.exit_code == 0, synth.output
@@ -106,11 +118,16 @@ def test_synth_is_reproducible_under_same_seed(tmp_path):
             app,
             [
                 "synth",
-                "--target", "cable_crossed",
-                "--clean", str(clean),
-                "--count", "1",
-                "--seed", "9",
-                "--out", str(out),
+                "--target",
+                "cable_crossed",
+                "--clean",
+                str(clean),
+                "--count",
+                "1",
+                "--seed",
+                "9",
+                "--out",
+                str(out),
             ],
         )
 

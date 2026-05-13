@@ -1,14 +1,14 @@
 import asyncio
 
-from PIL import Image
 import numpy as np
+from PIL import Image
 
 from roboqc_data.brigada.orchestrator import BrigadaSynthesizer, SynthRequest
 from roboqc_data.schema.taxonomy import DefectClass
 
 
 def _make_clean(path):
-    img = (np.full((48, 48, 3), 130, dtype=np.uint8))
+    img = np.full((48, 48, 3), 130, dtype=np.uint8)
     Image.fromarray(img).save(path)
     return path
 
@@ -51,6 +51,7 @@ def test_brigada_high_risk_triggers_friction_callback(tmp_path):
         raise RuntimeError("blocked by friction in test")
 
     import pytest as _pytest
+
     with _pytest.raises(RuntimeError, match="blocked by friction"):
         asyncio.run(BrigadaSynthesizer(friction=gate).generate(req))
     assert seen and "leak" in seen[0].lower()

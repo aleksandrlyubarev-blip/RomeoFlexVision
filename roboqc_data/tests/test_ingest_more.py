@@ -1,16 +1,16 @@
-from roboqc_data.ingest.isp_ad import ISPADAdapter
-from roboqc_data.ingest.mvtec_loco import MVTecLOCOAdapter
-from roboqc_data.ingest.pku_pcb import PKUPCBAdapter
-from roboqc_data.ingest.visa import VisAAdapter
-from roboqc_data.schema.splits import SplitSpec
-from roboqc_data.schema.taxonomy import DefectClass
-
 from _fixtures import (
     make_isp_ad_tree,
     make_mvtec_loco_tree,
     make_pku_pcb_tree,
     make_visa_tree,
 )
+
+from roboqc_data.ingest.isp_ad import ISPADAdapter
+from roboqc_data.ingest.mvtec_loco import MVTecLOCOAdapter
+from roboqc_data.ingest.pku_pcb import PKUPCBAdapter
+from roboqc_data.ingest.visa import VisAAdapter
+from roboqc_data.schema.splits import SplitSpec
+from roboqc_data.schema.taxonomy import DefectClass
 
 
 def test_visa_adapter_separates_normal_and_anomaly(tmp_path):
@@ -31,9 +31,7 @@ def test_mvtec_loco_maps_logical_and_structural_anomalies(tmp_path):
     assert DefectClass.WRONG_ROUTING in classes
     assert DefectClass.CONNECTOR_DAMAGE in classes
     structural = next(
-        r
-        for r in manifest.records
-        if any(a.defect_class is DefectClass.CONNECTOR_DAMAGE for a in r.annotations)
+        r for r in manifest.records if any(a.defect_class is DefectClass.CONNECTOR_DAMAGE for a in r.annotations)
     )
     assert structural.annotations[0].mask is not None
 

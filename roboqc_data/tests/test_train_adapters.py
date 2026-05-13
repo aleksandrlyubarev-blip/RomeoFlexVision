@@ -9,7 +9,7 @@ GPU code paths.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from roboqc_data.schema.records import Manifest
 from roboqc_data.train.anomalib_adapter import AnomalibAdapter
@@ -21,7 +21,7 @@ from roboqc_data.train.yolo_adapter import YoloAdapter
 def _empty_manifest() -> Manifest:
     return Manifest(
         manifest_id="m-empty",
-        created_at=datetime(2026, 5, 13, tzinfo=timezone.utc),
+        created_at=datetime(2026, 5, 13, tzinfo=UTC),
         seed=21,
         manifest_sha256="deadbeef",
         records=(),

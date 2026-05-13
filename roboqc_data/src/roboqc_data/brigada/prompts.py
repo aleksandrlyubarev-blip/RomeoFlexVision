@@ -22,6 +22,5 @@ SERGEANT_PROMPT = (
 )
 
 SOLDIER_PROMPT = (
-    "You are a BRIGADA SOLDIER. Validate the produced mask metadata and return "
-    "JSON {valid: bool, notes: string}."
+    "You are a BRIGADA SOLDIER. Validate the produced mask metadata and return JSON {valid: bool, notes: string}."
 )

@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -50,7 +50,7 @@ def test_manifest_round_trip():
     digest = manifest_digest([(rec.record_id, rec.sha256)])
     manifest = Manifest(
         manifest_id="m1",
-        created_at=datetime(2026, 5, 13, tzinfo=timezone.utc),
+        created_at=datetime(2026, 5, 13, tzinfo=UTC),
         seed=42,
         manifest_sha256=digest,
         records=(rec,),

@@ -7,8 +7,6 @@ re-reading dataset docs.
 
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import BaseModel, ConfigDict
 
 
@@ -16,7 +14,7 @@ class LicenseInfo(BaseModel):
     model_config = ConfigDict(strict=True, frozen=True)
 
     name: str
-    spdx: Optional[str]
+    spdx: str | None
     url: str
     redistributable: bool
     commercial_use: bool

@@ -1,0 +1,29 @@
+name: roboqc_data nightly
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 03:17 UTC every day
+  workflow_dispatch: {}
+
+jobs:
+  full-extras:
+    # The [train,export] extras pull torch/ultralytics/anomalib/onnx,
+    # which are too heavy for every PR. The nightly job covers them and
+    # surfaces upstream-incompatibility breakage early.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./roboqc_data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package with all extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[cv,brigada,train,export]
+          pip install opencv-python-headless
+      - name: Run full test suite
+        run: pytest -q

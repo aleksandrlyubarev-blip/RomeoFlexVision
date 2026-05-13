@@ -1,11 +1,9 @@
 import json
 
+from _fixtures import make_mvtec_ad_tree
 from typer.testing import CliRunner
 
 from roboqc_data.cli.main import app
-
-from _fixtures import make_mvtec_ad_tree
-
 
 runner = CliRunner()
 
@@ -27,9 +25,12 @@ def test_cli_ingest_to_coco_roundtrip(tmp_path):
         app,
         [
             "export",
-            "--manifest", str(manifest_dir / "manifest.json"),
-            "--format", "coco",
-            "--out", str(coco_path),
+            "--manifest",
+            str(manifest_dir / "manifest.json"),
+            "--format",
+            "coco",
+            "--out",
+            str(coco_path),
         ],
     )
     assert export_result.exit_code == 0, export_result.output
@@ -48,11 +49,16 @@ def test_cli_synth_creates_artifacts(tmp_path):
         app,
         [
             "synth",
-            "--target", "connector_damage",
-            "--clean", str(clean),
-            "--count", "2",
-            "--seed", "3",
-            "--out", str(out_dir),
+            "--target",
+            "connector_damage",
+            "--clean",
+            str(clean),
+            "--count",
+            "2",
+            "--seed",
+            "3",
+            "--out",
+            str(out_dir),
         ],
     )
     assert result.exit_code == 0, result.output

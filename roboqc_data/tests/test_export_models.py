@@ -29,9 +29,7 @@ def test_onnx_yolo_without_dep_is_skipped():
 def test_tensorrt_without_trtexec_is_skipped(tmp_path):
     fake = tmp_path / "m.onnx"
     fake.write_bytes(b"")
-    artifact = TensorRTExportAdapter().export(
-        f"onnx://{fake}", ExportConfig(target="tensorrt")
-    )
+    artifact = TensorRTExportAdapter().export(f"onnx://{fake}", ExportConfig(target="tensorrt"))
     # On CI runners without TensorRT, trtexec is not on PATH so the
     # adapter must report skipped, not crash.
     assert artifact.status == "skipped"

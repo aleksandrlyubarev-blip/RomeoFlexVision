@@ -14,8 +14,8 @@ Each ``.txt`` annotation in PKU-PCB stores absolute pixel coordinates
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from ..schema.records import (
     Annotation,
