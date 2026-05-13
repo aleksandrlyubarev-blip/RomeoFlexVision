@@ -16,7 +16,11 @@ from ..export.anomalib_folder import manifest_to_anomalib_folder
 from ..export.coco import write_coco
 from ..export.yolo_seg import manifest_to_yolo_seg
 from ..ingest.base import write_manifest_jsonl
+from ..ingest.isp_ad import ISPADAdapter
 from ..ingest.mvtec_ad import MVTecADAdapter
+from ..ingest.mvtec_loco import MVTecLOCOAdapter
+from ..ingest.pku_pcb import PKUPCBAdapter
+from ..ingest.visa import VisAAdapter
 from ..schema.records import Manifest
 from ..schema.splits import SplitSpec
 from ..schema.taxonomy import DefectClass
@@ -25,6 +29,10 @@ app = typer.Typer(no_args_is_help=True, help="RoboQC dataset tooling")
 
 ADAPTERS = {
     "mvtec_ad": MVTecADAdapter,
+    "mvtec_loco": MVTecLOCOAdapter,
+    "visa": VisAAdapter,
+    "isp_ad": ISPADAdapter,
+    "pku_pcb": PKUPCBAdapter,
 }
 
 
