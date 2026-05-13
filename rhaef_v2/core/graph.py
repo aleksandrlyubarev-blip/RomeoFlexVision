@@ -1,5 +1,8 @@
 import operator
 from typing import Annotated, Optional, TypedDict
+from uuid import uuid4
+
+from rhaef_v2.tools.interfaces import InspectionRequest, StubRoboQCClient
 
 from .model_router import FrictionGate, ModelRouter, TaskCategory
 
@@ -42,11 +45,22 @@ class AgentState(TypedDict):
     friction: Optional[FrictionGate]
 
 
+_roboqc_client = StubRoboQCClient()
+
+
 async def roboqc_stub(*_: object, **__: object) -> str:
-    return "RoboQC stub executed"
+    """Run a stub RoboQC inspection and return the JSON-serialised result."""
+    result = await _roboqc_client.run_check(
+        InspectionRequest(
+            inspection_id=f"insp-{uuid4().hex[:8]}",
+            image_uri="memory://placeholder",
+        )
+    )
+    return result.model_dump_json()
 
 
 async def hardware_bridge_stub(*_: object, **__: object) -> str:
+    """Run a stub hardware-bridge call and return a constant marker."""
     return "Hardware bridge stub executed"
 
 
