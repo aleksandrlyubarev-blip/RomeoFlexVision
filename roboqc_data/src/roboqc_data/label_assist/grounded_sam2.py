@@ -1,17 +1,15 @@
-"""Grounded SAM 2 label-assist (bootstrap-only).
+"""Label-assist scaffolding (bootstrap-only, never runtime).
 
-This module proposes masks from a text prompt by chaining Grounding DINO
-(open-vocabulary detection) and SAM 2 (segmentation). It is **not** a
-runtime inference path — the output is a queue of canonical
-``Annotation`` records with ``provenance="grounded_sam2"`` for human
-review.
+Originally targeted Grounded SAM 2 (Grounding DINO + Florence-2 + SAM 2);
+the canonical backend is now SAM 3 (see :mod:`roboqc_data.label_assist.sam3`),
+which folds open-vocabulary detection and segmentation into one model and
+ships better numbers on industrial defects per the Nov-2025 release
+(arXiv:2511.16719). This module keeps the shared types and orchestration
+so any Protocol-shaped backend plugs in.
 
-The real backend wrapper lives behind a Protocol so we can swap in a
-remote service, an Ultralytics SAM2 export, or the reference
-IDEA-Research repo without touching the canonical pipeline. The
-default :class:`StubGroundedSAM2Backend` returns deterministic
-mid-image boxes — it exists so CI can exercise the wiring without
-downloading model weights.
+Output is a queue of canonical ``Annotation`` records with provenance
+set by the backend (``"sam3"`` for SAM 3 / 3.1, ``"grounded_sam2"`` for
+the legacy chain) for human review.
 """
 
 from __future__ import annotations
@@ -23,7 +21,7 @@ from uuid import uuid4
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..ingest.base import BaseAdapter
-from ..schema.records import Annotation, BBox, ImageRecord, MaskRef, SourceInfo
+from ..schema.records import Annotation, BBox, ImageRecord, MaskRef, Provenance, SourceInfo
 from ..schema.splits import SplitSpec
 from ..schema.taxonomy import DefectClass
 
@@ -49,12 +47,17 @@ class Proposal(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
 
 
-class GroundedSAM2Backend(Protocol):
-    """Structural type the real backend must satisfy."""
+class LabelAssistBackend(Protocol):
+    """Structural type every label-assist backend must satisfy."""
 
     name: str
+    provenance: Provenance
 
     def detect(self, image_path: Path, prompt: LabelPrompt) -> list[Proposal]: ...
+
+
+# Back-compat alias — older code/imports reference GroundedSAM2Backend.
+GroundedSAM2Backend = LabelAssistBackend
 
 
 class StubGroundedSAM2Backend:
@@ -66,6 +69,7 @@ class StubGroundedSAM2Backend:
     """
 
     name = "stub-grounded-sam2"
+    provenance: Provenance = "grounded_sam2"
 
     def detect(self, image_path: Path, prompt: LabelPrompt) -> list[Proposal]:
         from PIL import Image
@@ -76,12 +80,28 @@ class StubGroundedSAM2Backend:
         return [Proposal(bbox=bbox, mask=None, confidence=prompt.box_threshold)]
 
 
+def _default_backend() -> LabelAssistBackend:
+    """Prefer a real SAM 3 backend; fall back to the deterministic stub.
+
+    SAM 3 was released by Meta in Nov 2025 and supersedes the
+    Grounded SAM 2 pipeline for our open-vocabulary label-assist
+    use case. We import lazily so the dependency stays optional.
+    """
+    try:
+        from .sam3 import Sam3Backend  # noqa: PLC0415
+
+        return Sam3Backend()
+    except Exception:
+        return StubGroundedSAM2Backend()
+
+
 class LabelAssistant:
     """Bootstraps weak labels for an unlabelled image folder.
 
     Args:
-        backend: any :class:`GroundedSAM2Backend`-shaped object.
-            Defaults to :class:`StubGroundedSAM2Backend`.
+        backend: any :class:`LabelAssistBackend`-shaped object.
+            Defaults to a real SAM 3 backend if installed, otherwise
+            :class:`StubGroundedSAM2Backend`.
 
     Example:
         >>> assistant = LabelAssistant()
@@ -89,8 +109,8 @@ class LabelAssistant:
         >>> # assistant.propose(images_dir, prompts) -> list[ImageRecord]
     """
 
-    def __init__(self, backend: GroundedSAM2Backend | None = None) -> None:
-        self.backend = backend or StubGroundedSAM2Backend()
+    def __init__(self, backend: LabelAssistBackend | None = None) -> None:
+        self.backend = backend or _default_backend()
 
     def propose(
         self,
@@ -113,11 +133,11 @@ class LabelAssistant:
                             bbox=hit.bbox,
                             mask=hit.mask,
                             confidence=hit.confidence,
-                            provenance="grounded_sam2",
+                            provenance=self.backend.provenance,
                         )
                     )
             width, height = BaseAdapter._image_dims(image_path)
-            record_id = f"grounded_sam2/{image_path.stem}"
+            record_id = f"{self.backend.provenance}/{image_path.stem}"
             records.append(
                 ImageRecord(
                     record_id=record_id,
@@ -129,7 +149,7 @@ class LabelAssistant:
                     source=SourceInfo(
                         dataset="custom",
                         license="see-attribution",
-                        attribution="grounded_sam2 backend: " + self.backend.name,
+                        attribution=f"label-assist backend: {self.backend.name}",
                         original_id=str(image_path),
                     ),
                     annotations=tuple(annotations),

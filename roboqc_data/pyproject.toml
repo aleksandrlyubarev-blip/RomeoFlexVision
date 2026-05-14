@@ -34,6 +34,15 @@ export = [
     "onnx>=1.16",
     "onnxruntime>=1.19",
 ]
+label_assist = [
+    # SAM 3 (Nov 2025) / SAM 3.1 (Mar 2026) — Meta's open-vocabulary
+    # detector+segmenter. Supersedes Grounded SAM 2 for our label-assist
+    # bootstrap. See src/roboqc_data/label_assist/sam3.py.
+    "sam3 @ git+https://github.com/facebookresearch/sam3@main",
+    "torch>=2.4",
+    "pillow>=10.4",
+    "numpy>=1.26",
+]
 
 [project.scripts]
 roboqc-data = "roboqc_data.cli.main:app"

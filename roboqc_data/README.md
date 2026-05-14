@@ -6,16 +6,17 @@ RoboQC dataset preparation subpackage. Lives inside the RomeoFlexVision monorepo
 
 - **Ingest** public industrial-defect benchmarks (MVTec AD, MVTec LOCO, VisA, ISP-AD, PKU-PCB) into a canonical Pydantic-v2 manifest.
 - **Synthesise** defects via the `brigada` multi-agent pipeline described in `RomeoFlexVision/docs/brigada-architecture.md` (LLM agents plan → deterministic OpenCV/Albumentations layer executes).
-- **Label-assist** with Grounded SAM 2 (bootstrap-only).
+- **Label-assist** with SAM 3 / SAM 3.1 (bootstrap-only). SAM 3 (Meta, Nov 2025) replaces the older Grounding-DINO → SAM 2 chain: a single text prompt like "missing screw" yields bbox + mask + confidence in one forward pass. See `src/roboqc_data/label_assist/sam3.py`. A deterministic `StubGroundedSAM2Backend` is the CI fallback when `sam3` is not installed.
 - **Train** adapters for Anomalib (PatchCore/EfficientAD), Ultralytics YOLO (det+seg), and RT-DETR.
 - **Export** trained models to ONNX and TensorRT for edge deployment.
 
 ## Install
 
 ```bash
-pip install -e .[cv,brigada]          # core dev surface (schema + ingest + brigada stubs)
-pip install -e .[cv,brigada,train]    # add training adapters (heavy)
-pip install -e .[cv,brigada,train,export]  # add ONNX/TensorRT export
+pip install -e .[cv,brigada]                  # core dev surface (schema + ingest + brigada stubs)
+pip install -e .[cv,brigada,label_assist]     # add SAM 3 label-assist (needs CUDA + weights)
+pip install -e .[cv,brigada,train]            # add training adapters (heavy)
+pip install -e .[cv,brigada,train,export]     # add ONNX/TensorRT export
 ```
 
 ## CLI

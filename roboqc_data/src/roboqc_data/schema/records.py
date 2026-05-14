@@ -62,7 +62,7 @@ class AnomalyHeatmapRef(BaseModel):
     range: tuple[float, float] = (0.0, 1.0)
 
 
-Provenance = Literal["human", "grounded_sam2", "brigada", "auto"]
+Provenance = Literal["human", "grounded_sam2", "sam3", "brigada", "auto"]
 
 
 class Annotation(BaseModel):
