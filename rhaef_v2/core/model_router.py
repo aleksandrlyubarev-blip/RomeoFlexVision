@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional, Protocol
@@ -35,6 +36,10 @@ class TaskCategory(str, Enum):
     DATA_TEST = "data_test"
     VIDEO_MEDIA = "video_media"
     ROUTINE = "routine"
+    # RoboQC testbed (local SGLang)
+    ROBOQC_VISION = "roboqc_vision"
+    ROBOQC_REASONING = "roboqc_reasoning"
+    ROBOQC_ACTION = "roboqc_action"
 
 
 MODEL_MAPPING: Dict[TaskCategory, str] = {
@@ -47,12 +52,20 @@ MODEL_MAPPING: Dict[TaskCategory, str] = {
     TaskCategory.DATA_TEST: "qwen/qwen3.6-plus",
     TaskCategory.VIDEO_MEDIA: "xai/grok-4",
     TaskCategory.ROUTINE: "qwen/qwen3.6-plus",
+    # RoboQC: openai/* имена заставляют litellm использовать OpenAI-совместимый путь.
+    # Реальный endpoint — SGLang на GPU-полигоне (см. SGLANG_BASE_URL).
+    TaskCategory.ROBOQC_VISION: "openai/qwen3-vl-local",
+    TaskCategory.ROBOQC_REASONING: "openai/qwen3.6-35b-local",
+    TaskCategory.ROBOQC_ACTION: "openai/qwen3.6-35b-local",
 }
 
 FALLBACK_MAPPING: Dict[str, str] = {
     "anthropic/claude-opus-4-7": "openai/gpt-5.5-pro",
     "openai/gpt-5.5-pro": "qwen/qwen3.6-plus",
     "xai/grok-4": "qwen/qwen3.6-plus",
+    # RoboQC: если локальный SGLang недоступен, роутим на облачный qwen.
+    "openai/qwen3-vl-local": "qwen/qwen3.6-plus",
+    "openai/qwen3.6-35b-local": "qwen/qwen3.6-plus",
 }
 
 
@@ -83,6 +96,20 @@ class ModelRouter:
     def _build_metadata(self, category: TaskCategory) -> dict[str, str]:
         return {"rhaef_category": category.value, "framework": "rhaef-v2"}
 
+    def _enrich_for_local(self, model: str, kwargs: dict[str, Any]) -> None:
+        """Для локальных ROBOQC_*-моделей вбиваем api_base/api_key/custom_llm_provider."""
+        if not model.endswith("-local"):
+            return
+        if "vl" in model.lower() or "vision" in model.lower():
+            base = os.environ.get("SGLANG_VISION_BASE_URL") or os.environ.get("SGLANG_BASE_URL")
+        else:
+            base = os.environ.get("SGLANG_BASE_URL")
+        if not base:
+            return
+        kwargs.setdefault("api_base", base)
+        kwargs.setdefault("api_key", "sglang-no-auth")
+        kwargs.setdefault("custom_llm_provider", "openai")
+
     async def route(
         self,
         category: TaskCategory,
@@ -104,6 +131,7 @@ class ModelRouter:
             "metadata": self._build_metadata(category),
             **kwargs,
         }
+        self._enrich_for_local(model, request_kwargs)
 
         if friction and friction.enabled and friction.human_approval_required:
             print(f"⚠️ FRICTION GATE: {friction.reason}")
@@ -117,11 +145,15 @@ class ModelRouter:
         except Exception:
             fallback_model = FALLBACK_MAPPING.get(model, "qwen/qwen3.6-plus")
             request_kwargs["model"] = fallback_model
+            self._enrich_for_local(fallback_model, request_kwargs)
             response = self._client(**request_kwargs)
 
         cost = 0.0
         if litellm is not None:
-            cost = float(litellm.completion_cost(completion_response=response))
+            try:
+                cost = float(litellm.completion_cost(completion_response=response))
+            except Exception:
+                cost = 0.0  # local SGLang — без стоимости по price-list, считаем отдельно в bench.
         self.cost_tracker["total_usd"] = float(self.cost_tracker["total_usd"]) + cost
         self.cost_tracker["requests"] = int(self.cost_tracker["requests"]) + 1
         return response
