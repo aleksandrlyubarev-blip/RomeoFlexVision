@@ -1,0 +1,90 @@
+/* LarmorSight Checker — dark theme. Verdict colors mirror pdf_export. */
+
+QMainWindow, QDialog, QWidget {
+    background-color: #1c1f24;
+    color: #e8eaed;
+    font-family: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+}
+
+QLabel#previewLabel {
+    background-color: #000000;
+    border: 1px solid #2d3036;
+}
+
+QLabel#sectionTitle {
+    font-weight: 600;
+    color: #b0b3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 0;
+}
+
+QLabel#verdictBadge {
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #5f6368;
+}
+
+QLabel#verdictBadge[verdict="good"]   { background-color: #1e8e3e; }
+QLabel#verdictBadge[verdict="warn"]   { background-color: #f9a825; color: #202124; }
+QLabel#verdictBadge[verdict="bad"]    { background-color: #d93025; }
+QLabel#verdictBadge[verdict="pass"]   { background-color: #1e8e3e; }
+QLabel#verdictBadge[verdict="fail"]   { background-color: #d93025; }
+QLabel#verdictBadge[verdict="retake"] { background-color: #f9a825; color: #202124; }
+
+QProgressBar {
+    border: 1px solid #2d3036;
+    border-radius: 3px;
+    background-color: #2a2d33;
+    text-align: right;
+    padding-right: 4px;
+    color: #e8eaed;
+    height: 14px;
+}
+QProgressBar::chunk {
+    background-color: #1e8e3e;
+    border-radius: 2px;
+}
+QProgressBar[level="warn"]::chunk { background-color: #f9a825; }
+QProgressBar[level="bad"]::chunk  { background-color: #d93025; }
+
+QPushButton {
+    background-color: #2a2d33;
+    border: 1px solid #3d4047;
+    border-radius: 4px;
+    padding: 6px 12px;
+}
+QPushButton:hover  { background-color: #34373e; }
+QPushButton:pressed { background-color: #1e2024; }
+QPushButton#captureButton {
+    background-color: #1a73e8;
+    border: 1px solid #1a73e8;
+    color: white;
+    font-weight: 700;
+    padding: 10px 18px;
+}
+QPushButton#captureButton:hover { background-color: #1765cc; }
+
+QStatusBar { background-color: #15171b; color: #b0b3b8; }
+QToolBar   { background-color: #15171b; border: 0; spacing: 6px; padding: 4px; }
+QMenuBar   { background-color: #15171b; }
+QMenuBar::item:selected { background-color: #2a2d33; }
+QMenu { background-color: #1c1f24; border: 1px solid #2d3036; }
+QMenu::item:selected { background-color: #2a2d33; }
+
+QLineEdit, QSpinBox, QComboBox {
+    background-color: #2a2d33;
+    border: 1px solid #3d4047;
+    border-radius: 4px;
+    padding: 4px 6px;
+}
+
+QListWidget {
+    background-color: #15171b;
+    border: 1px solid #2d3036;
+}
+QListWidget::item { padding: 4px; }
+QListWidget::item:selected { background-color: #2a2d33; }
