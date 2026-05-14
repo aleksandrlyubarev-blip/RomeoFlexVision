@@ -4,11 +4,11 @@ RoboQC dataset preparation subpackage. Lives inside the RomeoFlexVision monorepo
 
 ## What it does
 
-- **Ingest** public industrial-defect benchmarks (MVTec AD, MVTec LOCO, VisA, ISP-AD, PKU-PCB) into a canonical Pydantic-v2 manifest.
+- **Ingest** public industrial-defect benchmarks (**MVTec AD 2** — the 2026 successor with 8 harder scenarios, MVTec AD, MVTec LOCO, VisA, ISP-AD, PKU-PCB) into a canonical Pydantic-v2 manifest.
 - **Synthesise** defects via the `brigada` multi-agent pipeline described in `RomeoFlexVision/docs/brigada-architecture.md` (LLM agents plan → deterministic OpenCV/Albumentations layer executes).
 - **Label-assist** with SAM 3 / SAM 3.1 (bootstrap-only). SAM 3 (Meta, Nov 2025) replaces the older Grounding-DINO → SAM 2 chain: a single text prompt like "missing screw" yields bbox + mask + confidence in one forward pass. See `src/roboqc_data/label_assist/sam3.py`. A deterministic `StubGroundedSAM2Backend` is the CI fallback when `sam3` is not installed.
-- **Train** adapters for Anomalib (PatchCore/EfficientAD), Ultralytics YOLO (det+seg), and RT-DETR.
-- **Export** trained models to ONNX and TensorRT for edge deployment.
+- **Train** adapters for Anomalib v2 (PatchCore/EfficientAD), Ultralytics YOLO26 (Jan 2026, NMS-free; YOLO11 / YOLOv8 selectable via `weights=…`), and RT-DETR (default Ultralytics RTDETR; RT-DETRv4 / RT-DETRv3 / RT-DETRv2 plug in via `weights=…`).
+- **Export** trained models to ONNX and TensorRT for edge deployment (NVIDIA DeepStream 9.0 + TAO Toolkit 6.26.3 are the canonical downstream runtime; see `RomeoFlexVision/docs/brigada-architecture.md`).
 
 ## Install
 

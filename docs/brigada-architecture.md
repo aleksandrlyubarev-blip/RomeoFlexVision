@@ -85,3 +85,7 @@
 ### Label-assist: SAM 3 вместо Grounded SAM 2
 
 Изначально для bootstrap-разметки предполагалась цепочка Grounding DINO → Florence-2 → SAM 2. С релизом SAM 3 (Meta, ноябрь 2025; arXiv:2511.16719) и SAM 3.1 (март 2026) Promptable Concept Segmentation теперь живёт в одной модели: один text-промпт вида «missing screw» или «bent pin» возвращает bbox + маску + confidence за один forward pass. Для RoboQC это означает меньше движущихся частей, ниже latency и меньше VRAM на той же задаче. В коде backend подключается через Protocol (`LabelAssistBackend`), так что Grounded SAM 2 остаётся drop-in fallback'ом, а CI работает на детерминированном stub'е, который не требует весов.
+
+### Свежие версии нижестоящего стека (на май 2026)
+
+Исходные материалы упоминали NVIDIA TAO 6 + DeepStream 8; на момент мая 2026 актуальны **DeepStream 9.0** (поддержка Blackwell, обратная совместимость с DS 8.0) и **TAO Toolkit 6.26.3** (новые архитектуры NVPanoptix3D, CLIP, Cosmos Embed1). По детектору: **YOLO26** (Ultralytics, 14 января 2026) — NMS-free, end-to-end, edge-оптимизирован; **RT-DETRv4** (18 ноября 2025) добавляет Deep Semantic Injector с DINOv3-ViT-B как «painless» бустер AP без deployment-overhead'а; **RT-DETRv3** — WACV 2025 Oral. По anomaly-стеку: **Anomalib v2.2.0** (2026) — текущая стабильная линия с PatchCore/EfficientAD под единым API. По датасетам: **MVTec AD 2** (arXiv:2503.21622, IJCV 2026) — 8 более сложных индустриальных сценариев, SOTA сидит ниже 60 % AU-PRO; именно его стоит использовать как «честный» бенчмарк, пока brigada-датасет ещё греется.

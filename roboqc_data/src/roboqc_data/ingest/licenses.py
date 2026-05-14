@@ -28,6 +28,16 @@ MVTEC_AD = LicenseInfo(
     commercial_use=False,
 )
 
+# MVTec AD 2 (2026) — arXiv:2503.21622 / IJCV 2026.
+# Same MVTec research-only license family as the original.
+MVTEC_AD_2 = LicenseInfo(
+    name="MVTec AD 2",
+    spdx=None,
+    url="https://www.mvtec.com/company/research/datasets/mvtec-ad-2",
+    redistributable=False,
+    commercial_use=False,
+)
+
 MVTEC_LOCO = LicenseInfo(
     name="MVTec LOCO",
     spdx=None,
@@ -70,6 +80,7 @@ DAGM_2007 = LicenseInfo(
 
 REGISTRY: dict[str, LicenseInfo] = {
     "mvtec_ad": MVTEC_AD,
+    "mvtec_ad_2": MVTEC_AD_2,
     "mvtec_loco": MVTEC_LOCO,
     "visa": VISA,
     "isp_ad": ISP_AD,

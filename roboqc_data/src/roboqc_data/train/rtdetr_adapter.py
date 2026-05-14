@@ -1,8 +1,24 @@
 """Thin RT-DETR adapter.
 
-Uses Ultralytics RT-DETR when available; falls back to a
-``status="skipped"`` TrainResult otherwise so dependents can introspect
-the adapter without the optional ``[train]`` extra installed.
+Default path is Ultralytics' ``RTDETR`` (RT-DETR baseline, CVPR 2024).
+Two more recent options exist and can be plugged in by passing
+``weights="..."`` in ``cfg.extra``:
+
+- **RT-DETRv4** (2025-11-18, arXiv): adds a Deep Semantic Injector
+  (DINOv3-ViT-B) on top of the deep CNN backbone with gradient-guided
+  adaptive modulation; "painless" AP boost at no deployment cost.
+  Not in Ultralytics yet — use the RT-DETRs/RT-DETRv4 reference repo.
+- **RT-DETRv3** (WACV 2025 Oral): hierarchical dense positive
+  supervision via an auxiliary CNN branch + self-attention
+  perturbation for diversified label assignment.
+- **RT-DETRv2** (Jul 2024, on HuggingFace as ``rt_detr_v2``): bag-of-
+  freebies improvements over RT-DETR; available via
+  ``transformers.RTDetrV2ForObjectDetection`` if the team prefers the
+  HF route.
+
+If ``ultralytics`` is missing the adapter returns
+``status="skipped"`` so dependents can introspect it without the
+optional ``[train]`` extra installed.
 """
 
 from __future__ import annotations

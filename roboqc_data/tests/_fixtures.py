@@ -8,6 +8,37 @@ import numpy as np
 from PIL import Image
 
 
+def make_mvtec_ad_2_tree(root: Path, scenario: str = "transparent_object") -> Path:
+    """Create a minimal MVTec AD 2 shaped tree.
+
+    Structure produced (matches the 2026 release layout)::
+
+        <root>/<scenario>/train/good/000.png
+        <root>/<scenario>/validation/good/000.png
+        <root>/<scenario>/test_public/good/000.png
+        <root>/<scenario>/test_public/bad/000.png
+        <root>/<scenario>/ground_truth/test_public/bad/000_mask.png
+    """
+    base = root / scenario
+    (base / "train" / "good").mkdir(parents=True, exist_ok=True)
+    (base / "validation" / "good").mkdir(parents=True, exist_ok=True)
+    (base / "test_public" / "good").mkdir(parents=True, exist_ok=True)
+    (base / "test_public" / "bad").mkdir(parents=True, exist_ok=True)
+    (base / "ground_truth" / "test_public" / "bad").mkdir(parents=True, exist_ok=True)
+
+    rng = np.random.default_rng(17)
+    _write_png(base / "train" / "good" / "000.png", rng.integers(0, 255, (32, 32, 3), dtype=np.uint8))
+    _write_png(base / "validation" / "good" / "000.png", rng.integers(0, 255, (32, 32, 3), dtype=np.uint8))
+    _write_png(base / "test_public" / "good" / "000.png", rng.integers(0, 255, (32, 32, 3), dtype=np.uint8))
+    bad = rng.integers(0, 255, (32, 32, 3), dtype=np.uint8)
+    bad[12:18, 12:22] = 0
+    _write_png(base / "test_public" / "bad" / "000.png", bad)
+    mask = np.zeros((32, 32), dtype=np.uint8)
+    mask[12:18, 12:22] = 255
+    _write_png(base / "ground_truth" / "test_public" / "bad" / "000_mask.png", mask)
+    return root
+
+
 def make_visa_tree(root: Path, category: str = "pcb1") -> Path:
     """Create a minimal VisA-shaped tree.
 

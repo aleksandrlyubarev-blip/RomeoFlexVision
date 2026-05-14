@@ -17,6 +17,7 @@ from ..export.yolo_seg import manifest_to_yolo_seg
 from ..ingest.base import write_manifest_jsonl
 from ..ingest.isp_ad import ISPADAdapter
 from ..ingest.mvtec_ad import MVTecADAdapter
+from ..ingest.mvtec_ad_2 import MVTecAD2Adapter
 from ..ingest.mvtec_loco import MVTecLOCOAdapter
 from ..ingest.pku_pcb import PKUPCBAdapter
 from ..ingest.visa import VisAAdapter
@@ -28,6 +29,7 @@ app = typer.Typer(no_args_is_help=True, help="RoboQC dataset tooling")
 
 ADAPTERS = {
     "mvtec_ad": MVTecADAdapter,
+    "mvtec_ad_2": MVTecAD2Adapter,
     "mvtec_loco": MVTecLOCOAdapter,
     "visa": VisAAdapter,
     "isp_ad": ISPADAdapter,

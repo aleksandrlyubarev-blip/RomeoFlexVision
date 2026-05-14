@@ -95,6 +95,7 @@ class StationContext(BaseModel):
 
 SourceDataset = Literal[
     "mvtec_ad",
+    "mvtec_ad_2",
     "mvtec_loco",
     "visa",
     "isp_ad",

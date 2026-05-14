@@ -1,10 +1,20 @@
-"""Thin Ultralytics YOLO adapter (det + seg)."""
+"""Thin Ultralytics YOLO adapter (det + seg).
+
+Default weights target **YOLO26** (Ultralytics, released 2026-01-14):
+NMS-free end-to-end inference, edge-optimised, supports detection /
+segmentation / classification / pose / OBB. YOLO11 (Sep 2024) and the
+older YOLOv8 family remain accessible by passing ``weights="..."`` in
+``cfg.extra``.
+"""
 
 from __future__ import annotations
 
 from ..export.yolo_seg import manifest_to_yolo_seg
 from ..schema.records import Manifest
 from .base import TrainAdapter, TrainConfig, TrainResult, skipped_result
+
+DEFAULT_SEG_WEIGHTS = "yolo26n-seg.pt"
+DEFAULT_DET_WEIGHTS = "yolo26n.pt"
 
 
 class YoloAdapter:
@@ -19,7 +29,8 @@ class YoloAdapter:
 
         data_yaml = manifest_to_yolo_seg(manifest, cfg.workdir / "data")
         mode = str(cfg.extra.get("mode", "seg")).lower()
-        weights = str(cfg.extra.get("weights", "yolov8n-seg.pt" if mode == "seg" else "yolov8n.pt"))
+        default_weights = DEFAULT_SEG_WEIGHTS if mode == "seg" else DEFAULT_DET_WEIGHTS
+        weights = str(cfg.extra.get("weights", default_weights))
 
         model = YOLO(weights)  # pragma: no cover
         result = model.train(  # pragma: no cover

@@ -25,8 +25,12 @@ brigada = [
     "langsmith",
 ]
 train = [
-    "anomalib>=1.1",
-    "ultralytics>=8.3",
+    # Anomalib v2.0 shipped late 2025; v2.2.0 is the 2026 stable line.
+    "anomalib>=2.0",
+    # Ultralytics shipped YOLO26 on 2026-01-14 (NMS-free, end-to-end).
+    # YOLO26 ships under the same `ultralytics` package; pin the
+    # package version, not the model name.
+    "ultralytics>=8.3.50",
     "transformers>=4.45",
     "torch>=2.4",
 ]
