@@ -20,6 +20,7 @@ from ..ingest.mvtec_ad import MVTecADAdapter
 from ..ingest.mvtec_ad_2 import MVTecAD2Adapter
 from ..ingest.mvtec_loco import MVTecLOCOAdapter
 from ..ingest.pku_pcb import PKUPCBAdapter
+from ..ingest.real_iad_d3 import RealIADD3Adapter
 from ..ingest.visa import VisAAdapter
 from ..schema.records import Manifest
 from ..schema.splits import SplitSpec
@@ -34,6 +35,7 @@ ADAPTERS = {
     "visa": VisAAdapter,
     "isp_ad": ISPADAdapter,
     "pku_pcb": PKUPCBAdapter,
+    "real_iad_d3": RealIADD3Adapter,
 }
 
 

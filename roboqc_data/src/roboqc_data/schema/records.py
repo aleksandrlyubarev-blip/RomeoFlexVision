@@ -101,6 +101,7 @@ SourceDataset = Literal[
     "isp_ad",
     "pku_pcb",
     "dagm_2007",
+    "real_iad_d3",
     "brigada",
     "plant",
     "custom",

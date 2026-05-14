@@ -89,3 +89,15 @@
 ### Свежие версии нижестоящего стека (на май 2026)
 
 Исходные материалы упоминали NVIDIA TAO 6 + DeepStream 8; на момент мая 2026 актуальны **DeepStream 9.0** (поддержка Blackwell, обратная совместимость с DS 8.0) и **TAO Toolkit 6.26.3** (новые архитектуры NVPanoptix3D, CLIP, Cosmos Embed1). По детектору: **YOLO26** (Ultralytics, 14 января 2026) — NMS-free, end-to-end, edge-оптимизирован; **RT-DETRv4** (18 ноября 2025) добавляет Deep Semantic Injector с DINOv3-ViT-B как «painless» бустер AP без deployment-overhead'а; **RT-DETRv3** — WACV 2025 Oral. По anomaly-стеку: **Anomalib v2.2.0** (2026) — текущая стабильная линия с PatchCore/EfficientAD под единым API. По датасетам: **MVTec AD 2** (arXiv:2503.21622, IJCV 2026) — 8 более сложных индустриальных сценариев, SOTA сидит ниже 60 % AU-PRO; именно его стоит использовать как «честный» бенчмарк, пока brigada-датасет ещё греется.
+
+### NV-DINOv2 SSL pre-training как первый шаг
+
+Сильный сигнал из обзора NotebookLM: вместо того чтобы сразу обучать supervised-детектор с малой разметкой, имеет смысл сначала прогнать **self-supervised pre-training** на немеченых изображениях с конкретной линии через NV-DINOv2 — это адаптирует backbone к доменным текстурам (металл, кабельные жгуты, освещение фабрики) до того, как мы тратим разметку. По опубликованным числам fine-tune после такого SSL-пре-training поднимает supervised accuracy до 98.5 % даже на малых датасетах. В нашем pipeline это становится опциональным шагом 0 в `brigada` стратегии: если plant-bucket пуст — пропускаем; если есть хотя бы тысячи неразмеченных кадров со станции — запускаем SSL, потом supervised-обучение через `train/yolo_adapter.py` использует уже адаптированный backbone.
+
+### Edge-target: Luxonis OAK 4 рядом с Jetson
+
+Помимо Jetson Orin NX (TensorRT FP16/INT8, 126–168 FPS на YOLO26) обзор предложил вторую edge-платформу: **Luxonis OAK 4** — 52 TOPs on-camera inference, IP67, аппаратная stereo-глубина, прямой запуск YOLO-семейства без хост-PC. Для RoboQC это закрывает кейсы где невозможно ставить отдельный edge-PC рядом со станцией (mobile inspection trolley, узкие конвейерные ниши). Экспорт идёт через утилиту `luxonis/tools` (ONNX → `.nnarchive`) — реализовано в `roboqc_data/export_models/luxonis_oak.py` как опциональный `ExportTarget="luxonis_oak"`.
+
+### Логические аномалии (LogicQA) как отдельный путь
+
+Pixel-уровневые модели — PatchCore, EfficientAD, YOLO-seg — отлично ловят локальные дефекты (царапины, missing-screw), но **по построению** пропускают логические нарушения: «коннектор не тот, который должен быть в этом порту по SOP», «два винта вместо трёх», «жгут идёт поверх hot-zone». Это класс `WRONG_ROUTING` в нашей taxonomy, и для него работает другой шаблон, описанный в LogicQA: VLM сначала по 1–3 эталонным фото генерирует чек-лист yes/no вопросов, затем тот же VLM проверяет тестовое фото по этому чек-листу. В коде это `roboqc_data/logic/logic_qa.py` с двумя реализациями: `HeuristicLogicQa` (детерминированный, CI-friendly) и `RouterBackedLogicQa` (через `rhaef_v2.core.model_router.ModelRouter`, категория `TaskCategory.VISION`).

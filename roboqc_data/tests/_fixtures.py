@@ -8,6 +8,31 @@ import numpy as np
 from PIL import Image
 
 
+def make_real_iad_d3_tree(root: Path, category: str = "pcb") -> Path:
+    """Create a minimal Real-IAD D3 shaped tree (RGB + photometric + point cloud)."""
+    base = root / category
+    for native_split in ("train", "test"):
+        for defect in ("good",) if native_split == "train" else ("good", "scratch"):
+            for modality in ("rgb", "photometric"):
+                (base / native_split / defect / modality).mkdir(parents=True, exist_ok=True)
+            (base / native_split / defect / "pointcloud").mkdir(parents=True, exist_ok=True)
+    (base / "ground_truth" / "scratch").mkdir(parents=True, exist_ok=True)
+
+    rng = np.random.default_rng(23)
+    for path in (
+        base / "train" / "good" / "rgb" / "000.png",
+        base / "test" / "good" / "rgb" / "000.png",
+        base / "test" / "scratch" / "rgb" / "000.png",
+        base / "test" / "scratch" / "photometric" / "000.png",
+    ):
+        _write_png(path, rng.integers(0, 255, (32, 32, 3), dtype=np.uint8))
+    (base / "test" / "scratch" / "pointcloud" / "000.ply").write_bytes(b"ply\nformat ascii 1.0\nend_header\n")
+    mask = np.zeros((32, 32), dtype=np.uint8)
+    mask[10:14, 10:20] = 255
+    _write_png(base / "ground_truth" / "scratch" / "000_mask.png", mask)
+    return root
+
+
 def make_mvtec_ad_2_tree(root: Path, scenario: str = "transparent_object") -> Path:
     """Create a minimal MVTec AD 2 shaped tree.
 

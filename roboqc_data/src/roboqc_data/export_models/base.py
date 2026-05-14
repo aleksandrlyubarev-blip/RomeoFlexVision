@@ -17,7 +17,7 @@ from typing import Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
-ExportTarget = Literal["onnx", "tensorrt"]
+ExportTarget = Literal["onnx", "tensorrt", "luxonis_oak"]
 
 
 class ExportConfig(BaseModel):

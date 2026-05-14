@@ -193,3 +193,28 @@ HITL-консультации и evidence-store для inspection-driven flow:
 Если статья по вопросу ничего не говорит — так и пиши "статьи не
 покрывают этот вопрос". Не выдумывай числа.
 ```
+
+---
+
+## 8. Решения из обзора NotebookLM (май 2026)
+
+Список tooling-решений, полученных от NotebookLM по статьям пользователя. Каждая строка — конкретное действие, привязанное к файлам в `roboqc_data/`.
+
+| Находка | Источник из обзора | Решение | Файлы |
+|---|---|---|---|
+| **Luxonis OAK 4** edge-камеры (52 TOPs, IP67, аппаратная stereo-глубина) | Edge-платформа [1–5] | Добавить как первичный edge-target наряду с Jetson; экспорт через `luxonis/tools` | `export_models/luxonis_oak.py` (новый) |
+| **NVIDIA Jetson Orin NX + TensorRT FP16/INT8** для YOLO26 | 126–168 FPS на Jetson [6, 7] | Уже есть `tensorrt_export.py`; добавить FP16/INT8 как cfg-флаги | существующий `export_models/tensorrt_export.py` |
+| **DeepStream Coding Agent** + `deepstream-import-vision-model` | Микросервисы через Claude Code [12–14] | Документировать в README; future-PR на CI-step генерации pipeline | `README.md`, `docs/brigada-architecture.md` |
+| **NV-DINOv2 + SSL** на немеченых plant-изображениях | 98.5 % после small-fine-tune [19–21] | Заметка о pre-training step перед supervised train; future-PR на SSL loop | `docs/brigada-architecture.md` |
+| **AnomalyDINO** (training-free, few-shot DINOv2 patch features) | Быстрая реакция на новые детали [22–24] | Добавить как train adapter рядом с Anomalib | `train/anomaly_dino_adapter.py` (новый) |
+| **PatchCore-Lite / PaDiM-Lite / Tiny-Dinomaly** для edge (–77–90 % памяти) | Edge-anomaly [25–28] | Конфигурируется через `cfg.extra["model"]` в `AnomalibAdapter`; обновить docstring | `train/anomalib_adapter.py` |
+| **LogicQA** — VLM-генерируемый чек-лист логических аномалий | Логические аномалии [31–33] | Новый модуль `logic/` для класса `WRONG_ROUTING` (layout-level) | `logic/logic_qa.py` (новый) |
+| **VELM pipeline** — PatchCore + VLM классификация | Гибридный stack [34–37] | Использует существующий `AnomalibAdapter` + новый VLM-classifier; future-PR | `logic/` (общий с LogicQA) |
+| **MMD-based UDA** для адаптации к лёгкому drift'у | Domain adaptation [38, 40] | Новый модуль `adapt/` с Protocol под Faster R-CNN / YOLO | `adapt/mmd.py` (новый) |
+| **Real-IAD D3** dataset (2D + 3D micro-cloud + photometric stereo) | Сложные топологические дефекты [41] | Новый ingest-адаптер | `ingest/real_iad_d3.py` (новый) |
+
+**Что НЕ берём прямо сейчас** (требует серьёзной ML-работы):
+- Полная SSL-pretraining loop NV-DINOv2 — нужны plant-данные + multi-GPU.
+- Real-time YOLO-World на OAK 4 — нужны camera-side эксперименты.
+- Полный пайплайн дистилляции SAM 3 → edge модель.
+- Реальная VELM-интеграция с конкретной VLM — нужно решить provider (Anthropic / OpenAI / xAI через rhaef_v2 ModelRouter).

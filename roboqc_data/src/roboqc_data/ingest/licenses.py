@@ -78,6 +78,18 @@ DAGM_2007 = LicenseInfo(
     commercial_use=True,
 )
 
+# Real-IAD D3 (2025+) — multimodal industrial anomaly dataset with
+# 2D RGB, micrometre 3D point clouds, and photometric-stereo pseudo-3D
+# depth. Used in NotebookLM-reviewed paper [41] for topology-heavy
+# defects (PCB solder bridges, micrometre dents, etc.).
+REAL_IAD_D3 = LicenseInfo(
+    name="Real-IAD D3",
+    spdx=None,
+    url="https://realiad4ad.github.io/",
+    redistributable=True,
+    commercial_use=False,
+)
+
 REGISTRY: dict[str, LicenseInfo] = {
     "mvtec_ad": MVTEC_AD,
     "mvtec_ad_2": MVTEC_AD_2,
@@ -86,4 +98,5 @@ REGISTRY: dict[str, LicenseInfo] = {
     "isp_ad": ISP_AD,
     "pku_pcb": PKU_PCB,
     "dagm_2007": DAGM_2007,
+    "real_iad_d3": REAL_IAD_D3,
 }
