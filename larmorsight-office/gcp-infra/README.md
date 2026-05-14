@@ -1,15 +1,18 @@
-# gcp-infra — облачная инфраструктура AI-сотрудников LarmorSight
+# gcp-infra — облачная инфраструктура AI-сотрудников LarmorSight + RoboQC testbed
 
 Terraform-скелет для развёртывания облачных копий AI-сотрудников (`../employees/`)
 в Google Cloud Platform: Cloud Run-сервис на сотрудника, общий бакет Cloud Storage
 с навыками, секрет с Anthropic API key в Secret Manager и (опционально) Cloud
 Scheduler для периодического запуска.
 
+Отдельный **полигон RoboQC** (A100 80GB + SGLang + LangGraph-супервайзер)
+подключается опционально флагом `enable_testbed = true` — см. раздел "RoboQC GPU testbed".
+
 > **Статус: skeleton.** HCL валиден (`terraform validate`), но рассчитан на ваш
 > реальный GCP-проект и собранный образ рантайма. `terraform apply` ничего не
 > ломает, но создаёт ресурсы (и расходы) — применяйте осознанно.
 
-## Что создаётся
+## Что создаётся (Cloud Run AI-сотрудники)
 
 | Ресурс | Назначение |
 |---|---|
@@ -22,7 +25,7 @@ Scheduler для периодического запуска.
 ## Предпосылки
 - Terraform ≥ 1.9, `gcloud` (Google Cloud SDK), `gsutil`, `jq`.
 - GCP-проект с включённым биллингом; у вас есть права создавать ресурсы.
-- (Для реального рантажа) собранный и запушенный образ сотрудника — см.
+- (Для реального рантайма) собранный и запушенный образ сотрудника — см.
   `employee-runtime/Dockerfile`.
 
 ## Быстрый старт
@@ -85,9 +88,64 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
   не удалится, пока в нём есть объекты — это намеренно).
 - Рекомендуется отдельно настроить Budget Alert в биллинге проекта.
 
+## RoboQC GPU testbed
+
+Полигон (`modules/gpu-testbed` + `modules/models-bucket`, подключён в `testbed.tf`)
+поднимает 1×A100 80GB VM в `europe-west4-b`, бакет `<project>-roboqc-models` и
+Artifact Registry-репозиторий `roboqc`. По умолчанию `enable_testbed = false`,
+так что текущее поведение этого Terraform модуля не меняется.
+
+### Что создаётся при `enable_testbed = true`
+
+| Ресурс | Назначение |
+|---|---|
+| `google_compute_instance.testbed` | `a2-ultragpu-1g` (1×A100 80GB, 12 vCPU, 170 GiB) + 1× Local SSD 375 GB под `/srv/models`. Deep Learning VM (CUDA 12.4). Spot по умолчанию. |
+| `google_storage_bucket.models` | `<project>-roboqc-models` (regional europe-west4, lifecycle NEARLINE 30d / COLDLINE 180d). |
+| `google_artifact_registry_repository.roboqc` | Docker-репозиторий `roboqc` для образов SGLang + supervisor + bench. |
+| `google_compute_firewall` (SGLang/LangGraph/IAP-SSH) | Сетевые правила для 30000-30010, 8000, 22 (из IAP). |
+| `google_monitoring_dashboard.testbed` | Дашборд "RoboQC Testbed — A100" (GPU util, VRAM, CPU, net, custom `sglang/tokens_per_second`). |
+| `google_monitoring_alert_policy.idle_gpu` | Алерт простоя GPU > 30 минут. |
+| `google_cloud_scheduler_job.auto_shutdown` / `auto_start` | Авто-стоп в 19:00 UTC / старт 7:00 UTC пн-пт (cron настраивается). |
+
+### Быстрый старт полигона
+
+```bash
+cd larmorsight-office/gcp-infra
+# в terraform.tfvars раскомментируйте блок "RoboQC GPU testbed" и:
+#   enable_testbed = true
+#   testbed_region = "europe-west4"
+#   testbed_zone   = "europe-west4-b"
+terraform init   # первый раз подтянет modules/gpu-testbed и modules/models-bucket
+terraform plan -var enable_testbed=true
+terraform apply -var enable_testbed=true
+
+# Подключитесь (IAP, публичный вход закрыт):
+gcloud compute ssh roboqc-testbed --zone=europe-west4-b --tunnel-through-iap
+
+# Проверьте сервисы:
+docker ps                                                # ждём sglang-qwen + rhaef-supervisor
+curl -s http://localhost:30000/health                    # SGLang
+curl -s http://localhost:8000/health                     # LangGraph supervisor
+```
+
+### Стоимость и экономия
+- **On-demand** a2-ultragpu-1g в europe-west4 — ≈11 €/ч = ≈7 900 €/мес 24/7.
+- **Spot** — ≈70% дешевле, но может preempt'иться. `use_spot = true` по умолчанию.
+- **Auto-shutdown cron** и **idle-GPU алерт** дают ещё — 60-70 % к экономии, если ночью и
+  выходными полигон не нужен (блоки cron'а пустые => Scheduler не создаётся).
+- Для прода на 24/7 переведите на Committed Use Discount (1-3 года, − 40-55 %).
+
+### Снять только полигон
+
+```bash
+terraform destroy -target=module.gpu_testbed -target=module.models_bucket
+# Cloud Run-сотрудники остаются нетронутыми.
+```
+
 ## TODO (вне текущего скелета)
-- [ ] Реальный образ рантажа сотрудника (`employee-runtime/`).
+- [ ] Реальный образ рантайма сотрудника (`employee-runtime/`).
 - [ ] CI/CD: Cloud Build trigger на сборку образа + `terraform plan/apply` в pipeline.
 - [ ] Backend для state в GCS (закомментирован в `providers.tf`).
 - [ ] Бюджеты/алерты (`google_billing_budget`), детальные дашборды Cloud Monitoring.
+- [ ] GKE node-pool (Helm chart уже живёт в `infra/helm/roboqc-testbed/`, кластер — отдельный follow-up).
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

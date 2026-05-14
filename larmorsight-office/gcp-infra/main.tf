@@ -1,7 +1,7 @@
 locals {
   skills_bucket = var.skills_bucket != "" ? var.skills_bucket : "${var.project_id}-larmorsight-skills"
 
-  required_apis = [
+  base_apis = [
     "run.googleapis.com",
     "storage.googleapis.com",
     "secretmanager.googleapis.com",
@@ -9,6 +9,15 @@ locals {
     "cloudbuild.googleapis.com",
     "cloudscheduler.googleapis.com",
   ]
+
+  # Дополнительные API нужны только для GPU-полигона RoboQC.
+  testbed_apis = var.enable_testbed ? [
+    "compute.googleapis.com",
+    "monitoring.googleapis.com",
+    "logging.googleapis.com",
+  ] : []
+
+  required_apis = concat(local.base_apis, local.testbed_apis)
 }
 
 resource "google_project_service" "enabled" {
