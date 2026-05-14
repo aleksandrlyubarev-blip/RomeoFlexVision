@@ -1,0 +1,21 @@
+{{- range $key, $cfg := .Values.sglang }}
+{{- if $cfg.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "roboqc-testbed.fullname" $ }}-sglang-{{ $key }}
+  labels:
+    {{- include "roboqc-testbed.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: sglang-{{ $key }}
+spec:
+  type: {{ $.Values.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ include "roboqc-testbed.name" $ }}
+    app.kubernetes.io/component: sglang-{{ $key }}
+  ports:
+    - name: http
+      port: {{ $cfg.port }}
+      targetPort: http
+{{- end }}
+{{- end }}

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "roboqc-testbed.fullname" . }}-supervisor
+  labels:
+    {{- include "roboqc-testbed.labels" . | nindent 4 }}
+    app.kubernetes.io/component: supervisor
+spec:
+  replicas: {{ .Values.supervisor.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "roboqc-testbed.name" . }}
+      app.kubernetes.io/component: supervisor
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "roboqc-testbed.name" . }}
+        app.kubernetes.io/component: supervisor
+    spec:
+      containers:
+        - name: supervisor
+          image: "{{ .Values.image.supervisor.repository }}:{{ .Values.image.supervisor.tag }}"
+          imagePullPolicy: {{ .Values.image.supervisor.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.supervisor.port }}
+          env:
+            - name: SGLANG_BASE_URL
+              value: "http://{{ include "roboqc-testbed.fullname" . }}-sglang-qwen:{{ .Values.sglang.qwen.port }}/v1"
+            - name: SGLANG_GEMMA_BASE_URL
+              value: "http://{{ include "roboqc-testbed.fullname" . }}-sglang-gemma:{{ .Values.sglang.gemma.port }}/v1"
+            - name: SGLANG_VISION_BASE_URL
+              value: "http://{{ include "roboqc-testbed.fullname" . }}-sglang-vision:{{ .Values.sglang.vision.port }}/v1"
+            {{- range $k, $v := .Values.supervisor.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.supervisor.resources | nindent 12 }}
