@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "larmorsight-checker"
+version = "0.1.0"
+description = "macOS desktop demo app for industrial QC photo inspection of HPC liquid-cooling components, powered by xAI Grok vision."
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT" }
+dependencies = [
+    "PyQt6>=6.7",
+    "opencv-python>=4.10",
+    "numpy>=1.26,<2.0",
+    "pillow>=10.4",
+    "reportlab>=4.2",
+    "requests>=2.32",
+    "python-dotenv>=1.0",
+    "pydantic>=2.10",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-qt>=4.4",
+    "pytest-mock>=3.14",
+    "pypdf>=4.3",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["larmorsight_checker*"]
+
+[tool.setuptools.package-data]
+"larmorsight_checker.ui" = ["*.qss"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "macos: requires macOS host with USB camera; skipped in CI sandbox",
+]
