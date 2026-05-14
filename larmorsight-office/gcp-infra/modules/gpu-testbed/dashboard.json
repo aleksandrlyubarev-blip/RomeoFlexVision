@@ -1,0 +1,98 @@
+{
+  "displayName": "RoboQC Testbed — A100",
+  "mosaicLayout": {
+    "columns": 12,
+    "tiles": [
+      {
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "GPU Utilization (%)",
+          "xyChart": {
+            "dataSets": [{
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"agent.googleapis.com/gpu/utilization\" resource.type=\"gce_instance\"",
+                  "aggregation": {"alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_MEAN"}
+                }
+              }
+            }]
+          }
+        }
+      },
+      {
+        "xPos": 6,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "GPU Memory Used (MiB)",
+          "xyChart": {
+            "dataSets": [{
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"agent.googleapis.com/gpu/memory_used\" resource.type=\"gce_instance\"",
+                  "aggregation": {"alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_MEAN"}
+                }
+              }
+            }]
+          }
+        }
+      },
+      {
+        "yPos": 4,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "CPU Utilization (%)",
+          "xyChart": {
+            "dataSets": [{
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\"",
+                  "aggregation": {"alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_MEAN"}
+                }
+              }
+            }]
+          }
+        }
+      },
+      {
+        "xPos": 6,
+        "yPos": 4,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "Network Egress (B/s)",
+          "xyChart": {
+            "dataSets": [{
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"compute.googleapis.com/instance/network/sent_bytes_count\" resource.type=\"gce_instance\"",
+                  "aggregation": {"alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_RATE"}
+                }
+              }
+            }]
+          }
+        }
+      },
+      {
+        "yPos": 8,
+        "width": 12,
+        "height": 4,
+        "widget": {
+          "title": "SGLang tokens/s (custom metric)",
+          "xyChart": {
+            "dataSets": [{
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "metric.type=\"custom.googleapis.com/sglang/tokens_per_second\" resource.type=\"gce_instance\"",
+                  "aggregation": {"alignmentPeriod": "60s", "perSeriesAligner": "ALIGN_MEAN"}
+                }
+              }
+            }]
+          }
+        }
+      }
+    ]
+  }
+}

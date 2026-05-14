@@ -1,0 +1,15 @@
+# Flat-rate стоимости инференса в USD за эквивалент 1 M токенов.
+# Для локальных моделей база — амортизация A100 80GB Spot в europe-west4 (~$1.50/ч при 70% дискаунте).
+# Облачные цены — retail published rates (май 2026).
+
+local:
+  # Оценка: 1 GPU-час / (средний throughput 1500 ток/с = 5.4 M ток/ч) ≈ $0.28 / M tokens.
+  qwen3.6-35b-a3b: 0.28
+  gemma-4-31b: 0.36           # ниже throughput из-за dense-архитектуры
+  qwen3-vl-8b: 0.10
+
+cloud:
+  anthropic/claude-opus-4-7: 15.00
+  openai/gpt-5.5-pro: 10.00
+  qwen/qwen3.6-plus: 1.20
+  xai/grok-4: 5.00

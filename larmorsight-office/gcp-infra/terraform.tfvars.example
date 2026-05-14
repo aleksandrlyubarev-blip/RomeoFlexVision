@@ -25,3 +25,19 @@ active_employees = ["research-analyst"]
 # Ключ Anthropic лучше не хранить в этом файле, а завести версию секрета вручную:
 #   gcloud secrets versions add larmorsight-anthropic-api-key --data-file=- <<< "$ANTHROPIC_API_KEY"
 # anthropic_api_key = "sk-ant-..."
+
+# --- RoboQC GPU testbed (опционально) ---------------------------------
+# Раскомментируйте блок ниже, чтобы поднять A100 80GB в europe-west4 + бакет моделей + Artifact Registry.
+# Без этого блока тестовый полигон не создаётся и Cloud Run-сотрудники остаются нетронутыми.
+#
+# enable_testbed             = true
+# testbed_region             = "europe-west4"
+# testbed_zone               = "europe-west4-b"
+# gpu_machine_type           = "a2-ultragpu-1g"     # 1x A100 80GB
+# gpu_accelerator_type       = "nvidia-a100-80gb"
+# gpu_accelerator_count      = 1
+# use_spot                   = true                  # ~70% дешевле, может preempt'иться
+# testbed_monthly_budget_usd = 2500
+# testbed_auto_shutdown_cron = "0 19 * * *"          # стоп в 19:00 UTC каждый день
+# testbed_auto_start_cron    = "0 7 * * 1-5"         # старт в 07:00 UTC пн-пт
+# testbed_allowed_cidrs      = ["35.235.240.0/20"]   # только IAP. Добавьте свой office IP при необходимости.

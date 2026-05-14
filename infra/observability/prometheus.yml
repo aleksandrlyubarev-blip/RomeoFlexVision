@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: sglang-qwen
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["sglang-qwen:30000"]
+        labels: { model: qwen3.6-35b-a3b }
+
+  - job_name: sglang-gemma
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["sglang-gemma:30001"]
+        labels: { model: gemma-4-31b }
+
+  - job_name: sglang-vision
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["sglang-vision:30002"]
+        labels: { model: qwen3-vl-8b }
+
+  - job_name: rhaef-supervisor
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["rhaef-supervisor:8000"]

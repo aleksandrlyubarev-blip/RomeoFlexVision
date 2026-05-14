@@ -1,0 +1,17 @@
+apiVersion: v2
+name: roboqc-testbed
+description: |
+  GKE deployment полигона RoboQC: SGLang (Qwen/Gemma/Vision) + LangGraph-супервайзер (rhaef-supervisor).
+  Чарт предполагает, что GKE-кластер и GPU node-pool (nvidia-a100-80gb либо nvidia-tesla-a100)
+  уже созданы вне чарта (Terraform / gcloud). См. README.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.28.0-0"
+keywords:
+  - roboqc
+  - sglang
+  - langgraph
+  - gpu
+maintainers:
+  - name: rhaef-v2

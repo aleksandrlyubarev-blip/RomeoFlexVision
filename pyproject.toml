@@ -18,6 +18,14 @@ dependencies = [
     "pytest",
 ]
 
+[project.optional-dependencies]
+roboqc = [
+    "jinja2>=3.1",
+    "pynvml>=11.5",
+    "pyyaml>=6.0",
+    "pillow>=10.4",
+]
+
 [tool.setuptools.packages.find]
 include = ["rhaef_v2*"]
 

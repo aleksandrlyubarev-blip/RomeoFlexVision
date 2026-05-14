@@ -1,0 +1,24 @@
+# Манифест fixture-кейсов для бенчмарка RoboQC.
+# image_uri ожидается в бакете ROBOQC_MODELS_BUCKET (или локальный путь).
+# defect_class из roboqc_data/src/roboqc_data/schema/taxonomy.py: DefectClass.
+# command из ActionCommand.command: pick | reject | re_image | hold_for_review.
+{"id":"screw_01","image_uri":"gs://roboqc-models/fixtures/screw/screw_missing_a1.png","defect_class":"SCREW_MISSING","command":"reject","subject":"PCB v1","workcell":"WC-12"}
+{"id":"screw_02","image_uri":"gs://roboqc-models/fixtures/screw/all_present.png","defect_class":null,"command":"pick","subject":"PCB v1","workcell":"WC-12"}
+{"id":"screw_03","image_uri":"gs://roboqc-models/fixtures/screw/loose_a4.png","defect_class":"SCREW_MISSING","command":"hold_for_review","subject":"PCB v1","workcell":"WC-12"}
+{"id":"cable_01","image_uri":"gs://roboqc-models/fixtures/cable/pinched_run.png","defect_class":"CABLE_PINCHED","command":"reject","subject":"GPU module","workcell":"WC-04"}
+{"id":"cable_02","image_uri":"gs://roboqc-models/fixtures/cable/clean.png","defect_class":null,"command":"pick","subject":"GPU module","workcell":"WC-04"}
+{"id":"cable_03","image_uri":"gs://roboqc-models/fixtures/cable/tight_bend.png","defect_class":"CABLE_PINCHED","command":"hold_for_review","subject":"GPU module","workcell":"WC-04"}
+{"id":"connector_01","image_uri":"gs://roboqc-models/fixtures/connector/tilted_left.png","defect_class":"CONNECTOR_TILT","command":"reject","subject":"NIC","workcell":"WC-07"}
+{"id":"connector_02","image_uri":"gs://roboqc-models/fixtures/connector/seated.png","defect_class":null,"command":"pick","subject":"NIC","workcell":"WC-07"}
+{"id":"connector_03","image_uri":"gs://roboqc-models/fixtures/connector/half_seated.png","defect_class":"CONNECTOR_TILT","command":"re_image","subject":"NIC","workcell":"WC-07"}
+{"id":"latch_01","image_uri":"gs://roboqc-models/fixtures/latch/open_left.png","defect_class":"LATCH_OPEN","command":"reject","subject":"chassis cover","workcell":"WC-09"}
+{"id":"latch_02","image_uri":"gs://roboqc-models/fixtures/latch/closed.png","defect_class":null,"command":"pick","subject":"chassis cover","workcell":"WC-09"}
+{"id":"latch_03","image_uri":"gs://roboqc-models/fixtures/latch/partial.png","defect_class":"LATCH_OPEN","command":"hold_for_review","subject":"chassis cover","workcell":"WC-09"}
+{"id":"routing_01","image_uri":"gs://roboqc-models/fixtures/routing/crossed.png","defect_class":"ROUTING_BAD","command":"reject","subject":"backplane harness","workcell":"WC-15"}
+{"id":"routing_02","image_uri":"gs://roboqc-models/fixtures/routing/clean.png","defect_class":null,"command":"pick","subject":"backplane harness","workcell":"WC-15"}
+{"id":"routing_03","image_uri":"gs://roboqc-models/fixtures/routing/sharp_bend.png","defect_class":"ROUTING_BAD","command":"hold_for_review","subject":"backplane harness","workcell":"WC-15"}
+{"id":"leak_01","image_uri":"gs://roboqc-models/fixtures/leak/coolant_drop.png","defect_class":"LEAK","command":"reject","subject":"liquid loop","workcell":"WC-21"}
+{"id":"leak_02","image_uri":"gs://roboqc-models/fixtures/leak/dry.png","defect_class":null,"command":"pick","subject":"liquid loop","workcell":"WC-21"}
+{"id":"leak_03","image_uri":"gs://roboqc-models/fixtures/leak/residue.png","defect_class":"LEAK","command":"hold_for_review","subject":"liquid loop","workcell":"WC-21"}
+{"id":"edge_lowlight","image_uri":"gs://roboqc-models/fixtures/edge/lowlight_pcb.png","defect_class":null,"command":"re_image","subject":"PCB v1","workcell":"WC-12"}
+{"id":"edge_occlusion","image_uri":"gs://roboqc-models/fixtures/edge/occluded_connector.png","defect_class":null,"command":"re_image","subject":"NIC","workcell":"WC-07"}

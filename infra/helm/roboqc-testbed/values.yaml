@@ -1,0 +1,117 @@
+# values.yaml — GKE deployment полигона RoboQC.
+# По умолчанию включён только Qwen-профиль; gemma/vision включаются флагами.
+
+image:
+  sglang:
+    repository: lmsysorg/sglang
+    tag: latest
+    pullPolicy: IfNotPresent
+  supervisor:
+    repository: ""            # REGION-docker.pkg.dev/PROJECT/roboqc/rhaef-supervisor
+    tag: latest
+    pullPolicy: IfNotPresent
+
+# Назначение на A100 node-pool. Смените selector на nvidia-tesla-a100 для a2-highgpu.
+nodeSelector:
+  cloud.google.com/gke-accelerator: nvidia-a100-80gb
+
+tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+
+models:
+  primary: Qwen/Qwen3.6-35B-A3B-FP8
+  secondary: google/gemma-4-31b
+  vision: Qwen/Qwen3-VL-8B-Instruct
+  hfHome: /models/hf
+
+# PVC под кэш GGUF / safetensors. Для A100 node-pool рекомендуется local-ssd-provisioner.
+modelsPvc:
+  enabled: true
+  storageClass: standard-rwo
+  size: 500Gi
+  accessModes: ["ReadWriteOnce"]
+
+sglang:
+  qwen:
+    enabled: true
+    replicas: 1
+    port: 30000
+    extraArgs:
+      - --enable-mtp
+      - --tp
+      - "1"
+      - --mem-fraction-static
+      - "0.85"
+      - --context-length
+      - "32768"
+    resources:
+      requests:
+        cpu: "8"
+        memory: 96Gi
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
+  gemma:
+    enabled: false
+    replicas: 1
+    port: 30001
+    extraArgs:
+      - --tp
+      - "1"
+      - --mem-fraction-static
+      - "0.85"
+      - --context-length
+      - "32768"
+    resources:
+      requests:
+        cpu: "8"
+        memory: 96Gi
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
+  vision:
+    enabled: false
+    replicas: 1
+    port: 30002
+    extraArgs:
+      - --tp
+      - "1"
+      - --mem-fraction-static
+      - "0.65"
+    resources:
+      requests:
+        cpu: "4"
+        memory: 48Gi
+        nvidia.com/gpu: 1
+      limits:
+        nvidia.com/gpu: 1
+
+supervisor:
+  replicas: 1
+  port: 8000
+  resources:
+    requests:
+      cpu: "500m"
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+  env:
+    RHAEF_BACKEND: sglang
+    LANGCHAIN_TRACING_V2: "false"
+
+service:
+  type: ClusterIP
+
+# Автоскейлинг супервайзера (SGLang sticky к 1 GPU — не скейлим их).
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+serviceMonitor:
+  enabled: false           # включить если развёрнут Prometheus Operator
+  namespace: monitoring
