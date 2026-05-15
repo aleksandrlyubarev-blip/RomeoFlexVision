@@ -1,0 +1,87 @@
+# DeepStream 9.0 multi-camera inspection cell — reference template.
+#
+# Two-camera RoboQC station: one wide overview, one close-up macro on
+# the connector zone. Each camera has its own ROI and confidence
+# threshold; events flow to a single sink that POSTs InspectionResult
+# JSON to the Romeo_PHD HITL endpoint when requires_hitl is set.
+#
+# Tested target stack:
+#   DeepStream 9.0, TAO Toolkit 6.26.3, Jetson Orin NX / AGX.
+# Generated and refined by `deepstream-import-vision-model` skill —
+# see roboqc_data/README.md for the full Codex workflow.
+
+application:
+  name: roboqc-station-a4-rack-final
+  station_id: ST-A4-RACK-FINAL
+  log_level: info
+
+sources:
+  - id: overview
+    type: rtsp
+    uri: "rtsp://10.0.4.1/overview"
+    width: 1920
+    height: 1080
+  - id: connector_macro
+    type: rtsp
+    uri: "rtsp://10.0.4.2/macro"
+    width: 1280
+    height: 1024
+
+inference:
+  primary:
+    # YOLO26 segmentation (NMS-free, end-to-end) for screw / cable /
+    # connector wedge detection. Exported via roboqc_data/export_models/
+    # onnx_export.py -> tensorrt_export.py.
+    engine: /opt/roboqc/models/yolo26n-seg.engine
+    precision: fp16
+    network_input_shape: 3x640x640
+    threshold: 0.5
+
+  secondary:
+    # Anomalib PatchCore-Lite for cosmetic-defect catch-all on the
+    # macro camera. Selected via roboqc_data train/anomalib_adapter.py
+    # with cfg.extra["model"] = "patchcore_lite".
+    engine: /opt/roboqc/models/patchcore_lite.engine
+    precision: fp16
+    threshold: 0.65
+
+regions_of_interest:
+  - source_id: overview
+    name: cable_routing_zone
+    polygon: [[0.05, 0.30], [0.95, 0.30], [0.95, 0.80], [0.05, 0.80]]
+    classes:
+      - cable_wrong_port
+      - cable_not_seated
+      - cable_crossed
+      - wrong_routing
+  - source_id: connector_macro
+    name: connector_face
+    polygon: [[0.10, 0.10], [0.90, 0.10], [0.90, 0.90], [0.10, 0.90]]
+    classes:
+      - connector_damage
+      - connector_not_seated
+      - latch_open
+      - latch_broken
+
+sink:
+  type: rest
+  endpoint: "http://romeo-phd.local/api/inspections"
+  hitl_confidence_threshold: 0.85
+  payload_template: inspection_result_v1
+  retry:
+    max_attempts: 4
+    backoff_seconds: [2, 4, 8, 16]
+
+evidence_log:
+  enabled: true
+  storage_uri: "s3://roboqc-evidence/ST-A4-RACK-FINAL/"
+  retain_days: 365
+  fields:
+    - photo_before
+    - photo_after
+    - station_id
+    - operator_id
+    - work_order
+    - issue_type
+    - ai_confidence
+    - human_decision
