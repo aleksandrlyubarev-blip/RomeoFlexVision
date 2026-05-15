@@ -1,6 +1,8 @@
 """Unit-тесты для рантайма AI-сотрудника LarmorSight (app.py)."""
 from __future__ import annotations
 
+import json
+import logging
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -122,6 +124,32 @@ def test_run_uses_prompt_caching_and_adaptive_thinking(
     assert user_msg["role"] == "user"
     assert "экспресс-скан" in user_msg["content"]
     assert "Источник: pitch-deck.md" in user_msg["content"]
+
+
+def test_json_formatter_serializes_extras() -> None:
+    record = logging.LogRecord(
+        name="larmorsight.employee",
+        level=logging.INFO,
+        pathname=__file__,
+        lineno=1,
+        msg="run completed",
+        args=(),
+        exc_info=None,
+    )
+    record.employee = "research-analyst"
+    record.elapsed_ms = 1234
+    record.input_tokens = 100
+    out = app._JsonFormatter().format(record)
+    payload = json.loads(out)
+    assert payload["severity"] == "INFO"
+    assert payload["message"] == "run completed"
+    assert payload["logger"] == "larmorsight.employee"
+    assert payload["employee"] == "research-analyst"
+    assert payload["elapsed_ms"] == 1234
+    assert payload["input_tokens"] == 100
+    # стандартные поля LogRecord не утекают как поля payload
+    assert "args" not in payload
+    assert "msg" not in payload
 
 
 def test_run_max_tokens_override(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:

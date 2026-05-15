@@ -6,6 +6,25 @@
 ## [Unreleased]
 - —
 
+## 0.9.0
+### Добавлено
+- **Структурированные JSON-логи** в рантайме сотрудника (`app.py`):
+  `_JsonFormatter` пишет в stdout `{severity, message, logger, timestamp, ...extras}` —
+  Cloud Run автоматически разбирает `severity` и поднимает в Cloud Logging как
+  отдельные поля. Переключатель формата `LARMORSIGHT_LOG_FORMAT=json|text`
+  (по умолчанию `json`); уровень — через `LOG_LEVEL` (по умолчанию `INFO`).
+- Структурированный лог `run completed` на каждый успешный `POST /run`:
+  `employee`, `model`, `stop_reason`, `task_chars`, `context_chars`, `output_chars`,
+  `input_tokens`, `output_tokens`, `cache_read_input_tokens`,
+  `cache_creation_input_tokens`, `elapsed_ms` — удобно строить дашборды/алерты
+  в Cloud Logging Analytics.
+- На ошибки Anthropic (`APIStatusError`/`APIConnectionError`) — `WARNING` с
+  `status`/`request_id`/`elapsed_ms`.
+- Новый тест `test_json_formatter_serializes_extras` (теперь 7 тестов).
+
+### Изменено
+- `plugin.json` → `0.9.0`.
+
 ## 0.8.0
 ### Добавлено
 - **Дашборд Cloud Monitoring** — `google_monitoring_dashboard.larmorsight_overview`

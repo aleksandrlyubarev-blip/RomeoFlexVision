@@ -69,7 +69,11 @@ gsutil -m rsync -r -d employees/research-analyst gs://<project_id>-larmorsight-s
   Anthropic Messages API с prompt caching, моделью `claude-opus-4-7`, adaptive
   thinking и стримингом; `GET /healthz` — проверка живости. `ANTHROPIC_API_KEY`
   инъектится из Secret Manager (см. ниже). Тюнинг через env: `LARMORSIGHT_MODEL`,
-  `LARMORSIGHT_EFFORT`, `LARMORSIGHT_THINKING`, `LARMORSIGHT_MAX_TOKENS`.
+  `LARMORSIGHT_EFFORT`, `LARMORSIGHT_THINKING`, `LARMORSIGHT_MAX_TOKENS`,
+  `LARMORSIGHT_LOG_FORMAT` (`json`/`text`, по умолчанию `json` — Cloud Run
+  парсит `severity` из JSON и поднимает в Cloud Logging), `LOG_LEVEL`. На каждый
+  успешный `/run` пишется JSON-лог `run completed` со счётчиками токенов
+  (включая cache_read/cache_creation), временем ответа и размерами входа/выхода.
 - `requirements.txt` — `anthropic`, `google-cloud-storage`, `fastapi`, `uvicorn`, `pydantic`.
 - `Dockerfile` — `python:3.11-slim`, `uvicorn app:app` на `$PORT`.
 

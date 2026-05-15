@@ -16,11 +16,16 @@ Messages API с этим системным промптом (prompt caching) п
   LARMORSIGHT_EFFORT         "low" | "medium" | "high" | "xhigh" | "max" (по умолчанию "high")
   LARMORSIGHT_THINKING       "adaptive" | "disabled" (по умолчанию "adaptive")
   LARMORSIGHT_MAX_TOKENS     по умолчанию 16000
+  LARMORSIGHT_LOG_FORMAT     "json" (по умолчанию, для Cloud Logging) | "text"
+  LOG_LEVEL                  по умолчанию "INFO"
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
+import sys
+import time
 from functools import lru_cache
 from typing import Optional
 
@@ -28,7 +33,48 @@ import anthropic
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-logging.basicConfig(level=logging.INFO)
+# Стандартные поля LogRecord, которые НЕ выносим в JSON-payload (они либо служебные,
+# либо у нас уже есть их аналоги).
+_STD_LOG_RECORD_FIELDS = frozenset({
+    "args", "asctime", "created", "exc_info", "exc_text", "filename", "funcName",
+    "levelname", "levelno", "lineno", "message", "module", "msecs", "msg", "name",
+    "pathname", "process", "processName", "relativeCreated", "stack_info",
+    "thread", "threadName", "taskName",
+})
+
+
+class _JsonFormatter(logging.Formatter):
+    """JSON-логи для Cloud Logging — Cloud Run автоматически распарсит `severity`."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        payload: dict = {
+            "severity": record.levelname,
+            "message": record.getMessage(),
+            "logger": record.name,
+            "timestamp": self.formatTime(record, "%Y-%m-%dT%H:%M:%S"),
+        }
+        for key, value in record.__dict__.items():
+            if key in _STD_LOG_RECORD_FIELDS or key.startswith("_"):
+                continue
+            payload[key] = value
+        if record.exc_info:
+            payload["exc_info"] = self.formatException(record.exc_info)
+        return json.dumps(payload, ensure_ascii=False, default=str)
+
+
+def _setup_logging() -> None:
+    level = os.environ.get("LOG_LEVEL", "INFO").upper()
+    handler = logging.StreamHandler(sys.stdout)
+    if os.environ.get("LARMORSIGHT_LOG_FORMAT", "json") == "json":
+        handler.setFormatter(_JsonFormatter())
+    else:
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+    root = logging.getLogger()
+    root.handlers = [handler]
+    root.setLevel(level)
+
+
+_setup_logging()
 log = logging.getLogger("larmorsight.employee")
 
 EMPLOYEE = os.environ.get("LARMORSIGHT_EMPLOYEE", "unknown")
@@ -180,25 +226,54 @@ def run(req: RunRequest) -> RunResponse:
     if EFFORT:
         kwargs["output_config"] = {"effort": EFFORT}
 
+    started = time.perf_counter()
     try:
         # Стримим (защита от таймаутов на длинных ответах) и берём итоговое сообщение.
         with anthropic_client().messages.stream(**kwargs) as stream:
             message = stream.get_final_message()
     except anthropic.APIStatusError as exc:
         log.warning(
-            "Anthropic API error %s: %s (request_id=%s)",
-            exc.status_code, getattr(exc, "message", exc), getattr(exc, "_request_id", None),
+            "anthropic api error",
+            extra={
+                "employee": EMPLOYEE,
+                "status": exc.status_code,
+                "request_id": getattr(exc, "_request_id", None),
+                "elapsed_ms": int((time.perf_counter() - started) * 1000),
+            },
         )
         status = 502 if exc.status_code >= 500 else exc.status_code
         raise HTTPException(status_code=status, detail=str(getattr(exc, "message", exc)))
     except anthropic.APIConnectionError as exc:
+        log.warning(
+            "anthropic connection error",
+            extra={"employee": EMPLOYEE, "elapsed_ms": int((time.perf_counter() - started) * 1000)},
+        )
         raise HTTPException(status_code=503, detail=f"upstream connection error: {exc}")
 
+    elapsed_ms = int((time.perf_counter() - started) * 1000)
     text = "".join(b.text for b in message.content if b.type == "text").strip()
     try:
         usage = message.usage.model_dump()
     except AttributeError:  # pragma: no cover - на случай старого SDK
         usage = dict(message.usage)
+
+    log.info(
+        "run completed",
+        extra={
+            "employee": EMPLOYEE,
+            "model": message.model,
+            "stop_reason": message.stop_reason,
+            "task_chars": len(req.task),
+            "context_chars": len(req.context or ""),
+            "output_chars": len(text),
+            "input_tokens": usage.get("input_tokens"),
+            "output_tokens": usage.get("output_tokens"),
+            "cache_read_input_tokens": usage.get("cache_read_input_tokens"),
+            "cache_creation_input_tokens": usage.get("cache_creation_input_tokens"),
+            "elapsed_ms": elapsed_ms,
+        },
+    )
+
     return RunResponse(
         employee=EMPLOYEE,
         model=message.model,
