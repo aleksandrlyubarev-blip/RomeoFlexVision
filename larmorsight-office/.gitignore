@@ -1,6 +1,6 @@
 # Terraform
-gcp-infra/.terraform/
-gcp-infra/.terraform.lock.hcl
+**/.terraform/
+**/.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfvars

@@ -63,3 +63,5 @@ jobs:
         run: |
           terraform -chdir=gcp-infra init -backend=false -input=false
           terraform -chdir=gcp-infra validate
+          terraform -chdir=gcp-infra/bootstrap init -backend=false -input=false
+          terraform -chdir=gcp-infra/bootstrap validate

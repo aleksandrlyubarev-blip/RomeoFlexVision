@@ -169,6 +169,22 @@ Terraform создаст:
 письмо не уйдёт; их видно в Cloud Monitoring). Для Slack/PagerDuty/webhook добавьте
 дополнительные каналы вручную и привяжите их в политике (`notification_channels`).
 
+## State в GCS
+
+По умолчанию Terraform хранит state локально (`terraform.tfstate`). Для команды/CI
+лучше вынести его в Cloud Storage — есть подпапка `bootstrap/` с минимальной
+конфигурацией, которая создаёт бакет под state:
+
+```bash
+cd bootstrap
+cp terraform.tfvars.example terraform.tfvars   # те же project_id/region, что в основной
+terraform init && terraform apply
+```
+
+Затем раскомментируйте блок `backend "gcs"` в `providers.tf` (имя бакета —
+из output `state_bucket`) и выполните `terraform init -migrate-state` в `gcp-infra/`.
+Подробности — `bootstrap/README.md`.
+
 ## Контроль расходов
 - `min_instance_count = 0` — сервисы скейлятся в ноль, когда не используются.
 - `employee_max_instances` ограничивает потолок инстансов.
@@ -188,7 +204,8 @@ Terraform создаст:
       + опц. репозиторий Artifact Registry (`create_artifact_repo`).
 - [ ] `terraform plan/apply` внутри пайплайна (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`;
       требует backend для state + сервис-аккаунт с правами).
-- [ ] Backend для state в GCS (закомментирован в `providers.tf`).
+- [x] Backend для state в GCS — `bootstrap/` (создаёт бакет) + комментарии в `providers.tf`
+      (включается явно: `cd bootstrap && terraform apply`, затем `terraform init -migrate-state` в `..`).
 - [x] Алерты Cloud Monitoring на 5xx и p95-латентность (`enable_alerts` + опц. `alert_email`).
 - [ ] Дашборды Cloud Monitoring (`google_monitoring_dashboard`).
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

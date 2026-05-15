@@ -6,6 +6,24 @@
 ## [Unreleased]
 - —
 
+## 0.7.0
+### Добавлено
+- **`gcp-infra/bootstrap/`** — отдельная Terraform-конфигурация, создающая бакет
+  Cloud Storage (`<project_id>-larmorsight-tfstate`, versioning + lifecycle на
+  старые архивные версии) под Terraform state основной конфигурации. Свой state
+  держит локально (классическая «курица и яйцо»).
+- `providers.tf` основной конфигурации: проясняющие комментарии и пошаговый план
+  включения `backend "gcs"` (apply в bootstrap → раскомментировать блок →
+  `terraform init -migrate-state`).
+- `gcp-infra/README.md`: новая секция «State в GCS».
+- CI: `terraform validate` теперь покрывает и `bootstrap/`.
+
+### Изменено
+- `.gitignore`: Terraform-артефакты теперь матчатся по `**/.terraform/` /
+  `**/.terraform.lock.hcl` — захватывает и `bootstrap/`, и любые будущие
+  подкаталоги.
+- `plugin.json` → `0.7.0`.
+
 ## 0.6.0
 ### Добавлено
 - **Cloud Monitoring** — `enable_alerts` (опционально) включает:

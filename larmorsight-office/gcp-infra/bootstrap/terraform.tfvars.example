@@ -1,0 +1,8 @@
+# Скопируйте в terraform.tfvars и заполните под свой GCP-проект.
+# Эти значения должны совпадать с основным gcp-infra/terraform.tfvars.
+
+project_id = "my-gcp-project-id"
+region     = "us-central1"
+
+# Имя бакета (по умолчанию "<project_id>-larmorsight-tfstate"):
+# state_bucket = "my-gcp-project-id-larmorsight-tfstate"

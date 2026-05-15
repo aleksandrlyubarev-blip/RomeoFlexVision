@@ -8,7 +8,10 @@ terraform {
     }
   }
 
-  # При желании вынесите state в GCS:
+  # State в GCS (опционально). По шагам:
+  #   1. cd bootstrap && cp terraform.tfvars.example terraform.tfvars && terraform init && terraform apply
+  #   2. раскомментируйте блок ниже и подставьте имя бакета (output bootstrap.state_bucket)
+  #   3. cd .. && terraform init -migrate-state
   # backend "gcs" {
   #   bucket = "<project_id>-larmorsight-tfstate"
   #   prefix = "larmorsight-office"
