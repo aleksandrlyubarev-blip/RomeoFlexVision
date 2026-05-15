@@ -1,0 +1,102 @@
+# Triton Inference Server 2.45+ reference deployment for RoboQC.
+#
+# Alternative to the DeepStream 9.0 template
+# (`deepstream_inspection_cell.yaml`). DeepStream wins on edge-camera
+# integration; Triton wins on multi-model serving from a single host
+# (e.g. an inspection bench with one Orin AGX feeding many stations).
+#
+# Layout follows Triton's model-repository convention:
+#   /models/
+#     yolo26-seg/
+#       config.pbtxt          # this file (the yolo26-seg section)
+#       1/
+#         model.onnx          # exported via roboqc_data export_models/onnx_export.py
+#     patchcore_lite/
+#       config.pbtxt
+#       1/
+#         model.pt
+#     velm_orchestrator/      # Triton Python backend that fans out to the two above
+#       config.pbtxt
+#       1/
+#         model.py
+#
+# The block below is a *manifest* over the three sub-configs so a
+# deployment script (future PR) can write each config.pbtxt out
+# atomically. Keeping them in one YAML keeps the relationship between
+# models obvious and reviewable.
+
+application:
+  name: roboqc-bench-triton
+  station_id: ST-A4-RACK-FINAL
+  triton_version: ">=2.45"
+  default_precision: fp16
+  default_max_batch_size: 4
+
+models:
+  - name: yolo26-seg
+    platform: onnxruntime_onnx
+    max_batch_size: 4
+    input:
+      - name: images
+        data_type: FP32
+        dims: [3, 640, 640]
+    output:
+      - name: output0
+        data_type: FP32
+        dims: [-1]
+    instance_group:
+      - kind: KIND_GPU
+        count: 1
+    dynamic_batching:
+      preferred_batch_size: [1, 2, 4]
+      max_queue_delay_microseconds: 1000
+
+  - name: patchcore_lite
+    platform: pytorch_libtorch
+    max_batch_size: 1
+    input:
+      - name: image
+        data_type: FP32
+        dims: [3, 256, 256]
+    output:
+      - name: heatmap
+        data_type: FP32
+        dims: [256, 256]
+      - name: score
+        data_type: FP32
+        dims: [1]
+    instance_group:
+      - kind: KIND_GPU
+        count: 1
+
+  - name: velm_orchestrator
+    platform: python
+    # Python backend wraps roboqc_data.logic.velm.VelmPipeline and
+    # fans out to yolo26-seg (primary) + patchcore_lite (secondary),
+    # then collates a VelmResult JSON.
+    max_batch_size: 1
+    input:
+      - name: image_bytes
+        data_type: BYTES
+        dims: [1]
+      - name: image_uri
+        data_type: BYTES
+        dims: [1]
+    output:
+      - name: velm_result_json
+        data_type: BYTES
+        dims: [1]
+    instance_group:
+      - kind: KIND_CPU
+        count: 2
+
+sink:
+  # The orchestrator model emits a VelmResult JSON which the host
+  # process (roboqc-station service) wraps into an InspectionResult
+  # and POSTs to Romeo_PHD.
+  type: rest
+  endpoint: "http://romeo-phd.local/api/inspections"
+  hitl_confidence_threshold: 0.85
+  retry:
+    max_attempts: 4
+    backoff_seconds: [2, 4, 8, 16]

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from .calibration.conformal import ConformalPredictor
 from .logic.velm import VelmPipeline, VelmVerdict
 
 if TYPE_CHECKING:  # pragma: no cover - imports only used for typing
@@ -36,10 +37,28 @@ _PASS_SEVERITIES = frozenset({"ok", "cosmetic"})
 
 
 class VelmRoboQCClient:
-    """Async client that satisfies the rhaef_v2 RoboQCClient Protocol."""
+    """Async client that satisfies the rhaef_v2 RoboQCClient Protocol.
 
-    def __init__(self, pipeline: VelmPipeline | None = None) -> None:
+    Args:
+        pipeline: optional :class:`VelmPipeline`. Default constructs
+            a heuristic-only pipeline suitable for CI / dry-run.
+        predictor: optional calibrated
+            :class:`roboqc_data.calibration.conformal.ConformalPredictor`.
+            When supplied, the HITL routing threshold for borderline
+            confidence comes from the predictor (gives a valid
+            1 − α coverage guarantee on exchangeable data) rather than
+            the hard-coded :data:`HITL_CONFIDENCE_THRESHOLD`. Critical
+            and major severities, and any non-pass overall verdict,
+            still force HITL regardless.
+    """
+
+    def __init__(
+        self,
+        pipeline: VelmPipeline | None = None,
+        predictor: ConformalPredictor | None = None,
+    ) -> None:
         self.pipeline = pipeline or VelmPipeline()
+        self.predictor = predictor
 
     async def run_check(self, payload: InspectionRequest) -> InspectionResult:
         # Imported here to keep this module importable even when
@@ -57,10 +76,9 @@ class VelmRoboQCClient:
             detected = (DetectedDefect(defect_class="ok", confidence=0.95),)
 
         # Overall confidence is the maximum per-verdict confidence, or
-        # 0.95 when nothing was flagged. The InspectionResult-level
-        # confidence is what Romeo_PHD compares to HITL_CONFIDENCE_THRESHOLD.
+        # 0.95 when nothing was flagged.
         confidence = max((d.confidence for d in detected), default=0.95)
-        requires_hitl = (not result.overall_pass) or confidence < HITL_CONFIDENCE_THRESHOLD
+        requires_hitl = (not result.overall_pass) or self._below_threshold(confidence)
 
         return InspectionResult(
             inspection_id=payload.inspection_id,
@@ -71,6 +89,18 @@ class VelmRoboQCClient:
             model_version=MODEL_VERSION,
             requires_hitl=requires_hitl,
         )
+
+    def _below_threshold(self, confidence: float) -> bool:
+        """Route to HITL when confidence is below the active threshold.
+
+        Uses a calibrated conformal threshold if available, otherwise
+        falls back to the hard-coded HITL_CONFIDENCE_THRESHOLD. This
+        is the only routing knob the client exposes — everything else
+        flows from VelmResult.overall_pass and per-verdict severity.
+        """
+        if self.predictor is not None and self.predictor.is_calibrated:
+            return self.predictor.decide(confidence).requires_hitl
+        return confidence < HITL_CONFIDENCE_THRESHOLD
 
 
 def _to_detected_defect(detected_cls, verdict: VelmVerdict):
@@ -112,6 +142,7 @@ def build_velm_api_services(
     pipeline: VelmPipeline | None = None,
     *,
     dataset_root=None,
+    predictor: ConformalPredictor | None = None,
 ):
     """Construct rhaef_v2 :class:`APIServices` wired to VELM.
 
@@ -119,6 +150,16 @@ def build_velm_api_services(
     API surface unchanged while swapping ``StubRoboQCClient`` for
     :class:`VelmRoboQCClient`. Returns ``None`` when rhaef_v2 is not
     installed so this module stays importable in pure-data contexts.
+
+    Args:
+        pipeline: optional :class:`VelmPipeline` to wire in. Default
+            uses heuristic stand-ins (safe for dry-run).
+        dataset_root: optional dataset manifest root for
+            ``/dataset/manifest/{id}``.
+        predictor: optional calibrated
+            :class:`roboqc_data.calibration.conformal.ConformalPredictor`
+            so HITL routing uses statistical coverage instead of the
+            hard-coded threshold.
 
     Example:
         >>> services = build_velm_api_services()
@@ -137,6 +178,6 @@ def build_velm_api_services(
     return APIServices(
         model_router=ModelRouter(client=_fake_completion_client),
         policy_engine=FrictionPolicyEngine(),
-        roboqc_client=VelmRoboQCClient(pipeline=pipeline),
+        roboqc_client=VelmRoboQCClient(pipeline=pipeline, predictor=predictor),
         dataset_root=dataset_root,
     )
