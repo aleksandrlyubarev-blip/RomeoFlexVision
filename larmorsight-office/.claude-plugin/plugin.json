@@ -1,6 +1,6 @@
 {
   "name": "larmorsight-office",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "LarmorSight AI Office — AI-сотрудники (плагины с навыками), офисные slash-команды и развёртывание сотрудников в GCP по требованию.",
   "author": {
     "name": "LarmorSight"

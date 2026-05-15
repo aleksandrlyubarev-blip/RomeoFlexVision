@@ -32,3 +32,18 @@ output "build_trigger_id" {
   description = "ID Cloud Build trigger для образа сотрудника (null, если enable_build_trigger = false)."
   value       = one(google_cloudbuild_trigger.employee_image[*].trigger_id)
 }
+
+output "alert_policy_5xx" {
+  description = "Имена политик Cloud Monitoring на 5xx, по сотруднику (пусто, если enable_alerts = false)."
+  value       = { for k, v in google_monitoring_alert_policy.employee_5xx : k => v.name }
+}
+
+output "alert_policy_latency" {
+  description = "Имена политик Cloud Monitoring на p95-латентность, по сотруднику (пусто, если enable_alerts = false)."
+  value       = { for k, v in google_monitoring_alert_policy.employee_latency : k => v.name }
+}
+
+output "alert_notification_channel" {
+  description = "ID канала уведомлений по email (null, если enable_alerts = false или alert_email пуст)."
+  value       = one(google_monitoring_notification_channel.email[*].id)
+}

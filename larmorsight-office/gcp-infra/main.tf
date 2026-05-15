@@ -9,7 +9,14 @@ locals {
     "cloudbuild.googleapis.com",
     "cloudscheduler.googleapis.com",
     "billingbudgets.googleapis.com",
+    "monitoring.googleapis.com",
   ]
+
+  notification_channels = (
+    var.enable_alerts && var.alert_email != ""
+    ? [google_monitoring_notification_channel.email[0].id]
+    : []
+  )
 }
 
 data "google_project" "this" {
@@ -176,6 +183,73 @@ resource "google_cloudbuild_trigger" "employee_image" {
     _TAG        = "latest"
     _SOURCE_DIR = "larmorsight-office/gcp-infra/employee-runtime"
   }
+
+  depends_on = [google_project_service.enabled]
+}
+
+# Опционально: канал уведомлений Cloud Monitoring (email).
+resource "google_monitoring_notification_channel" "email" {
+  count = var.enable_alerts && var.alert_email != "" ? 1 : 0
+
+  display_name = "LarmorSight alerts <${var.alert_email}>"
+  type         = "email"
+  labels = {
+    email_address = var.alert_email
+  }
+
+  depends_on = [google_project_service.enabled]
+}
+
+# Алерт на 5xx у Cloud Run-сервиса сотрудника (любая 5xx за 5 минут).
+resource "google_monitoring_alert_policy" "employee_5xx" {
+  for_each = var.enable_alerts ? toset(var.active_employees) : toset([])
+
+  display_name = "LarmorSight ${each.value}: 5xx detected"
+  combiner     = "OR"
+
+  conditions {
+    display_name = "5xx > 0 за 5 минут"
+    condition_threshold {
+      filter          = "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${module.ai_employee[each.value].service_name}\" AND metric.labels.response_code_class=\"5xx\""
+      duration        = "300s"
+      comparison      = "COMPARISON_GT"
+      threshold_value = 0
+
+      aggregations {
+        alignment_period   = "60s"
+        per_series_aligner = "ALIGN_RATE"
+      }
+    }
+  }
+
+  notification_channels = local.notification_channels
+
+  depends_on = [google_project_service.enabled]
+}
+
+# Алерт на p95-латентность /run.
+resource "google_monitoring_alert_policy" "employee_latency" {
+  for_each = var.enable_alerts ? toset(var.active_employees) : toset([])
+
+  display_name = "LarmorSight ${each.value}: p95 latency > ${var.alert_latency_threshold_ms}ms"
+  combiner     = "OR"
+
+  conditions {
+    display_name = "p95 latency"
+    condition_threshold {
+      filter          = "metric.type=\"run.googleapis.com/request_latencies\" AND resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${module.ai_employee[each.value].service_name}\""
+      duration        = "300s"
+      comparison      = "COMPARISON_GT"
+      threshold_value = var.alert_latency_threshold_ms
+
+      aggregations {
+        alignment_period   = "60s"
+        per_series_aligner = "ALIGN_PERCENTILE_95"
+      }
+    }
+  }
+
+  notification_channels = local.notification_channels
 
   depends_on = [google_project_service.enabled]
 }

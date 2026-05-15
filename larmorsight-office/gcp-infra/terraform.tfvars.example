@@ -38,6 +38,11 @@ active_employees = ["research-analyst"]
 # github_repo          = "RomeoFlexVision"
 # build_branch         = "main"
 
+# Cloud Monitoring: алерты на ошибки/латентность сервисов сотрудников.
+# enable_alerts              = false
+# alert_email                = "ops@example.com"   # пусто => канал не создаётся
+# alert_latency_threshold_ms = 30000               # порог p95-латентности /run, мс
+
 # Ключ Anthropic лучше не хранить в этом файле, а завести версию секрета вручную:
 #   gcloud secrets versions add larmorsight-anthropic-api-key --data-file=- <<< "$ANTHROPIC_API_KEY"
 # anthropic_api_key = "sk-ant-..."

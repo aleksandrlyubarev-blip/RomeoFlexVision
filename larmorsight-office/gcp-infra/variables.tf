@@ -138,3 +138,21 @@ variable "build_branch" {
   description = "Ветка, push в которую запускает сборку образа сотрудника."
   default     = "main"
 }
+
+variable "enable_alerts" {
+  type        = bool
+  description = "Создавать алерты Cloud Monitoring на ошибки и латентность сервисов сотрудников."
+  default     = false
+}
+
+variable "alert_email" {
+  type        = string
+  description = "Email для уведомлений (создаётся google_monitoring_notification_channel). Пусто => канал не создаётся; алерты сработают, но без уведомления по email."
+  default     = ""
+}
+
+variable "alert_latency_threshold_ms" {
+  type        = number
+  description = "Порог p95-латентности /run (мс), при превышении которого срабатывает алерт."
+  default     = 30000
+}

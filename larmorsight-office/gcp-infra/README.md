@@ -23,6 +23,9 @@ Scheduler для периодического запуска.
 | `google_billing_budget.larmorsight` | опц. (если задан `billing_account`): месячный бюджет `budget_amount_usd` с алертами 50/90/100% |
 | `google_artifact_registry_repository.larmorsight` | опц. (`create_artifact_repo = true`): Docker-репозиторий `artifact_repo` для образа сотрудника |
 | `google_cloudbuild_trigger.employee_image` | опц. (`enable_build_trigger = true`): авто-сборка образа сотрудника при push в `build_branch` (по `cloudbuild.yaml`) |
+| `google_monitoring_notification_channel.email` | опц. (`enable_alerts = true` и задан `alert_email`): email-канал для уведомлений |
+| `google_monitoring_alert_policy.employee_5xx` | опц. (`enable_alerts = true`): на каждого сотрудника — алерт на 5xx за 5 минут |
+| `google_monitoring_alert_policy.employee_latency` | опц. (`enable_alerts = true`): на каждого сотрудника — алерт на p95-латентность выше `alert_latency_threshold_ms` |
 
 ## Предпосылки
 - Terraform ≥ 1.9, `gcloud` (Google Cloud SDK), `gsutil`, `jq`.
@@ -147,6 +150,25 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
 (Переменная `anthropic_api_key` существует для удобства локальных тестов, но она
 `sensitive` и попадёт в state — для прода используйте ручную/CI-загрузку версии.)
 
+## Мониторинг и алерты
+
+Чтобы получать уведомления о проблемах с сервисами сотрудников, задайте в `terraform.tfvars`:
+
+```hcl
+enable_alerts              = true
+alert_email                = "ops@example.com"   # пусто => канал не создаётся
+alert_latency_threshold_ms = 30000               # p95-латентность /run
+```
+
+Terraform создаст:
+- email-канал уведомлений (`google_monitoring_notification_channel`),
+- по две политики на каждого сотрудника из `active_employees`: на любые 5xx за 5 минут
+  и на p95-латентность `/run` выше порога.
+
+Если `alert_email` пуст — политики создаются без канала уведомлений (сработают, но
+письмо не уйдёт; их видно в Cloud Monitoring). Для Slack/PagerDuty/webhook добавьте
+дополнительные каналы вручную и привяжите их в политике (`notification_channels`).
+
 ## Контроль расходов
 - `min_instance_count = 0` — сервисы скейлятся в ноль, когда не используются.
 - `employee_max_instances` ограничивает потолок инстансов.
@@ -167,5 +189,6 @@ echo -n "$ANTHROPIC_API_KEY" | gcloud secrets versions add larmorsight-anthropic
 - [ ] `terraform plan/apply` внутри пайплайна (закомментированный шаг `terraform-apply` в `cloudbuild.yaml`;
       требует backend для state + сервис-аккаунт с правами).
 - [ ] Backend для state в GCS (закомментирован в `providers.tf`).
-- [ ] Детальные дашборды Cloud Monitoring / алерты на ошибки сервисов.
+- [x] Алерты Cloud Monitoring на 5xx и p95-латентность (`enable_alerts` + опц. `alert_email`).
+- [ ] Дашборды Cloud Monitoring (`google_monitoring_dashboard`).
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

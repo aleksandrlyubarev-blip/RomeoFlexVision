@@ -4,13 +4,14 @@
 (плагины с навыками), общие slash-команды, единый брендбук и инструменты
 развёртывания тех же сотрудников в облаке Google Cloud Platform по требованию.
 
-> Статус: **v0.5 — локальный офис + рабочий рантайм для Cloud Run + CI/CD + тесты.**
+> Статус: **v0.6 — локальный офис + рабочий рантайм для Cloud Run + CI/CD + тесты + мониторинг.**
 > Terraform валиден, рантайм сотрудника реальный (FastAPI + Anthropic API, prompt
 > caching, модель `claude-opus-4-7`) и покрыт тестами (pytest, Anthropic-клиент
 > мокается), Cloud Run-сервисы приватные (доступ через `invoker_members`), есть
-> опциональные бюджетный алерт, Artifact Registry и Cloud Build trigger, плюс
-> CI офиса в GitHub Actions. Рассчитано на ваш реальный GCP-проект и собранный
-> образ; сам `terraform apply` / деплой в этот пакет не входят. См. `CHANGELOG.md`.
+> опциональные бюджетный алерт, Artifact Registry, Cloud Build trigger и Cloud
+> Monitoring алерты (5xx и p95-латентность), плюс CI офиса в GitHub Actions.
+> Рассчитано на ваш реальный GCP-проект и собранный образ; сам `terraform apply` /
+> деплой в этот пакет не входят. См. `CHANGELOG.md`.
 
 ## Что внутри
 

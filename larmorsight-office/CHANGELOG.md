@@ -6,6 +6,21 @@
 ## [Unreleased]
 - —
 
+## 0.6.0
+### Добавлено
+- **Cloud Monitoring** — `enable_alerts` (опционально) включает:
+  - `google_monitoring_notification_channel.email` (если задан `alert_email`);
+  - на каждого сотрудника из `active_employees` две политики:
+    `employee_5xx` (любая 5xx за 5 минут на Cloud Run-сервисе сотрудника) и
+    `employee_latency` (p95-латентность `/run` выше `alert_latency_threshold_ms`,
+    по умолчанию 30 000 мс).
+  Включён API `monitoring.googleapis.com`.
+- Выходы Terraform: `alert_policy_5xx`, `alert_policy_latency`, `alert_notification_channel`.
+
+### Изменено
+- `terraform.tfvars.example`, `gcp-infra/README.md` (новая секция «Мониторинг и алерты»,
+  таблица ресурсов, TODO) и `plugin.json` → `0.6.0`.
+
 ## 0.5.0
 ### Добавлено
 - **Тесты рантайма сотрудника** — `gcp-infra/employee-runtime/test_app.py` (6 кейсов
