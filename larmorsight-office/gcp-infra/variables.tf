@@ -156,3 +156,9 @@ variable "alert_latency_threshold_ms" {
   description = "Порог p95-латентности /run (мс), при превышении которого срабатывает алерт."
   default     = 30000
 }
+
+variable "enable_dashboard" {
+  type        = bool
+  description = "Создавать дашборд Cloud Monitoring «LarmorSight AI Office — Overview» (request rate + p95-латентность на каждого сотрудника)."
+  default     = false
+}

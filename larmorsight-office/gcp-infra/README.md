@@ -26,6 +26,7 @@ Scheduler для периодического запуска.
 | `google_monitoring_notification_channel.email` | опц. (`enable_alerts = true` и задан `alert_email`): email-канал для уведомлений |
 | `google_monitoring_alert_policy.employee_5xx` | опц. (`enable_alerts = true`): на каждого сотрудника — алерт на 5xx за 5 минут |
 | `google_monitoring_alert_policy.employee_latency` | опц. (`enable_alerts = true`): на каждого сотрудника — алерт на p95-латентность выше `alert_latency_threshold_ms` |
+| `google_monitoring_dashboard.larmorsight_overview` | опц. (`enable_dashboard = true`): дашборд «LarmorSight AI Office — Overview» — на каждого сотрудника request rate (по `response_code_class`) и p95-латентность `/run` |
 
 ## Предпосылки
 - Terraform ≥ 1.9, `gcloud` (Google Cloud SDK), `gsutil`, `jq`.
@@ -169,6 +170,11 @@ Terraform создаст:
 письмо не уйдёт; их видно в Cloud Monitoring). Для Slack/PagerDuty/webhook добавьте
 дополнительные каналы вручную и привяжите их в политике (`notification_channels`).
 
+**Дашборд.** Установите `enable_dashboard = true` — Terraform создаст дашборд
+«LarmorSight AI Office — Overview» с двумя графиками на каждого сотрудника
+(request rate по классам ответов и p95-латентность `/run`). Имя ресурса — в выходе
+`monitoring_dashboard`; ссылка в консоли — `https://console.cloud.google.com/monitoring/dashboards`.
+
 ## State в GCS
 
 По умолчанию Terraform хранит state локально (`terraform.tfstate`). Для команды/CI
@@ -207,5 +213,5 @@ terraform init && terraform apply
 - [x] Backend для state в GCS — `bootstrap/` (создаёт бакет) + комментарии в `providers.tf`
       (включается явно: `cd bootstrap && terraform apply`, затем `terraform init -migrate-state` в `..`).
 - [x] Алерты Cloud Monitoring на 5xx и p95-латентность (`enable_alerts` + опц. `alert_email`).
-- [ ] Дашборды Cloud Monitoring (`google_monitoring_dashboard`).
+- [x] Дашборд Cloud Monitoring (`google_monitoring_dashboard`, `enable_dashboard`).
 - [ ] При необходимости — Vertex AI для более тяжёлых агентов вместо/в дополнение к Cloud Run.

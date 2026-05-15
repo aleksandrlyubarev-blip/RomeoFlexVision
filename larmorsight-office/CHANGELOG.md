@@ -6,6 +6,21 @@
 ## [Unreleased]
 - —
 
+## 0.8.0
+### Добавлено
+- **Дашборд Cloud Monitoring** — `google_monitoring_dashboard.larmorsight_overview`
+  (опционально, `enable_dashboard`): один дашборд «LarmorSight AI Office — Overview»,
+  по два графика на каждого сотрудника из `active_employees` — request rate
+  (`run.googleapis.com/request_count`, сгруппированный по `response_code_class`) и
+  p95-латентность `/run` (`run.googleapis.com/request_latencies`,
+  `ALIGN_PERCENTILE_95`). Если `active_employees` пуст, дашборд не создаётся.
+- Выход Terraform: `monitoring_dashboard` (имя ресурса
+  `projects/.../dashboards/...`, либо null).
+
+### Изменено
+- `terraform.tfvars.example`, `gcp-infra/README.md` (таблица ресурсов, секция
+  «Мониторинг и алерты», TODO) и `plugin.json` → `0.8.0`.
+
 ## 0.7.0
 ### Добавлено
 - **`gcp-infra/bootstrap/`** — отдельная Terraform-конфигурация, создающая бакет

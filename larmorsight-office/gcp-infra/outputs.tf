@@ -47,3 +47,8 @@ output "alert_notification_channel" {
   description = "ID канала уведомлений по email (null, если enable_alerts = false или alert_email пуст)."
   value       = one(google_monitoring_notification_channel.email[*].id)
 }
+
+output "monitoring_dashboard" {
+  description = "Имя дашборда Cloud Monitoring (projects/.../dashboards/...), null если enable_dashboard = false."
+  value       = one(google_monitoring_dashboard.larmorsight_overview[*].name)
+}

@@ -227,6 +227,68 @@ resource "google_monitoring_alert_policy" "employee_5xx" {
   depends_on = [google_project_service.enabled]
 }
 
+# Опционально: дашборд Cloud Monitoring со сводкой по всем сотрудникам.
+resource "google_monitoring_dashboard" "larmorsight_overview" {
+  count = var.enable_dashboard && length(var.active_employees) > 0 ? 1 : 0
+
+  dashboard_json = jsonencode({
+    displayName = "LarmorSight AI Office — Overview"
+    gridLayout = {
+      columns = "2"
+      widgets = flatten([
+        for name in var.active_employees : [
+          {
+            title = "${name} — request rate (req/s, by status class)"
+            xyChart = {
+              dataSets = [{
+                timeSeriesQuery = {
+                  timeSeriesFilter = {
+                    filter = "metric.type=\"run.googleapis.com/request_count\" AND resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${module.ai_employee[name].service_name}\""
+                    aggregation = {
+                      alignmentPeriod    = "60s"
+                      perSeriesAligner   = "ALIGN_RATE"
+                      crossSeriesReducer = "REDUCE_SUM"
+                      groupByFields      = ["metric.labels.response_code_class"]
+                    }
+                  }
+                }
+                plotType = "LINE"
+              }]
+              yAxis = {
+                label = "req/s"
+                scale = "LINEAR"
+              }
+            }
+          },
+          {
+            title = "${name} — p95 /run latency (ms)"
+            xyChart = {
+              dataSets = [{
+                timeSeriesQuery = {
+                  timeSeriesFilter = {
+                    filter = "metric.type=\"run.googleapis.com/request_latencies\" AND resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"${module.ai_employee[name].service_name}\""
+                    aggregation = {
+                      alignmentPeriod  = "60s"
+                      perSeriesAligner = "ALIGN_PERCENTILE_95"
+                    }
+                  }
+                }
+                plotType = "LINE"
+              }]
+              yAxis = {
+                label = "ms"
+                scale = "LINEAR"
+              }
+            }
+          }
+        ]
+      ])
+    }
+  })
+
+  depends_on = [google_project_service.enabled]
+}
+
 # Алерт на p95-латентность /run.
 resource "google_monitoring_alert_policy" "employee_latency" {
   for_each = var.enable_alerts ? toset(var.active_employees) : toset([])
