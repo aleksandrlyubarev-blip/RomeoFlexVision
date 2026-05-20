@@ -11,6 +11,7 @@ import numpy as np
 import typer
 
 from ..brigada.orchestrator import BrigadaSynthesizer, SynthRequest
+from ..deploy.render import render as render_deploy
 from ..export.anomalib_folder import manifest_to_anomalib_folder
 from ..export.coco import write_coco
 from ..export.yolo_seg import manifest_to_yolo_seg
@@ -179,6 +180,24 @@ def logic_qa(
                 "findings": [
                     {"question": f.question, "answer": f.answer, "explanation": f.explanation} for f in result.findings
                 ],
+            }
+        )
+    )
+
+
+@app.command(name="deploy-render")
+def deploy_render(
+    template: Path = typer.Option(..., exists=True, dir_okay=False, help="Path to a deploy template YAML"),
+    out: Path = typer.Option(..., help="Output directory for rendered config files"),
+) -> None:
+    """Render a DeepStream / Triton deploy template into runtime config files."""
+    written = render_deploy(template, out)
+    typer.echo(
+        json.dumps(
+            {
+                "template": str(template),
+                "out_dir": str(out),
+                "files": [str(p) for p in written],
             }
         )
     )
