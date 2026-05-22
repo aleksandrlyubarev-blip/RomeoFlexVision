@@ -1,7 +1,7 @@
 # roboqc-testbed (Helm)
 
 Продакшен-путь разворачивания полигона в GKE (альтернатива Compute Engine VM в
-`larmorsight-office/gcp-infra/modules/gpu-testbed`).
+`infra/gcp/modules/gpu-testbed`).
 
 ## Предпосылки
 - GKE кластер с GPU node-pool, образ NVIDIA driver installer развёрнут (`daemonset` от Google).

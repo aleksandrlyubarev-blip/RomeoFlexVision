@@ -12,15 +12,13 @@ E2E-инструкция: от пустого GCP-проекта до рабоч
 
 ## 1. Поднять инфраструктуру
 ```bash
-cd larmorsight-office/gcp-infra
+cd infra/gcp
 cp terraform.tfvars.example terraform.tfvars
-# в terraform.tfvars раскомментируйте блок "RoboQC GPU testbed" и выставьте:
-#   enable_testbed = true
-#   testbed_region = "europe-west4"
-#   testbed_zone   = "europe-west4-b"
+# в terraform.tfvars выставьте project_id; при необходимости —
+# testbed_region / testbed_zone (по умолчанию europe-west4 / europe-west4-b)
 terraform init
-terraform plan -var enable_testbed=true
-terraform apply -var enable_testbed=true
+terraform plan
+terraform apply
 ```
 Появятся outputs:
 - `testbed_external_ip`, `testbed_ssh_command`, `testbed_langgraph_url`, `testbed_sglang_primary_url`,
@@ -84,15 +82,14 @@ python scripts/bench_roboqc/report.py results/qwen.jsonl results/gemma.jsonl --o
 
 ## 7. Снести
 ```bash
-cd larmorsight-office/gcp-infra
-terraform destroy -target=module.gpu_testbed -target=module.models_bucket
+cd infra/gcp
+terraform destroy
 ```
-Это сносит только полигон — Cloud Run AI-сотрудники остаются нетронутыми.
 
 ## Troubleshooting
 - **`docker compose` не видит GPU.** Убедитесь, что VM поднята по образу Deep Learning VM
   (cu124) и `nvidia-smi` работает. Драйвер выставляется флагом `install-nvidia-driver=True`.
 - **SGLang качает модель часами.** Предварительно сложите веса в GCS-бакет полигона
   (`testbed_models_bucket` в outputs) — startup-скрипт сливает их в `/srv/models`.
-- **`pip install langgraph` падает в CI.** Bench-workflow ставит `roboqc` extras и `langgraph` из
-  pyproject; сверьтесь с версией Python 3.11.
+- **`pip install langgraph` падает в CI.** Bench-workflow ставит зависимости из `pyproject.toml`
+  (включая `langgraph`); сверьтесь с версией Python 3.11.

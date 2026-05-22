@@ -1,0 +1,19 @@
+# Скопируйте в terraform.tfvars и заполните под свой проект:
+#   cp terraform.tfvars.example terraform.tfvars
+
+project_id = "your-gcp-project-id"
+
+# --- GPU-полигон -----------------------------------------------------------
+# Дефолты рассчитаны на 1×A100 80GB Spot в europe-west4-b.
+# testbed_region = "europe-west4"
+# testbed_zone   = "europe-west4-b"
+# use_spot       = true
+
+# Авто-экономия (UTC). Пусто => Cloud Scheduler-задача не создаётся.
+# testbed_auto_shutdown_cron = "0 19 * * *"
+# testbed_auto_start_cron    = "0 7 * * 1-5"
+
+# Модели полигона (HuggingFace repo id).
+# testbed_primary_model_repo_id   = "Qwen/Qwen3.6-35B-A3B-FP8"
+# testbed_secondary_model_repo_id = "google/gemma-4-31b"
+# testbed_vision_model_repo_id    = "Qwen/Qwen3-VL-8B-Instruct"

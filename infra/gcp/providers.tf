@@ -10,12 +10,12 @@ terraform {
 
   # При желании вынесите state в GCS:
   # backend "gcs" {
-  #   bucket = "<project_id>-larmorsight-tfstate"
-  #   prefix = "larmorsight-office"
+  #   bucket = "<project_id>-roboqc-tfstate"
+  #   prefix = "roboqc-testbed"
   # }
 }
 
 provider "google" {
   project = var.project_id
-  region  = var.region
+  region  = var.testbed_region
 }

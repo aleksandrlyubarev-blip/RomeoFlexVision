@@ -1,9 +1,7 @@
-# RoboQC GPU testbed: подключается опционально через var.enable_testbed.
-# Когда enable_testbed = false (по умолчанию) — никакого diff'а нет, существующая
-# инфраструктура AI-сотрудников (Cloud Run) не затрагивается.
+# GPU-полигон RoboQC: 1×A100 80GB VM в europe-west4, бакет моделей и
+# Artifact Registry-репозиторий. E2E-инструкция — docs/deployment-gcp-testbed.md.
 
 module "models_bucket" {
-  count  = var.enable_testbed ? 1 : 0
   source = "./modules/models-bucket"
 
   project_id       = var.project_id
@@ -15,7 +13,6 @@ module "models_bucket" {
 }
 
 module "gpu_testbed" {
-  count  = var.enable_testbed ? 1 : 0
   source = "./modules/gpu-testbed"
 
   project_id              = var.project_id
@@ -25,8 +22,8 @@ module "gpu_testbed" {
   accelerator_type        = var.gpu_accelerator_type
   accelerator_count       = var.gpu_accelerator_count
   use_spot                = var.use_spot
-  models_bucket           = module.models_bucket[0].bucket_name
-  registry_repo           = module.models_bucket[0].registry_repo_url
+  models_bucket           = module.models_bucket.bucket_name
+  registry_repo           = module.models_bucket.registry_repo_url
   allowed_cidrs           = var.testbed_allowed_cidrs
   monthly_budget_usd      = var.testbed_monthly_budget_usd
   auto_shutdown_cron      = var.testbed_auto_shutdown_cron
