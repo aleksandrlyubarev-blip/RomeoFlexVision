@@ -38,7 +38,7 @@
 
   <rect x="96" y="92" width="300" height="40" rx="20" fill="rgba(66,216,255,0.1)" stroke="rgba(66,216,255,0.24)" />
   <text x="124" y="118" fill="#7BE8FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.16em">
-    ROMEOFLEXVISION
+    NEUTRONVISION
   </text>
 
   <text x="96" y="222" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="84" font-weight="800">
@@ -51,7 +51,7 @@
     No CAD. No Cloud. No ML Team.
   </text>
   <text x="96" y="414" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
-    Synchronized Physical Action with RoboQC.
+    Synchronized Physical Action with NeutronVision QC.
   </text>
 
   <g>
@@ -59,8 +59,8 @@
     <text x="778" y="166" fill="#7BE8FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.14em">
       PRODUCT LAYER
     </text>
-    <text x="778" y="214" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="800">
-      RoboQC
+    <text x="778" y="214" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800">
+      NeutronVision QC
     </text>
     <text x="778" y="252" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500">
       Visual quality control for electronics assembly
