@@ -64,7 +64,7 @@ gsutil -m cp -r local/fixtures/* gs://$PROJECT_ID-roboqc-models/fixtures/
 На VM:
 ```bash
 cd /opt/roboqc-testbed
-pip install -e .[roboqc]
+pip install -e .
 pip install -e ./roboqc_data
 python scripts/bench_roboqc.py --model qwen --n 20 --out results/qwen.jsonl
 # включите Gemma-profile:

@@ -28,7 +28,7 @@ jobs:
 
       - name: Install
         run: |
-          pip install -e .[roboqc]
+          pip install -e .
           pip install -e ./roboqc_data
 
       - name: Unit tests (prompts + graph)
