@@ -9,17 +9,10 @@ export function registerProductsCommand(bot: RomeoBot, config: AppConfig): void 
       .join('\n\n');
 
     await ctx.reply(
-      `RoboQC product line:\n\n${message}`,
-      Markup.inlineKeyboard([
-        [
-          Markup.button.url('RoboQC', config.links.products[0].url),
-          Markup.button.url('Andrew', config.links.products[1].url),
-        ],
-        [
-          Markup.button.url('Romeo PhD', config.links.products[2].url),
-          Markup.button.url('Bassito', config.links.products[3].url),
-        ],
-      ]),
+      `What NeutronVision builds:\n\n${message}`,
+      Markup.inlineKeyboard(
+        config.links.products.map((product) => [Markup.button.url(product.title, product.url)]),
+      ),
     );
   });
 }

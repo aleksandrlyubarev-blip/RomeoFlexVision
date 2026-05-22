@@ -6,12 +6,12 @@ import { buildHelpMessage } from './help.js';
 export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
   bot.start(async (ctx) => {
     const message = [
-      'RoboQC is the public entry point into the new inline quality-control product surface.',
+      'NeutronVision QC is inline AI visual quality control for electronics and AI-hardware assembly.',
       '',
       'Use this bot to:',
       '- open the live landing and pilot page',
-      '- review the RoboQC product line and repositories',
-      '- ask English questions about RoboQC and Romeo FlexVision',
+      '- learn what NeutronVision QC inspects and how it deploys',
+      '- ask English questions about edge deployment and the open execution layer',
       '- jump to GitHub, LinkedIn, and public contact routes',
       '',
       'Example: "Why do you focus on station #2 instead of station #5?"',
@@ -42,17 +42,10 @@ export function registerStartCommand(bot: RomeoBot, config: AppConfig): void {
       .join('\n');
 
     await ctx.reply(
-      `RoboQC product line:\n${summary}`,
-      Markup.inlineKeyboard([
-        [
-          Markup.button.url('RoboQC', config.links.products[0].url),
-          Markup.button.url('Andrew', config.links.products[1].url),
-        ],
-        [
-          Markup.button.url('Romeo PhD', config.links.products[2].url),
-          Markup.button.url('Bassito', config.links.products[3].url),
-        ],
-      ]),
+      `What NeutronVision builds:\n${summary}`,
+      Markup.inlineKeyboard(
+        config.links.products.map((product) => [Markup.button.url(product.title, product.url)]),
+      ),
     );
   });
 

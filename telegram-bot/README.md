@@ -1,14 +1,14 @@
-# RoboQC Telegram Bot
+# NeutronVision Telegram Bot
 
-Public Telegram entrypoint for the RoboQC product surface, powered by Romeo FlexVision.
+Public Telegram entrypoint for NeutronVision QC.
 
 The bot is intentionally lightweight:
 
 - `/start` opens the main navigation and pilot links
-- `/about` explains the bot and the RoboQC positioning
+- `/about` explains the bot and NeutronVision QC positioning
 - `/help` shows the available commands
 - `/demo` routes users to the live landing
-- `/products` lists the current RoboQC product line
+- `/products` describes NeutronVision QC
 - `/github` opens the GitHub surfaces
 - `/contact` routes users to public contact points
 - `POST /api/leads` accepts landing-form leads and forwards them to configured Telegram admin chats
@@ -73,7 +73,7 @@ curl -X POST http://localhost:8080/api/leads \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Alex",
-    "company": "Romeo FlexVision",
+    "company": "NeutronVision",
     "email": "alex@example.com",
     "message": "Need a pilot for electronics assembly QC",
     "language": "en",

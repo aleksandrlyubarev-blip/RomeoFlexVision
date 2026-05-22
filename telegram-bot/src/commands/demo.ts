@@ -6,7 +6,7 @@ export function registerDemoCommand(bot: RomeoBot, config: AppConfig): void {
   bot.command('demo', async (ctx) => {
     await ctx.reply(
       'Live landing and pilot surface:',
-      Markup.inlineKeyboard([[Markup.button.url('Open RoboQC landing', config.links.site)]]),
+      Markup.inlineKeyboard([[Markup.button.url('Open NeutronVision QC landing', config.links.site)]]),
     );
   });
 }

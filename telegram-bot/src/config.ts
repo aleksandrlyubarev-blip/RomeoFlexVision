@@ -126,15 +126,14 @@ export function loadConfig(): AppConfig {
     leadAllowedOrigins: normalizeOriginList(parseCsvList(process.env.LEAD_ALLOWED_ORIGINS), publicBaseUrl),
     leadRateLimitPerMinute: parsePositiveInt(process.env.LEAD_RATE_LIMIT_PER_MINUTE, 10),
     botProfile: {
-      name: 'RoboQC Bot',
-      oneLiner: 'Public Telegram entrypoint for the RoboQC landing.',
+      name: 'NeutronVision Bot',
+      oneLiner: 'Public Telegram entrypoint for NeutronVision QC.',
       summary:
-        'I help visitors understand what RoboQC is, answer English product questions about RoboQC and Romeo FlexVision, open the live landing, review the product line, and jump to GitHub or LinkedIn.',
+        'I help visitors understand what NeutronVision QC is, answer English product questions about inline visual quality control, open the live landing, and jump to GitHub or LinkedIn.',
       capabilities: [
-        'Explain the RoboQC positioning and pilot story',
+        'Explain NeutronVision QC positioning and the pilot story',
         'Answer English questions about edge deployment, station-level defects, and the open execution layer',
         'Open the live landing and demo surface',
-        'List RoboQC Inspector, Andrew Analytic, Romeo PhD, and Bassito',
         'Route visitors to GitHub, LinkedIn, and public contact surfaces',
       ],
     },
@@ -146,28 +145,11 @@ export function loadConfig(): AppConfig {
       linkedin: 'https://www.linkedin.com/company/romeoflexvision',
       products: [
         {
-          slug: 'roboqc',
-          title: 'RoboQC Inspector',
-          description: 'The camera-robot for inline quality control and station-level defect capture.',
+          slug: 'neutronvision-qc',
+          title: 'NeutronVision QC',
+          description:
+            'AI visual quality control for electronics and AI-hardware assembly: catches station-level defects inline, before end-of-line test.',
           url: 'https://github.com/aleksandrlyubarev-blip/RomeoFlexVision',
-        },
-        {
-          slug: 'andrew',
-          title: 'Andrew Analytic',
-          description: 'Station analytics, routing, validation, and root-cause review.',
-          url: 'https://github.com/aleksandrlyubarev-blip/Andrew-Analitic',
-        },
-        {
-          slug: 'romeo',
-          title: 'Romeo PhD',
-          description: 'Readable reports, operator handoff, and technical explanation.',
-          url: 'https://github.com/aleksandrlyubarev-blip/Romeo_PHD',
-        },
-        {
-          slug: 'bassito',
-          title: 'Bassito',
-          description: 'Training media and pilot enablement for repeated defect scenarios.',
-          url: 'https://github.com/aleksandrlyubarev-blip/Bassito',
         },
       ],
     },
