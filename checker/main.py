@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 
-from larmorsight_checker.app import run
+from checker.app import run
 
 if __name__ == "__main__":
     sys.exit(run())

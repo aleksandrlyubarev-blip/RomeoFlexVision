@@ -18,7 +18,7 @@ from ..config.settings import Settings, write_secrets
 class SettingsDialog(QDialog):
     def __init__(self, settings: Settings, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("LarmorSight Settings")
+        self.setWindowTitle("NeutronVision Settings")
         self._settings = settings
 
         self._camera_index = QSpinBox()

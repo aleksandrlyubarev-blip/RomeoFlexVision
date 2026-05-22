@@ -13,7 +13,7 @@ if sys.platform != "darwin":
 
 
 def test_open_default_camera_grabs_frame() -> None:
-    from larmorsight_checker.camera.uvc_camera import UVCCamera
+    from checker.camera.uvc_camera import UVCCamera
 
     cam = UVCCamera(index=0)
     assert cam.open(), "expected default UVC camera to open"

@@ -14,9 +14,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from larmorsight_checker.inference.ai_engine import AIEngine, CaptureResult  # noqa: E402
-from larmorsight_checker.inference.quality_validator import QualityReport  # noqa: E402
-from larmorsight_checker.session.session_manager import (  # noqa: E402
+from checker.inference.ai_engine import AIEngine, CaptureResult  # noqa: E402
+from checker.inference.quality_validator import QualityReport  # noqa: E402
+from checker.session.session_manager import (  # noqa: E402
     CameraInfo,
     CaptureRecord,
     Session,

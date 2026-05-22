@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 from PIL import Image
 
-from larmorsight_checker.inference.grok_engine import GrokEngine, _extract_json
+from checker.inference.grok_engine import GrokEngine, _extract_json
 
 
 def _jpeg(width: int = 1920, height: int = 1080) -> bytes:

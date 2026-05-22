@@ -13,9 +13,9 @@ if sys.platform != "darwin":
 
 
 def test_main_window_constructs(qtbot) -> None:
-    from larmorsight_checker.config.settings import Settings
-    from larmorsight_checker.ui.main_window import MainWindow
+    from checker.config.settings import Settings
+    from checker.ui.main_window import MainWindow
 
     window = MainWindow(Settings.load())
     qtbot.addWidget(window)
-    assert window.windowTitle().startswith("LarmorSight")
+    assert window.windowTitle().startswith("NeutronVision")

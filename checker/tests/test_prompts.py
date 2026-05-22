@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from larmorsight_checker.inference.prompts import QC_INSPECTION_PROMPT, qc_prompt
+from checker.inference.prompts import QC_INSPECTION_PROMPT, qc_prompt
 
 
 def test_prompt_contains_expected_keys() -> None:

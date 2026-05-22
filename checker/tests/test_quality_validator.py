@@ -7,7 +7,7 @@ import time
 import numpy as np
 import pytest
 
-from larmorsight_checker.inference.quality_validator import evaluate
+from checker.inference.quality_validator import evaluate
 
 
 def test_sharp_beats_blurred(synthetic_sharp_frame, synthetic_blurred_frame) -> None:
