@@ -120,7 +120,7 @@ def sample_session(tmp_sessions_dir) -> Session:
                     notes="metallic surface, no concerns",
                     raw_response="{}",
                     latency_ms=4200.0,
-                    engine="grok:grok-2-vision-1212",
+                    engine="grok:grok-4.3",
                 ),
             )
         )

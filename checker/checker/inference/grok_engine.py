@@ -92,7 +92,7 @@ class GrokEngine(AIEngine):
         self,
         api_key: str,
         *,
-        model: str = "grok-2-vision-1212",
+        model: str = "grok-4.3",
         endpoint: str = "https://api.x.ai/v1/chat/completions",
         timeout_s: float = 15.0,
         max_side: int = 512,
