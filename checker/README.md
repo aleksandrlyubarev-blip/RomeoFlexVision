@@ -11,7 +11,7 @@ NeutronVision Checker is a one-screen PyQt6 app that turns a USB camera + a sing
    JSON + a multi-page PDF summary.
 
 It exists to support pitch demos and as an open-source reference application on
-top of the [RoboQC](https://github.com/aleksandrlyubarev-blip/romeoflexvision)
+top of the [NeutronVision QC](https://github.com/aleksandrlyubarev-blip/romeoflexvision)
 stack. **It is not a certified QC tool.**
 
 ---
@@ -235,7 +235,7 @@ skip automatically off-platform.
 
 ## License
 
-MIT (matches the rest of the RomeoFlexVision repo). See `LICENSE` at the
+MIT (matches the rest of the NeutronVision QC repo). See `LICENSE` at the
 repository root.
 
 ---
