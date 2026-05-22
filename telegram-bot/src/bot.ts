@@ -32,11 +32,11 @@ export function createBot(config: AppConfig): RomeoBot {
 
 export async function syncBotMetadata(bot: RomeoBot, config: AppConfig): Promise<void> {
   await bot.telegram.setMyCommands([
-    { command: 'start', description: 'Open the RoboQC navigation and pilot links' },
-    { command: 'about', description: 'Explain what RoboQC is and what this bot does' },
+    { command: 'start', description: 'Open the NeutronVision QC navigation and pilot links' },
+    { command: 'about', description: 'Explain what NeutronVision QC is and what this bot does' },
     { command: 'help', description: 'Show available commands' },
-    { command: 'demo', description: 'Open the live RoboQC landing' },
-    { command: 'products', description: 'List RoboQC products and repos' },
+    { command: 'demo', description: 'Open the live NeutronVision QC landing' },
+    { command: 'products', description: 'List NeutronVision QC products and repos' },
     { command: 'github', description: 'Open GitHub org and repositories' },
     { command: 'contact', description: 'Get public contact routes' },
   ]);

@@ -190,12 +190,12 @@ export interface SiteCopy {
 const SITE_COPY: Record<Language, SiteCopy> = {
   en: {
     meta: {
-      title: 'RomeoFlexVision | The Open Execution Layer for Physical AI',
+      title: 'NeutronVision | The Open Execution Layer for Physical AI',
       description:
-        'RomeoFlexVision is the open execution layer for physical AI, and RoboQC brings that stack into AI-powered visual quality control for electronics assembly.',
-      ogTitle: 'RomeoFlexVision | Open Execution Layer for Physical AI',
+        'NeutronVision is the open execution layer for physical AI, and NeutronVision QC brings that stack into AI-powered visual quality control for electronics assembly.',
+      ogTitle: 'NeutronVision | Open Execution Layer for Physical AI',
       ogDescription:
-        'No CAD. No Cloud. No ML Team. Synchronized Physical Action with RoboQC for inline quality control.',
+        'No CAD. No Cloud. No ML Team. Synchronized Physical Action with NeutronVision QC for inline quality control.',
     },
     nav: {
       products: 'Products',
@@ -216,10 +216,10 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       close: 'Close',
     },
     hero: {
-      eyebrow: 'RomeoFlexVision',
+      eyebrow: 'NeutronVision',
       title: 'The Open Execution Layer for Physical AI',
       subtitle:
-        'RoboQC brings that stack into AI-powered visual quality control for electronics assembly, catching defects inline instead of waiting for end-of-line failure.',
+        'NeutronVision QC brings that stack into AI-powered visual quality control for electronics assembly, catching defects inline instead of waiting for end-of-line failure.',
       sloganLabel: 'Core slogan',
       slogan:
         'No CAD. No Cloud. No ML Team. Synchronized Physical Action.',
@@ -229,7 +229,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       chips: ['Physical AI', 'Edge-native QC', 'Hebrew-ready site', 'Editable corporate landing'],
     },
     heroVisual: {
-      headline: 'RoboQC + RomeoFlexVision',
+      headline: 'NeutronVision QC + the execution layer',
       subline: 'A dark physical-AI surface built from the two pitch decks.',
       cardA: 'Inline visual quality control for electronics assembly',
       cardB: 'Neutral execution layer across heterogeneous hardware',
@@ -239,10 +239,10 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'Products',
       title: 'Two layers. One industrial story.',
       description:
-        'RomeoFlexVision is the execution layer. RoboQC is the applied quality-control product that operators and factories feel first.',
+        'NeutronVision is the execution layer. NeutronVision QC is the applied quality-control product that operators and factories feel first.',
       items: [
         {
-          name: 'RomeoFlexVision',
+          name: 'NeutronVision',
           subtitle: 'Open Execution Layer for Physical AI',
           description:
             'The neutral bridge that coordinates perception, reasoning, and action across heterogeneous industrial hardware.',
@@ -253,7 +253,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
           ],
         },
         {
-          name: 'RoboQC',
+          name: 'NeutronVision QC',
           subtitle: 'AI-Powered Visual Quality Control for Electronics Assembly',
           description:
             'The camera-first quality-control product that catches station-level defects before they become expensive end-of-line failures.',
@@ -292,7 +292,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'Solution',
       title: 'A deployment path from raw evidence to synchronized physical action.',
       description:
-        'RomeoFlexVision provides the execution pattern, while RoboQC applies it to inline inspection, operator evidence, and physical escalation.',
+        'NeutronVision provides the execution pattern, while NeutronVision QC applies it to inline inspection, operator evidence, and physical escalation.',
       steps: [
         {
           step: '01',
@@ -335,7 +335,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'Tech Edge',
       title: 'A practical edge stack for dense industrial inspection.',
       description:
-        'The RoboQC deck makes the deployment case clearly: real inline response requires low latency, on-prem execution, and fast startup without CAD dependencies.',
+        'The NeutronVision QC deck makes the deployment case clearly: real inline response requires low latency, on-prem execution, and fast startup without CAD dependencies.',
       bullets: [
         'Sub-200ms latency on an RTX 3060/4060 edge node',
         '100% edge-native and framed for fast Docker-based deployment',
@@ -377,7 +377,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
         },
         {
           phase: 'Weeks 7-9',
-          title: 'Deploy RoboQC inline with operator evidence',
+          title: 'Deploy NeutronVision QC inline with operator evidence',
           description:
             'Run the system on the line, deliver frame-trace-decision evidence, and tune the escalation path for operators.',
         },
@@ -395,7 +395,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       description:
         'The founder card is intentionally lean here because the repository does not include a verified portrait asset. The focus stays on expertise and execution credibility.',
       leaderName: 'Alexander Lyubarev',
-      leaderRole: 'Founder, RomeoFlexVision / RoboQC',
+      leaderRole: 'Founder, NeutronVision / NeutronVision QC',
       expertise: [
         'Physical AI execution layers and industrial coordination logic',
         'Inline quality control for dense electronics and server-rack assembly',
@@ -410,13 +410,13 @@ const SITE_COPY: Record<Language, SiteCopy> = {
         href: SITE_LINKS.combinedDeck,
       },
       {
-        title: 'RomeoFlexVision Physical AI Deck',
+        title: 'NeutronVision Physical AI Deck',
         description:
           'Execution-layer narrative, coordination gap, neutral bridge, and defensibility matrix.',
         href: SITE_LINKS.physicalAiDeck,
       },
       {
-        title: 'RoboQC Precision Assembly AI Deck',
+        title: 'NeutronVision QC Precision Assembly AI Deck',
         description:
           'Inline QC story, cost-to-rework logic, edge stack, wedge market, and rollout narrative.',
         href: SITE_LINKS.roboqcDeck,
@@ -445,7 +445,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
     form: {
       title: "Write me & let's inspire!",
       description:
-        'Send your pilot brief into the RoboQC inbox and open Telegram in parallel, so the team gets a real lead and you get an immediate operator route.',
+        'Send your pilot brief into the NeutronVision QC inbox and open Telegram in parallel, so the team gets a real lead and you get an immediate operator route.',
       nameLabel: 'Name',
       companyLabel: 'Company',
       emailLabel: 'Email',
@@ -471,12 +471,12 @@ const SITE_COPY: Record<Language, SiteCopy> = {
   },
   he: {
     meta: {
-      title: 'RomeoFlexVision | שכבת הביצוע הפתוחה ל-Physical AI',
+      title: 'NeutronVision | שכבת הביצוע הפתוחה ל-Physical AI',
       description:
-        'RomeoFlexVision היא שכבת הביצוע הפתוחה ל-Physical AI, ו-RoboQC מביאה את הסטאק הזה לבקרת איכות חזותית בזמן אמת עבור הרכבת אלקטרוניקה.',
-      ogTitle: 'RomeoFlexVision | שכבת הביצוע הפתוחה ל-Physical AI',
+        'NeutronVision היא שכבת הביצוע הפתוחה ל-Physical AI, ו-NeutronVision QC מביאה את הסטאק הזה לבקרת איכות חזותית בזמן אמת עבור הרכבת אלקטרוניקה.',
+      ogTitle: 'NeutronVision | שכבת הביצוע הפתוחה ל-Physical AI',
       ogDescription:
-        'בלי CAD. בלי ענן. בלי צוות ML. פעולה פיזית מסונכרנת עם RoboQC לבקרת איכות inline.',
+        'בלי CAD. בלי ענן. בלי צוות ML. פעולה פיזית מסונכרנת עם NeutronVision QC לבקרת איכות inline.',
     },
     nav: {
       products: 'מוצרים',
@@ -497,10 +497,10 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       close: 'סגור',
     },
     hero: {
-      eyebrow: 'RomeoFlexVision',
+      eyebrow: 'NeutronVision',
       title: 'שכבת הביצוע הפתוחה ל-Physical AI',
       subtitle:
-        'RoboQC מביאה את הסטאק הזה לבקרת איכות חזותית עבור הרכבת אלקטרוניקה, ותופסת פגמים inline במקום להמתין לכשל בקצה הקו.',
+        'NeutronVision QC מביאה את הסטאק הזה לבקרת איכות חזותית עבור הרכבת אלקטרוניקה, ותופסת פגמים inline במקום להמתין לכשל בקצה הקו.',
       sloganLabel: 'סלוגן',
       slogan: 'בלי CAD. בלי ענן. בלי צוות ML. פעולה פיזית מסונכרנת.',
       primaryCta: 'הורדת דק',
@@ -509,7 +509,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       chips: ['Physical AI', 'QC קצה', 'אתר באנגלית + עברית', 'לנדינג תאגידי עריך'],
     },
     heroVisual: {
-      headline: 'RoboQC + RomeoFlexVision',
+      headline: 'NeutronVision QC + שכבת הביצוע',
       subline: 'משטח פיזיקלי-טכנולוגי כהה שנבנה משני הדקים שסופקו.',
       cardA: 'בקרת איכות חזותית inline להרכבת אלקטרוניקה',
       cardB: 'שכבת ביצוע ניטרלית על חומרה הטרוגנית',
@@ -519,10 +519,10 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'מוצרים',
       title: 'שתי שכבות. סיפור תעשייתי אחד.',
       description:
-        'RomeoFlexVision היא שכבת הביצוע. RoboQC היא שכבת המוצר היישומית שמרגישים קודם בקו ובמפעל.',
+        'NeutronVision היא שכבת הביצוע. NeutronVision QC היא שכבת המוצר היישומית שמרגישים קודם בקו ובמפעל.',
       items: [
         {
-          name: 'RomeoFlexVision',
+          name: 'NeutronVision',
           subtitle: 'שכבת ביצוע פתוחה ל-Physical AI',
           description:
             'הגשר הניטרלי שמתאם בין תפיסה, reasoning ופעולה על גבי חומרה תעשייתית הטרוגנית.',
@@ -533,7 +533,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
           ],
         },
         {
-          name: 'RoboQC',
+          name: 'NeutronVision QC',
           subtitle: 'בקרת איכות חזותית מבוססת AI להרכבת אלקטרוניקה',
           description:
             'מוצר QC מבוסס מצלמה שתופס פגמי תחנה לפני שהם הופכים לכשל יקר בסוף הקו.',
@@ -572,7 +572,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'פתרון',
       title: 'מסלול הטמעה מראיה גולמית עד פעולה פיזית מסונכרנת.',
       description:
-        'RomeoFlexVision מספקת את דפוס הביצוע, ו-RoboQC מיישמת אותו לבדיקת inline, הוכחה למפעיל והסלמה פיזית.',
+        'NeutronVision מספקת את דפוס הביצוע, ו-NeutronVision QC מיישמת אותו לבדיקת inline, הוכחה למפעיל והסלמה פיזית.',
       steps: [
         {
           step: '01',
@@ -615,7 +615,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       kicker: 'יתרון טכני',
       title: 'סטאק קצה פרקטי לבדיקת תעשייה צפופה.',
       description:
-        'הדק של RoboQC מציג את המקרה בצורה ברורה: תגובת inline אמיתית דורשת latency נמוך, ביצוע on-prem והתחלה מהירה בלי תלות ב-CAD.',
+        'הדק של NeutronVision QC מציג את המקרה בצורה ברורה: תגובת inline אמיתית דורשת latency נמוך, ביצוע on-prem והתחלה מהירה בלי תלות ב-CAD.',
       bullets: [
         'Latency תת-200ms על edge node מסוג RTX 3060/4060',
         '100% edge-native וממוסגר להטמעת Docker מהירה',
@@ -657,7 +657,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
         },
         {
           phase: 'שבועות 7-9',
-          title: 'פריסת RoboQC inline עם evidence למפעיל',
+          title: 'פריסת NeutronVision QC inline עם evidence למפעיל',
           description:
             'מריצים את המערכת על הקו, מספקים evidence מסוג frame-trace-decision, ומכוונים את מסלול ההסלמה.',
         },
@@ -675,7 +675,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
       description:
         'כרטיס המייסד נשאר כאן רזה בכוונה כי בריפו אין כרגע פורטרט מאומת. המיקוד נשאר במומחיות ובאמינות הביצוע.',
       leaderName: 'Alexander Lyubarev',
-      leaderRole: 'Founder, RomeoFlexVision / RoboQC',
+      leaderRole: 'Founder, NeutronVision / NeutronVision QC',
       expertise: [
         'שכבות ביצוע ל-Physical AI ולוגיקת תיאום תעשייתית',
         'בקרת איכות inline להרכבת אלקטרוניקה צפופה ו-server racks',
@@ -690,13 +690,13 @@ const SITE_COPY: Record<Language, SiteCopy> = {
         href: SITE_LINKS.combinedDeck,
       },
       {
-        title: 'RomeoFlexVision Physical AI Deck',
+        title: 'NeutronVision Physical AI Deck',
         description:
           'נרטיב שכבת הביצוע, פער התיאום, ה-neutral bridge ומטריצת ההגנה הארכיטקטונית.',
         href: SITE_LINKS.physicalAiDeck,
       },
       {
-        title: 'RoboQC Precision Assembly AI Deck',
+        title: 'NeutronVision QC Precision Assembly AI Deck',
         description:
           'סיפור ה-inline QC, לוגיקת עלות לתיקון, סטאק ה-edge, ה-wedge market ונרטיב rollout.',
         href: SITE_LINKS.roboqcDeck,
@@ -725,7 +725,7 @@ const SITE_COPY: Record<Language, SiteCopy> = {
     form: {
       title: 'Write me & let’s inspire!',
       description:
-        'שלח את הבריף שלך ישירות ל-inbox של RoboQC ובמקביל פתח את Telegram, כך שהצוות מקבל ליד אמיתי ואתה מקבל ערוץ מהיר לשיחה.',
+        'שלח את הבריף שלך ישירות ל-inbox של NeutronVision QC ובמקביל פתח את Telegram, כך שהצוות מקבל ליד אמיתי ואתה מקבל ערוץ מהיר לשיחה.',
       nameLabel: 'שם',
       companyLabel: 'חברה',
       emailLabel: 'אימייל',

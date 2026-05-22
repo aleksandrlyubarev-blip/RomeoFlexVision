@@ -1,8 +1,8 @@
-# LarmorSight Checker
+# NeutronVision Checker
 
 > macOS desktop demo for industrial QC photo inspection of HPC liquid-cooling components, powered by xAI Grok vision.
 
-LarmorSight Checker is a one-screen PyQt6 app that turns a USB camera + a single
+NeutronVision Checker is a one-screen PyQt6 app that turns a USB camera + a single
 `SPACE` keypress into:
 
 1. A **quality-gated capture** (sharpness / exposure / framing scored in real time).
@@ -11,7 +11,7 @@ LarmorSight Checker is a one-screen PyQt6 app that turns a USB camera + a single
    JSON + a multi-page PDF summary.
 
 It exists to support pitch demos and as an open-source reference application on
-top of the [RoboQC](https://github.com/aleksandrlyubarev-blip/romeoflexvision)
+top of the [NeutronVision QC](https://github.com/aleksandrlyubarev-blip/romeoflexvision)
 stack. **It is not a certified QC tool.**
 
 ---
@@ -49,18 +49,18 @@ camera backend is selected for AVFoundation.
 
 ```bash
 git clone https://github.com/aleksandrlyubarev-blip/romeoflexvision.git
-cd romeoflexvision/larmorsight-checker
+cd romeoflexvision/checker
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Create `~/LarmorSight/secrets.env` and put your Grok key inside:
+Create `~/NeutronVision/secrets.env` and put your Grok key inside:
 
 ```bash
-mkdir -p ~/LarmorSight
-printf "GROK_API_KEY=xai-your-key-here\n" > ~/LarmorSight/secrets.env
-chmod 600 ~/LarmorSight/secrets.env
+mkdir -p ~/NeutronVision
+printf "GROK_API_KEY=xai-your-key-here\n" > ~/NeutronVision/secrets.env
+chmod 600 ~/NeutronVision/secrets.env
 ```
 
 (The Settings dialog can also write this file for you; the entry just stays on
@@ -109,7 +109,7 @@ Keyboard shortcuts:
 ## Output layout
 
 ```
-~/LarmorSight/
+~/NeutronVision/
 ├── config.json                    # camera index, engine, model id, thresholds
 ├── secrets.env                    # GROK_API_KEY=… (chmod 600)
 ├── logs/
@@ -167,7 +167,7 @@ language TZ document.
 
 ## Configuration reference
 
-`~/LarmorSight/config.json` (all fields optional; defaults shown):
+`~/NeutronVision/config.json` (all fields optional; defaults shown):
 
 ```json
 {
@@ -197,8 +197,8 @@ language TZ document.
   Settings (0, 1, 2). The first frame after open often takes ~200 ms — the
   app's warmup loop already accounts for this.
 - **Grok API 401.** Settings dialog → re-enter the key. The app will rewrite
-  `~/LarmorSight/secrets.env` for you.
-- **Verdict consistently `unknown`.** Check `~/LarmorSight/logs/checker_*.log`
+  `~/NeutronVision/secrets.env` for you.
+- **Verdict consistently `unknown`.** Check `~/NeutronVision/logs/checker_*.log`
   — if the response body is non-JSON, your `grok_model` may not support
   `response_format=json_object`. The engine falls back to regex extraction,
   but a clearly-instructed model id is the cleanest fix.
@@ -212,7 +212,7 @@ language TZ document.
 Run the sandbox-friendly test suite (no Qt, no camera):
 
 ```bash
-ruff check larmorsight_checker tests
+ruff check checker tests
 pytest -q
 ```
 
@@ -235,15 +235,13 @@ skip automatically off-platform.
 
 ## License
 
-MIT (matches the rest of the RomeoFlexVision repo). See `LICENSE` at the
+MIT (matches the rest of the NeutronVision QC repo). See `LICENSE` at the
 repository root.
 
 ---
 
 ## Related projects
 
-- [`larmorsight-office/`](../larmorsight-office) — administration / GCP
-  workspace for LarmorSight commercial deployments.
-- [`roboqc_data/`](../roboqc_data) — RoboQC dataset preparation pipeline.
-- LarmorSight commercial SKUs (LS1100–LS4100) are extensions on top of this
+- [`roboqc_data/`](../roboqc_data) — NeutronVision QC dataset preparation pipeline.
+- NeutronVision QC commercial SKUs (NV1100–NV4100) are extensions on top of this
   reference application.

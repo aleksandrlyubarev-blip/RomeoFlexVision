@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-import larmorsight_checker.utils.paths as paths_mod
-from larmorsight_checker.config.settings import Settings, write_secrets
+import checker.utils.paths as paths_mod
+from checker.config.settings import Settings, write_secrets
 
 
 @pytest.fixture
@@ -22,9 +22,9 @@ def isolated_home(tmp_path, monkeypatch) -> Path:
 
 def test_load_creates_app_dirs(isolated_home) -> None:
     settings = Settings.load()
-    assert (isolated_home / "LarmorSight").is_dir()
-    assert (isolated_home / "LarmorSight" / "sessions").is_dir()
-    assert (isolated_home / "LarmorSight" / "logs").is_dir()
+    assert (isolated_home / "NeutronVision").is_dir()
+    assert (isolated_home / "NeutronVision" / "sessions").is_dir()
+    assert (isolated_home / "NeutronVision" / "logs").is_dir()
     assert settings.engine == "grok"
     assert settings.grok_api_key is None
 
@@ -39,7 +39,7 @@ def test_load_picks_up_env(isolated_home, monkeypatch) -> None:
 def test_save_strips_secret(isolated_home) -> None:
     settings = Settings.load().model_copy(update={"camera_index": 3, "grok_model": "grok-vision-test"})
     settings.save()
-    payload = json.loads((isolated_home / "LarmorSight" / "config.json").read_text())
+    payload = json.loads((isolated_home / "NeutronVision" / "config.json").read_text())
     assert payload["camera_index"] == 3
     assert payload["grok_model"] == "grok-vision-test"
     assert "grok_api_key" not in payload
@@ -55,13 +55,13 @@ def test_write_secrets_creates_file(isolated_home) -> None:
 def test_write_secrets_replaces_existing(isolated_home) -> None:
     write_secrets("xai-old")
     write_secrets("xai-new")
-    contents = (isolated_home / "LarmorSight" / "secrets.env").read_text()
+    contents = (isolated_home / "NeutronVision" / "secrets.env").read_text()
     assert "xai-old" not in contents
     assert "GROK_API_KEY=xai-new" in contents
 
 
 def test_paths_helpers(isolated_home) -> None:
-    assert paths_mod.app_root() == isolated_home / "LarmorSight"
+    assert paths_mod.app_root() == isolated_home / "NeutronVision"
     paths_mod.ensure_app_dirs()
     new = paths_mod.new_session_dir("ZutaCore Demo!")
     assert new.exists()

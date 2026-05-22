@@ -39,16 +39,13 @@ if (-not $Token) {
   throw "TELEGRAM_BOT_TOKEN is required"
 }
 
-$BotName = "RoboQC Bot"
+$BotName = "NeutronVision Bot"
 $SiteUrl = "https://romeoflexvision.com"
 $GithubUrl = "https://github.com/aleksandrlyubarev-blip"
 $LinkedInUrl = "https://www.linkedin.com/company/romeoflexvision"
 $TelegramUrl = "https://t.me/RomeoFlexVision_bot"
 $Products = @(
-  @{ name = "RoboQC Inspector"; url = "https://github.com/aleksandrlyubarev-blip/RomeoFlexVision"; description = "Inline quality-control robot and station-level defect capture." },
-  @{ name = "Andrew Analytic"; url = "https://github.com/aleksandrlyubarev-blip/Andrew-Analitic"; description = "Station analytics, routing, and root-cause review." },
-  @{ name = "Romeo PhD"; url = "https://github.com/aleksandrlyubarev-blip/Romeo_PHD"; description = "Readable reports and technical explanation." },
-  @{ name = "Bassito"; url = "https://github.com/aleksandrlyubarev-blip/Bassito"; description = "Training media and pilot enablement." }
+  @{ name = "NeutronVision QC"; url = "https://github.com/aleksandrlyubarev-blip/RomeoFlexVision"; description = "AI visual quality control for electronics and AI-hardware assembly: catches station-level defects inline." }
 )
 
 $StatePath = Join-Path $PSScriptRoot $StateDir
@@ -138,19 +135,19 @@ function Build-MainKeyboard {
 
 function Get-AboutText {
   return @"
-$BotName is the public entrypoint for the RoboQC landing.
+$BotName is the public entrypoint for the NeutronVision QC landing.
 
 I can:
-- explain what RoboQC is
-- answer English questions about RoboQC and Romeo FlexVision
+- explain what NeutronVision QC is
+- answer English questions about NeutronVision QC and NeutronVision
 - show the live landing and pilot surface
-- list the RoboQC product line
+- list the NeutronVision QC product line
 - route you to GitHub, LinkedIn, and public contact surfaces
 "@
 }
 
 function Get-ProductsText {
-  $lines = @("RoboQC product line:")
+  $lines = @("What NeutronVision builds:")
   foreach ($product in $Products) {
     $lines += "- $($product.name): $($product.description)"
     $lines += "  $($product.url)"
@@ -163,18 +160,18 @@ function Get-HelpText {
 Available commands:
 /start - open the main navigation
 /help - command list and example questions
-/about - explain what RoboQC is
+/about - explain what NeutronVision QC is
 /demo - open the live landing
-/products - list the RoboQC product line
+/products - list the NeutronVision QC product line
 /github - open GitHub surfaces
 /contact - show public contact routes
 
 Ask in English, for example:
-- What is RoboQC?
+- What is NeutronVision QC?
 - Why do you focus on station #2 instead of station #5?
 - Do I need CAD, cloud, or an ML team?
 - How many samples do I need to start?
-- What is Romeo FlexVision?
+- What is NeutronVision?
 - How fast is inference on the edge?
 "@
 }
@@ -209,9 +206,9 @@ function Get-EnglishQuestionReply {
 
   $matchers = @(
     @{
-      Terms = @(@("what is", "roboqc"), @("tell me about", "roboqc"), @("what does", "roboqc"), @("roboqc", "quality control"))
+      Terms = @(@("what is", "neutronvision"), @("tell me about", "neutronvision"), @("what does", "neutronvision"), @("neutronvision", "quality control"))
       Reply = @"
-RoboQC is an AI-powered visual quality-control system for electronics assembly.
+NeutronVision QC is an AI-powered visual quality-control system for electronics assembly.
 
 It watches the line inline, catches defects the moment they are created, and sends evidence early enough for operators to act before the problem reaches end-of-line test.
 
@@ -221,17 +218,17 @@ Public landing: $SiteUrl
     @{
       Terms = @(@("station 2", "station 5"), @("station #2", "station #5"), @("cost to rework"), @("reactive", "qc"), @("rework", "station 5"), @("missing screw"), @("misaligned connector"))
       Reply = @"
-The RoboQC thesis is simple: catch the defect at station #2, not at station #5.
+The NeutronVision QC thesis is simple: catch the defect at station #2, not at station #5.
 
 In the deck, a missing screw or misaligned connector is roughly a $10 fix when it is born at station #2, but it can become about $1,000 of rework if it escapes to end-of-line test.
 
-That is why RoboQC is built for inline prevention instead of reactive QA.
+That is why NeutronVision QC is built for inline prevention instead of reactive QA.
 "@
     },
     @{
-      Terms = @(@("how does", "roboqc"), @("how", "roboqc", "work"), @("inline prevention"), @("edge native"), @("defect detected"), @("camera", "station 2"))
+      Terms = @(@("how does", "neutronvision"), @("how", "neutronvision", "work"), @("inline prevention"), @("edge native"), @("defect detected"), @("camera", "station 2"))
       Reply = @"
-RoboQC places vision at the station where the defect is likely to appear, not only at the end of the line.
+NeutronVision QC places vision at the station where the defect is likely to appear, not only at the end of the line.
 
 A camera observes the process, the edge node detects the defect in real time, and the operator gets a frame, trace, and decision while the unit is still recoverable.
 
@@ -241,7 +238,7 @@ The goal is evidence-first action, not a late spreadsheet after the shift is ove
     @{
       Terms = @(@("no cad"), @("need cad"), @("need cloud"), @("no cloud"), @("ml team"), @("need an ml team"), @("on prem"), @("on premise"), @("on prem capability"))
       Reply = @"
-RoboQC is designed to remove adoption friction on the factory floor.
+NeutronVision QC is designed to remove adoption friction on the factory floor.
 
 The positioning in the materials is: no CAD, no cloud, and no dedicated ML team required for the initial deployment.
 
@@ -267,9 +264,9 @@ With TensorRT and 4-bit quantization, the target is sub-200ms inference, which i
 "@
     },
     @{
-      Terms = @(@("what is", "romeoflexvision"), @("what is", "romeo flexvision"), @("romeo flexvision"), @("romeoflexvision"), @("open execution layer"), @("physical ai"))
+      Terms = @(@("open execution layer"), @("execution layer"), @("physical ai"), @("open core"))
       Reply = @"
-Romeo FlexVision is the open execution layer behind RoboQC.
+NeutronVision is the open execution layer behind NeutronVision QC.
 
 Its role is to bridge perception, reasoning, and physical action across heterogeneous industrial hardware, without locking the plant into a closed vendor stack.
 
@@ -281,7 +278,7 @@ In the materials, it is positioned as the neutral bridge for physical AI: import
       Reply = @"
 The action layer is about turning perception into a safe physical decision.
 
-In the RoboQC deck, semantic conflict resolution combines inputs from different nodes, resolves the final verdict, and then triggers the PLC or downstream control path.
+In the NeutronVision QC deck, semantic conflict resolution combines inputs from different nodes, resolves the final verdict, and then triggers the PLC or downstream control path.
 
 The point is that execution is not just a webhook. It is the verdict that causes the physical move.
 "@
@@ -289,7 +286,7 @@ The point is that execution is not just a webhook. It is the verdict that causes
     @{
       Terms = @(@("open source"), @("vendor lock"), @("lock in"), @("multi vendor"), @("neutral switzerland"), @("moat"), @("walled gardens"))
       Reply = @"
-Romeo FlexVision is positioned around an open-source core and multi-vendor coordination.
+NeutronVision is positioned around an open-source core and multi-vendor coordination.
 
 The strategic argument is that factories do not want a black-box controller sitting in front of a multi-million-dollar line.
 
@@ -368,7 +365,7 @@ function Handle-TextMessage {
 
   switch -Regex ($trimmed) {
     '^/start(@\w+)?$' {
-      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the RoboQC landing, inspect products, and ask English questions about RoboQC and Romeo FlexVision.`n`nExample: Why do you focus on station #2 instead of station #5?" -ReplyMarkup (Build-MainKeyboard)
+      Send-Message -ChatId $ChatId -Text "Hello. I am $BotName.`n`nUse me to open the NeutronVision QC landing, inspect products, and ask English questions about NeutronVision QC and NeutronVision.`n`nExample: Why do you focus on station #2 instead of station #5?" -ReplyMarkup (Build-MainKeyboard)
       return
     }
     '^/help(@\w+)?$' {
@@ -398,7 +395,7 @@ function Handle-TextMessage {
   }
 
   if (Is-Greeting -Text $trimmed) {
-    Send-Message -ChatId $ChatId -Text "Hello. I am $BotName. Ask me in English about RoboQC or use /about." -ReplyMarkup (Build-MainKeyboard)
+    Send-Message -ChatId $ChatId -Text "Hello. I am $BotName. Ask me in English about NeutronVision QC or use /about." -ReplyMarkup (Build-MainKeyboard)
     return
   }
 
@@ -413,17 +410,17 @@ function Handle-TextMessage {
     return
   }
 
-  Send-Message -ChatId $ChatId -Text "I am $BotName. Ask me in English about RoboQC, Romeo FlexVision, station #2, edge deployment, few-shot samples, or use /about /help /demo /products /github /contact." -ReplyMarkup (Build-MainKeyboard)
+  Send-Message -ChatId $ChatId -Text "I am $BotName. Ask me in English about NeutronVision QC, NeutronVision, station #2, edge deployment, few-shot samples, or use /about /help /demo /products /github /contact." -ReplyMarkup (Build-MainKeyboard)
 }
 
 Invoke-TelegramMethod -Method "deleteWebhook" -Body @{} | Out-Null
 Invoke-TelegramMethod -Method "setMyCommands" -Body @{
   commands = @(
     @{ command = "start"; description = "Open the main navigation" },
-    @{ command = "about"; description = "Explain what RoboQC is" },
+    @{ command = "about"; description = "Explain what NeutronVision QC is" },
     @{ command = "help"; description = "Show available commands" },
     @{ command = "demo"; description = "Open the live landing" },
-    @{ command = "products"; description = "List RoboQC products" },
+    @{ command = "products"; description = "List NeutronVision QC products" },
     @{ command = "github"; description = "Open GitHub surfaces" },
     @{ command = "contact"; description = "Show public contact routes" }
   )

@@ -332,7 +332,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
               <span className="site-wordmark-eye" aria-hidden="true" />
             </div>
             <div>
-              <div className="text-base font-semibold tracking-tight text-white">RomeoFlexVision</div>
+              <div className="text-base font-semibold tracking-tight text-white">NeutronVision</div>
               <div className="text-[11px] uppercase tracking-[0.24em] text-slate-400">
                 Open Execution Layer for Physical AI
               </div>
@@ -480,7 +480,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 <div className="site-hero-card site-hero-card-left">
                   <img
                     src={asset('/assets/decks/rfv-cover.png')}
-                    alt="RomeoFlexVision deck cover"
+                    alt="NeutronVision deck cover"
                     className="site-hero-thumb"
                   />
                 </div>
@@ -488,7 +488,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 <div className="site-hero-card site-hero-card-right">
                   <img
                     src={asset('/assets/decks/roboqc-cover.png')}
-                    alt="RoboQC deck cover"
+                    alt="NeutronVision QC deck cover"
                     className="site-hero-thumb"
                   />
                 </div>
@@ -558,10 +558,10 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 />
               </div>
               <div className="site-image-shell">
-                <div className="site-image-caption">Old way vs RoboQC</div>
+                <div className="site-image-caption">Old way vs NeutronVision QC</div>
                 <img
                   src={asset('/assets/decks/roboqc-old-vs-new.png')}
-                  alt="Old reactive QA versus RoboQC inline prevention"
+                  alt="Old reactive QA versus NeutronVision QC inline prevention"
                   className="site-section-image"
                 />
               </div>
@@ -648,7 +648,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
               <div className="site-image-shell md:col-span-2">
                 <img
                   src={asset('/assets/decks/roboqc-window.png')}
-                  alt="RoboQC market window diagram"
+                  alt="NeutronVision QC market window diagram"
                   className="site-section-image"
                 />
               </div>
@@ -681,7 +681,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
               <div className="site-image-shell">
                 <img
                   src={asset('/assets/decks/roboqc-tech-edge.png')}
-                  alt="RoboQC edge stack diagram"
+                  alt="NeutronVision QC edge stack diagram"
                   className="site-section-image"
                 />
               </div>
@@ -719,7 +719,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 <div className="site-image-caption">Neutral bridge</div>
                 <img
                   src={asset('/assets/decks/rfv-neutral-bridge.png')}
-                  alt="RomeoFlexVision neutral bridge diagram"
+                  alt="NeutronVision neutral bridge diagram"
                   className="site-section-image"
                 />
               </div>
@@ -727,7 +727,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 <div className="site-image-caption">Wedge market</div>
                 <img
                   src={asset('/assets/decks/roboqc-wedge.png')}
-                  alt="RoboQC wedge market expansion"
+                  alt="NeutronVision QC wedge market expansion"
                   className="site-section-image"
                 />
               </div>
@@ -763,7 +763,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
                 <div className="site-image-shell">
                   <img
                     src={asset('/assets/decks/roboqc-moat.png')}
-                    alt="RomeoFlexVision open source core moat"
+                    alt="NeutronVision open source core moat"
                     className="site-section-image"
                   />
                 </div>
@@ -805,7 +805,7 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
             <div className="site-image-shell">
               <img
                 src={asset('/assets/decks/rfv-cover.png')}
-                alt="RomeoFlexVision physical AI deck cover"
+                alt="NeutronVision physical AI deck cover"
                 className="site-section-image"
               />
             </div>
@@ -949,13 +949,13 @@ export default function Landing({ onPilotLaunch }: LandingProps) {
             </div>
 
             <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-              <span>2026 RomeoFlexVision / RoboQC. Physical AI landing.</span>
+              <span>2026 NeutronVision / NeutronVision QC. Physical AI landing.</span>
               <div className="flex flex-wrap items-center gap-3">
                 <a href={physicalAiDeckHref} download className="site-footer-link">
                   RFV deck
                 </a>
                 <a href={roboqcDeckHref} download className="site-footer-link">
-                  RoboQC deck
+                  NeutronVision QC deck
                 </a>
                 <a href={SITE_LINKS.telegram} target="_blank" rel="noreferrer" className="site-footer-link">
                   {SITE_LINKS.telegramHandle}

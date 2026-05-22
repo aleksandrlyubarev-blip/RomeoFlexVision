@@ -1,4 +1,4 @@
-"""Logging setup: stderr + rotating file under ~/LarmorSight/logs/."""
+"""Logging setup: stderr + rotating file under ~/NeutronVision/logs/."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 
 from .paths import ensure_app_dirs, logs_root
 
-LOGGER_NAME = "larmorsight"
+LOGGER_NAME = "checker"
 _configured = False
 
 

@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from larmorsight_checker.inference.ai_engine import CaptureResult
-from larmorsight_checker.session.session_manager import SessionManager
+from checker.inference.ai_engine import CaptureResult
+from checker.session.session_manager import SessionManager
 
 
 def _make_manager(tmp_sessions_dir):

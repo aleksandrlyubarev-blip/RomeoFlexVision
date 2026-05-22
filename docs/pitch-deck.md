@@ -1,4 +1,4 @@
-# RomeoFlexVision — Pitch Deck (Draft)
+# NeutronVision — Pitch Deck (Draft)
 
 > Status: **draft v0.1** — narrative pass, не дизайн.
 > Audience: seed / Series A investors с интересом к AI infra и industrial AI.
@@ -55,7 +55,7 @@ Defect categories, которые мы видим в AI hardware и high-end ele
 
 ---
 
-## Slide 4 — RomeoFlexVision
+## Slide 4 — NeutronVision
 
 **One-liner.** AI-powered visual QC execution layer for complex electronics manufacturing.
 
@@ -66,7 +66,7 @@ Defect categories, которые мы видим в AI hardware и high-end ele
 - **QMS / MES** системами завода,
 - **QC-инженером** (human-in-the-loop).
 
-**Что делает RomeoFlexVision:**
+**Что делает NeutronVision:**
 1. Видит юнит на станции через камеру.
 2. Понимает, какая операция сейчас идёт (по SOP / work order).
 3. Проверяет конкретные visual checks за миллисекунды.
@@ -191,7 +191,7 @@ Defect categories, которые мы видим в AI hardware и high-end ele
 - Premium tier — AI assistant for QC engineer (см. slide 10).
 
 **Unit economics направление:**
-- Один defect, пойманный в RomeoFlexVision = $X сэкономлено vs RMA.
+- Один defect, пойманный в NeutronVision = $X сэкономлено vs RMA.
 - Год подписки на станцию ≪ цена одного полевого incident.
 
 **Takeaway.** Мы продаём value, привязанную к hardware-grade KPI, а не к токенам.
@@ -235,7 +235,7 @@ Defect categories, которые мы видим в AI hardware и high-end ele
 ## Slide 12 — Investment thesis
 
 **Тезис в одном абзаце.**
-AI hardware build-out не замедлится в горизонте 5+ лет. Скрытое узкое горлышко — не чипы, а physical assembly QC. RomeoFlexVision — execution layer, который сидит в этом узком месте: software-маржа, hardware-grade defensibility (proprietary data + deep integration). Wedge сейчас → расширение в QC operating system для AI infrastructure manufacturing.
+AI hardware build-out не замедлится в горизонте 5+ лет. Скрытое узкое горлышко — не чипы, а physical assembly QC. NeutronVision — execution layer, который сидит в этом узком месте: software-маржа, hardware-grade defensibility (proprietary data + deep integration). Wedge сейчас → расширение в QC operating system для AI infrastructure manufacturing.
 
 **Почему мы:**
 - Команда: [TODO — founder backgrounds, manufacturing + AI].

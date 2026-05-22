@@ -1,4 +1,4 @@
-"""Application settings: JSON config + dotenv secrets under ~/LarmorSight/."""
+"""Application settings: JSON config + dotenv secrets under ~/NeutronVision/."""
 
 from __future__ import annotations
 
@@ -78,7 +78,7 @@ class Settings(BaseModel):
         return cls(**data)
 
     def save(self) -> None:
-        """Persist non-secret fields to ~/LarmorSight/config.json."""
+        """Persist non-secret fields to ~/NeutronVision/config.json."""
         ensure_app_dirs()
         payload = self.model_dump(mode="json")
         payload.pop("grok_api_key", None)  # secrets stay in dotenv

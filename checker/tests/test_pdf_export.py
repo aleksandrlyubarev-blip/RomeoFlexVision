@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from larmorsight_checker.session import pdf_export
+from checker.session import pdf_export
 
 
 def test_export_writes_file(tmp_path, sample_session) -> None:

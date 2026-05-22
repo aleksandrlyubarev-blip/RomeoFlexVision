@@ -1,6 +1,6 @@
-# RoboQC Landing
+# NeutronVision Landing
 
-React + TypeScript + Vite landing for RoboQC, powered by Romeo FlexVision.
+React + TypeScript + Vite landing for NeutronVision and the NeutronVision QC product.
 
 ## Scripts
 
@@ -11,9 +11,14 @@ React + TypeScript + Vite landing for RoboQC, powered by Romeo FlexVision.
 
 ## Brand assets
 
-The current landing uses the brand pack in `public/assets/brand`:
+The brand pack in `public/assets/brand` still carries pre-rename `roboqc-*`
+filenames and artwork. It needs a NeutronVision redesign pass:
 
 - `roboqc-logo.svg`
 - `roboqc-mark.svg`
 - `roboqc-icon-16/32/64/128.png`
 - `romeo-photo.jpg`
+
+The deck images in `public/assets/decks`, the PDFs in `public/downloads`,
+and `public/brand/index.html` are likewise still RoboQC / RomeoFlexVision
+branded and need to be regenerated.

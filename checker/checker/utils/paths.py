@@ -1,4 +1,4 @@
-"""Filesystem layout for ~/LarmorSight/."""
+"""Filesystem layout for ~/NeutronVision/."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def app_root() -> Path:
-    return Path.home() / "LarmorSight"
+    return Path.home() / "NeutronVision"
 
 
 def sessions_root() -> Path:

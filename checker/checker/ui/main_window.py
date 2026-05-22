@@ -56,7 +56,7 @@ def _build_engine(settings: Settings) -> AIEngine | None:
 class MainWindow(QMainWindow):
     def __init__(self, settings: Settings) -> None:
         super().__init__()
-        self.setWindowTitle("LarmorSight Checker v0.1")
+        self.setWindowTitle("NeutronVision Checker v0.1")
         self.resize(1280, 760)
         self._settings = settings
 

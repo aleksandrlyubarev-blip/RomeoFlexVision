@@ -40,7 +40,7 @@ def _summary_counts(session: Session) -> dict[str, int]:
 
 def _cover(session: Session, styles) -> list:
     counts = _summary_counts(session)
-    title = Paragraph(f"<b>LarmorSight session summary</b><br/>{session.name}", styles["Title"])
+    title = Paragraph(f"<b>NeutronVision session summary</b><br/>{session.name}", styles["Title"])
     rows = [
         ["Session ID", session.session_id],
         ["Operator", session.operator or "-"],

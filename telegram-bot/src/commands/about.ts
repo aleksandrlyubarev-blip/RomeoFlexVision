@@ -22,7 +22,7 @@ function looksLikeSelfQuestion(text: string): boolean {
     'what do you do',
     'about you',
     'tell me about yourself',
-    'about roboqc',
+    'about neutronvision',
   ];
 
   return triggers.some((trigger) => normalized.includes(trigger));
@@ -43,7 +43,7 @@ function buildFallbackMessage(config: AppConfig): string {
     `I am ${config.botProfile.name}.`,
     config.botProfile.oneLiner,
     '',
-    'I can answer product questions in English about RoboQC and Romeo FlexVision.',
+    'I can answer product questions in English about NeutronVision QC - inline visual quality control for electronics assembly.',
     '',
     'Try questions like:',
     ...getSuggestedEnglishQuestions().map((item) => `- ${item}`),
