@@ -11,8 +11,6 @@ The public layer is:
 - **NeutronVision** — research layer for visual inspection workflows, evidence logging, and human review.
 - **NeutronVision Checker** — camera-based demo/reference application for image capture, frame-quality checks, assisted review, and evidence artifacts.
 
-A future commercial product track may be separated into a private repository later. That track is intentionally not named or promoted in the public repository.
-
 ## Data and IP boundary
 
 The public repository is intended for public datasets, synthetic examples, and generic manufacturing-quality concepts only.
@@ -34,6 +32,5 @@ Future production deployments should use customer-supplied data only under a wri
 ## Current cleanup priority
 
 1. Keep the public site focused on NeutronVision and NeutronVision Checker.
-2. Keep any future commercial product track private and unnamed in public materials until the split is ready.
-3. Remove public claims about pilots, proprietary datasets, customer deployments, and factory-specific knowledge unless they are verified and approved for publication.
-4. Replace old pitch decks with a safe public overview before promoting the site.
+2. Remove public claims about pilots, proprietary datasets, customer deployments, factory-specific knowledge, and unnamed future product tracks.
+3. Replace old pitch decks with a safe public overview before promoting the site.
