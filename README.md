@@ -10,7 +10,8 @@ The public layer is:
 
 - **NeutronVision** — research layer for visual inspection workflows, evidence logging, and human review.
 - **NeutronVision Checker** — camera-based demo/reference application for image capture, frame-quality checks, assisted review, and evidence artifacts.
-- **LarmorSight** — prepared startup/product line that should remain in a private commercial track until data rights, IP boundaries, customer scope, and deployment agreements are clear.
+
+A future commercial product track may be separated into a private repository later. That track is intentionally not named or promoted in the public repository.
 
 ## Data and IP boundary
 
@@ -33,6 +34,6 @@ Future production deployments should use customer-supplied data only under a wri
 ## Current cleanup priority
 
 1. Keep the public site focused on NeutronVision and NeutronVision Checker.
-2. Move commercial LarmorSight materials into a private startup/product track.
+2. Keep any future commercial product track private and unnamed in public materials until the split is ready.
 3. Remove public claims about pilots, proprietary datasets, customer deployments, and factory-specific knowledge unless they are verified and approved for publication.
 4. Replace old pitch decks with a safe public overview before promoting the site.
