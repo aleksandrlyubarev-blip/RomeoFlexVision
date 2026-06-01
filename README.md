@@ -1,39 +1,38 @@
-# NeutronVision QC
+# NeutronVision
 
-AI-слой визуального контроля качества для сборки сложной электроники и AI-железа.
-Камера на станции видит собранный узел, проверяет визуальные дефекты (винты,
-кабели, коннекторы, защёлки, трассировка) за миллисекунды, подсказывает оператору
-и сохраняет полный evidence-лог для аудита.
+Independent visual-AI research and demo stack for human-in-the-loop inspection workflows.
 
-> **Приватный репозиторий продукта.** Публичная поверхность (лендинг) вынесена в
-> отдельный репозиторий — см. `ROADMAP.md`, раздел «Бренд и структура репозиториев».
+## Public positioning
 
-## Монорепо
+This public repository should be treated as a research and demo surface, not as a production customer deployment.
 
-| Каталог | Что это | Статус |
+The public layer is:
+
+- **NeutronVision** — research layer for visual inspection workflows, evidence logging, and human review.
+- **NeutronVision Checker** — camera-based demo/reference application for image capture, frame-quality checks, assisted review, and evidence artifacts.
+- **LarmorSight** — prepared startup/product line that should remain in a private commercial track until data rights, IP boundaries, customer scope, and deployment agreements are clear.
+
+## Data and IP boundary
+
+The public repository is intended for public datasets, synthetic examples, and generic manufacturing-quality concepts only.
+
+It should not include employer data, customer data, production photos, internal work instructions, proprietary layouts, confidential defect records, or reverse-engineered geometry from any third-party manufacturing site.
+
+Future production deployments should use customer-supplied data only under a written agreement.
+
+## Monorepo
+
+| Directory | Purpose | Public posture |
 |---|---|---|
-| `checker/` | Десктоп-приложение оператора: камера → вердикт PASS/FAIL (PyQt6) | MVP |
-| `rhaef_v2/` | Агентный фреймворк + 6-агентный QC-пайплайн (LangGraph) | каркас |
-| `roboqc_data/` | Подготовка датасета: ingest, синтез дефектов, экспорт | в работе |
-| `infra/` | Helm-чарт и observability для GPU-полигона | — |
-| `scripts/` | Бенчмарки моделей | — |
-| `docs/` | Питч-дек, архитектура, runbook'и | — |
+| `checker/` | NeutronVision Checker demo app: camera -> assisted review -> evidence artifacts | Public demo/reference layer |
+| `roboqc_data/` | Dataset tooling for public/synthetic examples | Public only if license-tracked |
+| `rhaef_v2/` | Agent pipeline experiments | Consider private if tied to product roadmap |
+| `docs/` | Notes, architecture, and decks | Needs cleanup before public use |
+| `infra/` | Deployment/testbed scaffolding | Consider private |
 
-## Бренд
+## Current cleanup priority
 
-- **NeutronVision** — зонтичный бренд / компания.
-- **NeutronVision QC** — продукт (AI-контроль качества сборки).
-- **checker** — приложение оператора на станции.
-
-`rhaef_v2`, `roboqc` — внутренние кодовые имена, не выносятся в продуктовый нейминг.
-
-## План
-
-Текущий план развития и состояние проектов — [`ROADMAP.md`](ROADMAP.md).
-Первые прототипы камер для тестирования — к концу июля.
-
-## Разработка
-
-Каждый подпроект самодостаточен и описан в собственном README
-(`checker/README.md`, `roboqc_data/README.md`, и т.д.).
-Стандарты кода — [`CODING_STANDARDS.md`](CODING_STANDARDS.md).
+1. Keep the public site focused on NeutronVision and NeutronVision Checker.
+2. Move commercial LarmorSight materials into a private startup/product track.
+3. Remove public claims about pilots, proprietary datasets, customer deployments, and factory-specific knowledge unless they are verified and approved for publication.
+4. Replace old pitch decks with a safe public overview before promoting the site.
