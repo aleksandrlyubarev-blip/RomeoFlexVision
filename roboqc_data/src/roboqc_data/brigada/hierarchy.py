@@ -1,7 +1,7 @@
 """Role Protocols for the brigada hierarchy.
 
 Each role corresponds to a level in the General → Major → Sergeant →
-Soldier hierarchy from ``docs/brigada-architecture.md``. The
+Soldier hierarchy used by the experimental agent layer. The
 implementations live in :mod:`roboqc_data.brigada.agents`.
 """
 

@@ -10,7 +10,7 @@ import {
 
 export type Language = 'en' | 'he';
 
-const LANGUAGE_STORAGE_KEY = 'roboqc-language';
+const LANGUAGE_STORAGE_KEY = 'romeoflexvision-language';
 
 export const LANGUAGE_META: Record<
   Language,
@@ -85,4 +85,3 @@ export function useLanguage() {
   }
   return context;
 }
-

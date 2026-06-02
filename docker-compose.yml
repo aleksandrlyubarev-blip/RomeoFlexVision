@@ -1,7 +1,6 @@
 version: "3.9"
 
-# RHAEF v2 базовый cloud-режим (без GPU). для GPU-полигона RoboQC используйте compose.gpu.yml:
-#   docker compose --env-file .env.testbed -f compose.gpu.yml up -d sglang-qwen rhaef-supervisor
+# Experimental agent API in the default cloud mode.
 
 services:
   rhaef-api:

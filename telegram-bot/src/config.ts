@@ -126,14 +126,14 @@ export function loadConfig(): AppConfig {
     leadAllowedOrigins: normalizeOriginList(parseCsvList(process.env.LEAD_ALLOWED_ORIGINS), publicBaseUrl),
     leadRateLimitPerMinute: parsePositiveInt(process.env.LEAD_RATE_LIMIT_PER_MINUTE, 10),
     botProfile: {
-      name: 'NeutronVision Bot',
-      oneLiner: 'Public Telegram entrypoint for NeutronVision QC.',
+      name: 'RomeoFlexVision Info Bot',
+      oneLiner: 'Public Telegram entrypoint for the RomeoFlexVision research surface.',
       summary:
-        'I help visitors understand what NeutronVision QC is, answer English product questions about inline visual quality control, open the live landing, and jump to GitHub or LinkedIn.',
+        'I explain the public RomeoFlexVision system map, open the live landing, and jump to GitHub or LinkedIn.',
       capabilities: [
-        'Explain NeutronVision QC positioning and the pilot story',
-        'Answer English questions about edge deployment, station-level defects, and the open execution layer',
-        'Open the live landing and demo surface',
+        'Explain the public system map',
+        'Answer English questions about RoboQC, Neuron Vision Display, Checker, and RomeoFlexVision',
+        'Open the live research and demo surface',
         'Route visitors to GitHub, LinkedIn, and public contact surfaces',
       ],
     },
@@ -145,10 +145,10 @@ export function loadConfig(): AppConfig {
       linkedin: 'https://www.linkedin.com/company/romeoflexvision',
       products: [
         {
-          slug: 'neutronvision-qc',
-          title: 'NeutronVision QC',
+          slug: 'neuron-vision-display',
+          title: 'Neuron Vision Display',
           description:
-            'AI visual quality control for electronics and AI-hardware assembly: catches station-level defects inline, before end-of-line test.',
+            'Visual inspection software for assisted review and evidence logging.',
           url: 'https://github.com/aleksandrlyubarev-blip/RomeoFlexVision',
         },
       ],

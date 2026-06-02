@@ -1,7 +1,6 @@
-"""Defect taxonomy for RoboQC.
+"""Generic defect taxonomy for public and synthetic examples.
 
-The classes here mirror the wedge defect list from
-`RomeoFlexVision/docs/pitch-deck.md` (slide 6). Adding a new class
+Adding a new class
 requires bumping :data:`TAXONOMY_VERSION` so manifests built against
 the old taxonomy can be detected by consumers.
 """

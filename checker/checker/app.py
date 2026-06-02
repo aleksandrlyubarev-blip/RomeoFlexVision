@@ -13,11 +13,11 @@ from .utils.logging import get_logger
 
 def run() -> int:
     log = get_logger()
-    log.info("NeutronVision Checker starting")
+    log.info("Neuron Vision Display starting")
 
     settings = Settings.load()
     app = QApplication(sys.argv)
-    app.setApplicationName("NeutronVision Checker")
+    app.setApplicationName("Neuron Vision Display")
     app.setStyleSheet(load_stylesheet())
 
     window = MainWindow(settings)

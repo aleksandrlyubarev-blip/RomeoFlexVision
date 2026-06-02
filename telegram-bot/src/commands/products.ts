@@ -9,7 +9,7 @@ export function registerProductsCommand(bot: RomeoBot, config: AppConfig): void 
       .join('\n\n');
 
     await ctx.reply(
-      `What NeutronVision builds:\n\n${message}`,
+      `Public system map:\n\n${message}`,
       Markup.inlineKeyboard(
         config.links.products.map((product) => [Markup.button.url(product.title, product.url)]),
       ),

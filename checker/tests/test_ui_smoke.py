@@ -18,4 +18,4 @@ def test_main_window_constructs(qtbot) -> None:
 
     window = MainWindow(Settings.load())
     qtbot.addWidget(window)
-    assert window.windowTitle().startswith("NeutronVision")
+    assert window.windowTitle().startswith("Neuron Vision Display")

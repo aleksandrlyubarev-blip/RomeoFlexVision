@@ -16,7 +16,7 @@ async function main(): Promise<void> {
   app.get('/', (_req: Request, res: Response) => {
     res.json({
       ok: true,
-      service: 'neutronvision-telegram-bot',
+      service: 'romeoflexvision-telegram-bot',
       mode: config.webhookDomain ? 'webhook' : 'polling',
       bot: config.telegramBotUsername,
     });
@@ -60,7 +60,7 @@ async function main(): Promise<void> {
 
   const server = app.listen(config.port, () => {
     console.log(
-      `neutronvision-telegram-bot listening on port ${config.port} (${config.webhookDomain ? 'webhook' : 'polling'} mode)`,
+      `romeoflexvision-telegram-bot listening on port ${config.port} (${config.webhookDomain ? 'webhook' : 'polling'} mode)`,
     );
   });
 

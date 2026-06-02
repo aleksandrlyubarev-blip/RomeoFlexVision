@@ -155,7 +155,7 @@ function Shell() {
 
   return (
     <Landing
-      onPilotLaunch={() => {
+      onContactLaunch={() => {
         window.open(SITE_LINKS.telegram, '_blank', 'noopener,noreferrer');
       }}
     />

@@ -36,7 +36,7 @@ class TaskCategory(str, Enum):
     DATA_TEST = "data_test"
     VIDEO_MEDIA = "video_media"
     ROUTINE = "routine"
-    # RoboQC testbed (local SGLang)
+    # Legacy RoboQC implementation codename for the local inspection pipeline.
     ROBOQC_VISION = "roboqc_vision"
     ROBOQC_REASONING = "roboqc_reasoning"
     ROBOQC_ACTION = "roboqc_action"
@@ -52,7 +52,7 @@ MODEL_MAPPING: Dict[TaskCategory, str] = {
     TaskCategory.DATA_TEST: "qwen/qwen3.6-plus",
     TaskCategory.VIDEO_MEDIA: "xai/grok-4",
     TaskCategory.ROUTINE: "qwen/qwen3.6-plus",
-    # RoboQC: openai/* имена заставляют litellm использовать OpenAI-совместимый путь.
+    # Legacy inspection-pipeline routes use OpenAI-compatible local endpoints.
     # Реальный endpoint — SGLang на GPU-полигоне (см. SGLANG_BASE_URL).
     TaskCategory.ROBOQC_VISION: "openai/qwen3-vl-local",
     TaskCategory.ROBOQC_REASONING: "openai/qwen3.6-35b-local",
@@ -63,7 +63,7 @@ FALLBACK_MAPPING: Dict[str, str] = {
     "anthropic/claude-opus-4-7": "openai/gpt-5.5-pro",
     "openai/gpt-5.5-pro": "qwen/qwen3.6-plus",
     "xai/grok-4": "qwen/qwen3.6-plus",
-    # RoboQC: если локальный SGLang недоступен, роутим на облачный qwen.
+    # If a local endpoint is unavailable, route through the cloud fallback.
     "openai/qwen3-vl-local": "qwen/qwen3.6-plus",
     "openai/qwen3.6-35b-local": "qwen/qwen3.6-plus",
 }
@@ -97,7 +97,7 @@ class ModelRouter:
         return {"rhaef_category": category.value, "framework": "rhaef-v2"}
 
     def _enrich_for_local(self, model: str, kwargs: dict[str, Any]) -> None:
-        """Для локальных ROBOQC_*-моделей вбиваем api_base/api_key/custom_llm_provider."""
+        """Configure api_base, api_key, and provider for legacy local inspection routes."""
         if not model.endswith("-local"):
             return
         if "vl" in model.lower() or "vision" in model.lower():

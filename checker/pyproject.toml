@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "checker"
 version = "0.1.0"
-description = "macOS desktop demo app for industrial QC photo inspection of HPC liquid-cooling components, powered by xAI Grok vision."
+description = "macOS desktop demo app for generic visual inspection workflows with human review and evidence logging."
 requires-python = ">=3.11,<3.13"
 license = { text = "MIT" }
 dependencies = [

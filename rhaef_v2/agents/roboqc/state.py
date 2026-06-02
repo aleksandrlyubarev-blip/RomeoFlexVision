@@ -1,4 +1,4 @@
-"""Состояние LangGraph-пайплайна RoboQC."""
+"""State for the experimental inspection LangGraph."""
 
 from __future__ import annotations
 

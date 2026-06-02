@@ -93,7 +93,7 @@ def sample_session(tmp_sessions_dir) -> Session:
     session = Session(
         session_id=session_dir.name,
         name="demo",
-        product_code="ZC-001",
+        product_code="DEMO-001",
         started_at=datetime.now(UTC),
         operator="alex",
         camera=CameraInfo(),

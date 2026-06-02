@@ -1,4 +1,4 @@
-"""Filesystem layout for ~/NeutronVision/."""
+"""Filesystem layout for ~/NeuronVisionDisplay/."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def app_root() -> Path:
-    return Path.home() / "NeutronVision"
+    return Path.home() / "NeuronVisionDisplay"
 
 
 def sessions_root() -> Path:

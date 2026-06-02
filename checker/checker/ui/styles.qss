@@ -1,4 +1,4 @@
-/* NeutronVision Checker — dark theme. Verdict colors mirror pdf_export. */
+/* Neuron Vision Display - dark theme. Verdict colors mirror pdf_export. */
 
 QMainWindow, QDialog, QWidget {
     background-color: #1c1f24;

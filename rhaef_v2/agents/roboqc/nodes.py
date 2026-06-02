@@ -1,4 +1,4 @@
-"""Узлы LangGraph-графа RoboQC.
+"""Nodes for the experimental inspection LangGraph.
 
 Каждый узел: (a) рендерит свой prompt-шаблон, (b) вызывает ModelRouter в нужной TaskCategory,
 (c) парсит ответ в типизированный фрагмент состояния, (d) возвращает dict-патч для LangGraph.

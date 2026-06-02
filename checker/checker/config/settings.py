@@ -1,4 +1,4 @@
-"""Application settings: JSON config + dotenv secrets under ~/NeutronVision/."""
+"""Application settings: JSON config + dotenv secrets under ~/NeuronVisionDisplay/."""
 
 from __future__ import annotations
 
@@ -50,6 +50,7 @@ class Settings(BaseModel):
     quality: QualityThresholds = Field(default_factory=QualityThresholds)
 
     sessions_dir: Path = Field(default_factory=sessions_root)
+    product_profile_path: Path | None = None
 
     @classmethod
     def load(cls) -> "Settings":
@@ -74,11 +75,13 @@ class Settings(BaseModel):
 
         if "sessions_dir" in data and isinstance(data["sessions_dir"], str):
             data["sessions_dir"] = Path(data["sessions_dir"]).expanduser()
+        if "product_profile_path" in data and isinstance(data["product_profile_path"], str):
+            data["product_profile_path"] = Path(data["product_profile_path"]).expanduser()
 
         return cls(**data)
 
     def save(self) -> None:
-        """Persist non-secret fields to ~/NeutronVision/config.json."""
+        """Persist non-secret fields to ~/NeuronVisionDisplay/config.json."""
         ensure_app_dirs()
         payload = self.model_dump(mode="json")
         payload.pop("grok_api_key", None)  # secrets stay in dotenv
