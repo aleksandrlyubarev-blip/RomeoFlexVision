@@ -29,7 +29,7 @@ except Exception:  # pragma: no cover
     ToolNode = None  # type: ignore
 
 router = ModelRouter()
-app = FastAPI(title="RHAEF v2")
+app = FastAPI(title="RomeoFlexVision Experimental Agent API")
 
 try:
     from rhaef_v2.api.routes import router as api_router
@@ -49,7 +49,7 @@ _roboqc_client = StubRoboQCClient()
 
 
 async def roboqc_stub(*_: object, **__: object) -> str:
-    """Run a stub RoboQC inspection and return the JSON-serialised result."""
+    """Run a stub inspection and return the JSON-serialised result."""
     result = await _roboqc_client.run_check(
         InspectionRequest(
             inspection_id=f"insp-{uuid4().hex[:8]}",

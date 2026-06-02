@@ -8,6 +8,8 @@ import pytest
 
 from checker.inference.ai_engine import CaptureResult
 from checker.session.session_manager import SessionManager
+from checker.vision.registration import AlignmentResult
+from checker.vision.roi import RoiInspectionResult
 
 
 def _make_manager(tmp_sessions_dir):
@@ -16,11 +18,11 @@ def _make_manager(tmp_sessions_dir):
 
 def test_start_creates_directory(tmp_sessions_dir) -> None:
     mgr = _make_manager(tmp_sessions_dir)
-    session = mgr.start("zutacore-demo")
+    session = mgr.start("demo-assembly")
     assert session.dir.exists()
     assert (session.dir / "session.json").exists()
     payload = json.loads((session.dir / "session.json").read_text())
-    assert payload["name"] == "zutacore-demo"
+    assert payload["name"] == "demo-assembly"
     assert payload["captures"] == []
 
 
@@ -47,6 +49,36 @@ def test_add_capture_writes_files(tmp_sessions_dir, synthetic_sharp_frame, sampl
     cap_json = session.dir / f"{record.capture_id}_capture.json"
     assert cap_json.exists()
     assert json.loads(cap_json.read_text())["capture_id"] == "001"
+
+
+def test_add_capture_writes_alignment_and_roi_evidence(tmp_sessions_dir, synthetic_sharp_frame, sample_quality) -> None:
+    mgr = _make_manager(tmp_sessions_dir)
+    session = mgr.start("demo")
+    alignment = AlignmentResult(status="aligned", score=0.88, match_count=40, inlier_count=32)
+    roi_result = RoiInspectionResult(
+        roi_id="screw-a",
+        label="Screw A",
+        kind="screw",
+        bbox_px=(10, 20, 30, 40),
+        mean_luminance=0.55,
+        sharpness=120.0,
+        edge_density=0.08,
+    )
+
+    record = mgr.add_capture(
+        synthetic_sharp_frame,
+        sample_quality,
+        alignment=alignment,
+        roi_results=[roi_result],
+        aligned_frame_bgr=synthetic_sharp_frame,
+        roi_overlay_bgr=synthetic_sharp_frame,
+    )
+
+    assert (session.dir / record.aligned_frame_path).exists()
+    assert (session.dir / record.roi_overlay_path).exists()
+    on_disk = json.loads((session.dir / "001_capture.json").read_text())
+    assert on_disk["alignment"]["score"] == 0.88
+    assert on_disk["roi_results"][0]["roi_id"] == "screw-a"
 
 
 def test_attach_result_updates_json(tmp_sessions_dir, synthetic_sharp_frame, sample_quality) -> None:

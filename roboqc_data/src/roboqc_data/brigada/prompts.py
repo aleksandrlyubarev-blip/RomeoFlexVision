@@ -1,7 +1,7 @@
 """System prompts for the brigada hierarchy.
 
 Prompts are intentionally short and machine-targeted. The General/Major/
-Sergeant/Soldier split mirrors ``RomeoFlexVision/docs/brigada-architecture.md``.
+Sergeant/Soldier split mirrors the experimental agent hierarchy.
 """
 
 from __future__ import annotations

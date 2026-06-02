@@ -1,24 +1,27 @@
-# NeutronVision Landing
+# RomeoFlexVision Landing
 
-React + TypeScript + Vite landing for NeutronVision and the NeutronVision QC product.
+React + TypeScript + Vite landing for the public RomeoFlexVision research and
+demo surface.
 
-## Scripts
+The landing uses the current public vocabulary:
 
-- `npm run dev` - local development
-- `npm run build` - production build
-- `npm run preview` - preview the built landing
-- `npm run lint` - run ESLint
+- RoboQC - robot hardware.
+- Neuron Vision Display - software.
+- Checker - manual scanner.
+- RomeoFlexVision - agent system and legal submission wrapper.
 
-## Brand assets
+The public site intentionally avoids customer-specific details, production
+claims, infrastructure details, and old product-track materials.
 
-The brand pack in `public/assets/brand` still carries pre-rename `roboqc-*`
-filenames and artwork. It needs a NeutronVision redesign pass:
+## Development
 
-- `roboqc-logo.svg`
-- `roboqc-mark.svg`
-- `roboqc-icon-16/32/64/128.png`
-- `romeo-photo.jpg`
+```bash
+npm install
+npm run dev
+```
 
-The deck images in `public/assets/decks`, the PDFs in `public/downloads`,
-and `public/brand/index.html` are likewise still RoboQC / RomeoFlexVision
-branded and need to be regenerated.
+## Build
+
+```bash
+npm run build
+```

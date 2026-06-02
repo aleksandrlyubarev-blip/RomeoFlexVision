@@ -14,6 +14,8 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..inference.ai_engine import CaptureResult
 from ..inference.quality_validator import QualityReport
 from ..utils.paths import new_session_dir, sessions_root
+from ..vision.registration import AlignmentResult
+from ..vision.roi import RoiInspectionResult
 
 THUMBNAIL_MAX_SIDE = 256
 JPEG_QUALITY = 92
@@ -36,6 +38,10 @@ class CaptureRecord(BaseModel):
     quality: QualityReport
     quality_passed: bool
     ai_inference: CaptureResult | None = None
+    alignment: AlignmentResult | None = None
+    roi_results: list[RoiInspectionResult] = Field(default_factory=list)
+    aligned_frame_path: str = ""
+    roi_overlay_path: str = ""
 
 
 class Session(BaseModel):
@@ -118,18 +124,33 @@ class SessionManager:
         self._write_session_json()
         return self._session
 
-    def add_capture(self, frame_bgr: np.ndarray, quality: QualityReport) -> CaptureRecord:
+    def add_capture(
+        self,
+        frame_bgr: np.ndarray,
+        quality: QualityReport,
+        *,
+        alignment: AlignmentResult | None = None,
+        roi_results: list[RoiInspectionResult] | None = None,
+        aligned_frame_bgr: np.ndarray | None = None,
+        roi_overlay_bgr: np.ndarray | None = None,
+    ) -> CaptureRecord:
         session = self._require_open()
         idx = session.capture_count + 1
         capture_id = f"{idx:03d}"
         when = datetime.now(UTC)
         frame_name = f"{capture_id}_capture.jpg"
         thumb_name = f"{capture_id}_thumbnail.jpg"
+        aligned_name = f"{capture_id}_aligned.jpg" if aligned_frame_bgr is not None else ""
+        overlay_name = f"{capture_id}_roi_overlay.jpg" if roi_overlay_bgr is not None else ""
         frame_path = session.dir / frame_name
         thumb_path = session.dir / thumb_name
 
         cv2.imwrite(str(frame_path), frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
         _write_thumbnail(frame_bgr, thumb_path)
+        if aligned_frame_bgr is not None:
+            cv2.imwrite(str(session.dir / aligned_name), aligned_frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
+        if roi_overlay_bgr is not None:
+            cv2.imwrite(str(session.dir / overlay_name), roi_overlay_bgr, [cv2.IMWRITE_JPEG_QUALITY, JPEG_QUALITY])
 
         record = CaptureRecord(
             capture_id=capture_id,
@@ -138,6 +159,10 @@ class SessionManager:
             thumbnail_path=thumb_name,
             quality=quality,
             quality_passed=_passes(quality, self._sharpness_min, self._exposure_min, self._framing_min),
+            alignment=alignment,
+            roi_results=roi_results or [],
+            aligned_frame_path=aligned_name,
+            roi_overlay_path=overlay_name,
         )
         session.captures.append(record)
         self._write_capture_json(record)

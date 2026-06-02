@@ -2,7 +2,7 @@
 
 The real implementation routes through ``rhaef_v2.core.model_router.ModelRouter``
 to a 70B-class model with ``TaskCategory.CRITICAL`` (per
-``docs/brigada-architecture.md``). For the initial PR we ship a
+the experimental hierarchy). For the initial PR we ship a
 deterministic stub that the orchestrator and tests can rely on.
 """
 

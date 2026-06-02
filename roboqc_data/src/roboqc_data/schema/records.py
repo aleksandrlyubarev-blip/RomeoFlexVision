@@ -1,4 +1,4 @@
-"""Canonical Pydantic v2 schema for RoboQC dataset records.
+"""Canonical Pydantic v2 schema for inspection dataset records.
 
 All models are strict and frozen (immutable). Conversion to/from
 on-disk JSONL is done via Pydantic's built-in serialization

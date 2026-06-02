@@ -4,8 +4,7 @@ Every transform takes a clean image and a parameter dict, and returns
 ``(rgb, binary_mask)`` with mask values in {0, 255}. The mask is the
 ground truth localisation of the synthesised defect.
 
-The full multi-agent hierarchy described in
-``RomeoFlexVision/docs/brigada-architecture.md`` plans *which*
+The experimental multi-agent hierarchy plans *which*
 transform to apply with *what* parameters — but the pixel-level
 geometry happens here, deterministically.
 """

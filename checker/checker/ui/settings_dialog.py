@@ -18,7 +18,7 @@ from ..config.settings import Settings, write_secrets
 class SettingsDialog(QDialog):
     def __init__(self, settings: Settings, parent=None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("NeutronVision Settings")
+        self.setWindowTitle("Neuron Vision Display Settings")
         self._settings = settings
 
         self._camera_index = QSpinBox()
@@ -39,12 +39,15 @@ class SettingsDialog(QDialog):
         self._api_key.setPlaceholderText("xai-…")
 
         self._model = QLineEdit(settings.grok_model)
+        self._product_profile = QLineEdit(str(settings.product_profile_path or ""))
+        self._product_profile.setPlaceholderText("~/NeuronVisionDisplay/products/demo-assembly.json")
 
         form = QFormLayout()
         form.addRow("Camera index", self._camera_index)
         form.addRow("AI engine", self._engine)
         form.addRow("Grok API key", self._api_key)
         form.addRow("Grok model id", self._model)
+        form.addRow("Product profile", self._product_profile)
 
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(self.accept)
@@ -63,7 +66,16 @@ class SettingsDialog(QDialog):
                 "camera_index": self._camera_index.value(),
                 "grok_model": self._model.text().strip() or self._settings.grok_model,
                 "engine": self._engine.currentData() or "grok",
+                "product_profile_path": self._profile_path(),
             }
         )
         new.save()
         return new
+
+    def _profile_path(self):
+        raw = self._product_profile.text().strip()
+        if not raw:
+            return None
+        from pathlib import Path
+
+        return Path(raw).expanduser()

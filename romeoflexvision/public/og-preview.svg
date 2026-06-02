@@ -8,78 +8,23 @@
       <stop stop-color="#42D8FF" stop-opacity="0.34" />
       <stop offset="1" stop-color="#42D8FF" stop-opacity="0" />
     </radialGradient>
-    <radialGradient id="yellow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(930 460) rotate(149) scale(300 220)">
-      <stop stop-color="#FFD95C" stop-opacity="0.2" />
-      <stop offset="1" stop-color="#FFD95C" stop-opacity="0" />
-    </radialGradient>
   </defs>
   <rect width="1200" height="630" rx="36" fill="url(#bg)" />
   <rect width="1200" height="630" rx="36" fill="url(#cyan)" />
-  <rect width="1200" height="630" rx="36" fill="url(#yellow)" />
-
-  <g opacity="0.14">
-    <path d="M88 94H1112" stroke="#D8E5FF" />
-    <path d="M88 158H1112" stroke="#D8E5FF" />
-    <path d="M88 222H1112" stroke="#D8E5FF" />
-    <path d="M88 286H1112" stroke="#D8E5FF" />
-    <path d="M88 350H1112" stroke="#D8E5FF" />
-    <path d="M88 414H1112" stroke="#D8E5FF" />
-    <path d="M88 478H1112" stroke="#D8E5FF" />
-    <path d="M88 542H1112" stroke="#D8E5FF" />
-    <path d="M152 70V560" stroke="#D8E5FF" />
-    <path d="M280 70V560" stroke="#D8E5FF" />
-    <path d="M408 70V560" stroke="#D8E5FF" />
-    <path d="M536 70V560" stroke="#D8E5FF" />
-    <path d="M664 70V560" stroke="#D8E5FF" />
-    <path d="M792 70V560" stroke="#D8E5FF" />
-    <path d="M920 70V560" stroke="#D8E5FF" />
-    <path d="M1048 70V560" stroke="#D8E5FF" />
-  </g>
-
-  <rect x="96" y="92" width="300" height="40" rx="20" fill="rgba(66,216,255,0.1)" stroke="rgba(66,216,255,0.24)" />
-  <text x="124" y="118" fill="#7BE8FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.16em">
-    NEUTRONVISION
+  <rect x="96" y="92" width="330" height="40" rx="20" fill="rgba(66,216,255,0.1)" stroke="rgba(66,216,255,0.24)" />
+  <text x="124" y="118" fill="#7BE8FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.14em">
+    ROMEOFLEXVISION
   </text>
-
-  <text x="96" y="222" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="84" font-weight="800">
-    The Open Execution
+  <text x="96" y="238" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">
+    Visual inspection
   </text>
-  <text x="96" y="306" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="84" font-weight="800">
-    Layer for Physical AI
+  <text x="96" y="322" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800">
+    research
   </text>
-  <text x="96" y="370" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
-    No CAD. No Cloud. No ML Team.
+  <text x="96" y="396" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">
+    Public demo surface for evidence logging
   </text>
-  <text x="96" y="414" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500">
-    Synchronized Physical Action with NeutronVision QC.
+  <text x="96" y="440" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">
+    and human-reviewed inspection workflows.
   </text>
-
-  <g>
-    <rect x="742" y="116" width="360" height="164" rx="34" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" />
-    <text x="778" y="166" fill="#7BE8FF" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.14em">
-      PRODUCT LAYER
-    </text>
-    <text x="778" y="214" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800">
-      NeutronVision QC
-    </text>
-    <text x="778" y="252" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500">
-      Visual quality control for electronics assembly
-    </text>
-  </g>
-
-  <g>
-    <rect x="702" y="320" width="400" height="184" rx="34" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" />
-    <text x="738" y="370" fill="#FFD95C" font-family="IBM Plex Mono, Arial, monospace" font-size="16" font-weight="700" letter-spacing="0.14em">
-      EDGE NATIVE
-    </text>
-    <text x="738" y="418" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">
-      Sub-200ms inference
-    </text>
-    <text x="738" y="454" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500">
-      Import -> Annotate -> Train -> Deploy
-    </text>
-    <text x="738" y="488" fill="#D8E5FF" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500">
-      and semantic conflict resolution
-    </text>
-  </g>
 </svg>

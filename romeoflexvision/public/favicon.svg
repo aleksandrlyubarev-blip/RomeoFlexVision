@@ -10,10 +10,7 @@
     </linearGradient>
   </defs>
   <rect x="4" y="4" width="120" height="120" rx="32" fill="url(#bg)" />
-  <text x="24" y="54" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="34" font-style="italic" font-weight="800">
-    RF
-  </text>
-  <path d="M76 42C92 42 104 52 112 64C104 76 92 86 76 86C60 86 48 76 40 64C48 52 60 42 76 42Z" stroke="url(#stroke)" stroke-width="5" />
-  <path d="M76 50C86 50 94 56 99 64C94 72 86 78 76 78C66 78 58 72 53 64C58 56 66 50 76 50Z" stroke="url(#stroke)" stroke-width="4" />
-  <circle cx="76" cy="64" r="7" fill="#FFD95C" />
+  <path d="M64 34C86 34 103 47 114 64C103 81 86 94 64 94C42 94 25 81 14 64C25 47 42 34 64 34Z" stroke="url(#stroke)" stroke-width="5" />
+  <path d="M64 44C78 44 89 52 96 64C89 76 78 84 64 84C50 84 39 76 32 64C39 52 50 44 64 44Z" stroke="url(#stroke)" stroke-width="4" />
+  <circle cx="64" cy="64" r="9" fill="#FFD95C" />
 </svg>

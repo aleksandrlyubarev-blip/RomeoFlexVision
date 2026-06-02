@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 QC_INSPECTION_PROMPT = """\
-You are an industrial quality control assistant. Inspect this photo of a metallic component used in HPC liquid cooling assembly. Report in JSON:
+You are an industrial quality control assistant. Inspect this photo of an assembly component. Report in JSON:
 
 {
   "surface_condition": "clean|scratched|corroded|stained|other",

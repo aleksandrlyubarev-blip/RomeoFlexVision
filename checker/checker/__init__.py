@@ -1,3 +1,3 @@
-"""NeutronVision Checker — macOS desktop QC inspection demo."""
+"""Neuron Vision Display - macOS desktop inspection demo."""
 
 __version__ = "0.1.0"

@@ -1,8 +1,8 @@
-# NeutronVision Checker
+# Neuron Vision Display
 
-> macOS desktop demo for industrial QC photo inspection of HPC liquid-cooling components, powered by xAI Grok vision.
+> macOS desktop demo for generic visual inspection workflows with human review and evidence logging.
 
-NeutronVision Checker is a one-screen PyQt6 app that turns a USB camera + a single
+Neuron Vision Display is a one-screen PyQt6 app that turns a USB camera + a single
 `SPACE` keypress into:
 
 1. A **quality-gated capture** (sharpness / exposure / framing scored in real time).
@@ -10,9 +10,8 @@ NeutronVision Checker is a one-screen PyQt6 app that turns a USB camera + a sing
 3. A **session-scoped artifact** on disk: full-res JPEG + thumbnail + per-capture
    JSON + a multi-page PDF summary.
 
-It exists to support pitch demos and as an open-source reference application on
-top of the [NeutronVision QC](https://github.com/aleksandrlyubarev-blip/romeoflexvision)
-stack. **It is not a certified QC tool.**
+It exists as a public reference application for generic inspection workflows.
+**It is not a certified QC tool or a production customer deployment.**
 
 ---
 
@@ -25,6 +24,7 @@ stack. **It is not a certified QC tool.**
 | Capture → JPEG + JSON | ✅ | — |
 | AI verdict via xAI Grok | ✅ | — |
 | Session summary PDF | ✅ | — |
+| Reference alignment + ROI evidence | ✅ | — |
 | Local MLX Gemma engine | _coming soon_ (UI shows it disabled) | ✅ |
 | SAM 3 / Florence-2 segmentation overlay | — | ✅ |
 | Multi-camera | — | ✅ |
@@ -55,12 +55,12 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Create `~/NeutronVision/secrets.env` and put your Grok key inside:
+Create `~/NeuronVisionDisplay/secrets.env` and put your Grok key inside:
 
 ```bash
-mkdir -p ~/NeutronVision
-printf "GROK_API_KEY=xai-your-key-here\n" > ~/NeutronVision/secrets.env
-chmod 600 ~/NeutronVision/secrets.env
+mkdir -p ~/NeuronVisionDisplay
+printf "GROK_API_KEY=xai-your-key-here\n" > ~/NeuronVisionDisplay/secrets.env
+chmod 600 ~/NeuronVisionDisplay/secrets.env
 ```
 
 (The Settings dialog can also write this file for you; the entry just stays on
@@ -109,16 +109,18 @@ Keyboard shortcuts:
 ## Output layout
 
 ```
-~/NeutronVision/
+~/NeuronVisionDisplay/
 ├── config.json                    # camera index, engine, model id, thresholds
 ├── secrets.env                    # GROK_API_KEY=… (chmod 600)
 ├── logs/
 │   └── checker_YYYYMMDD.log
 └── sessions/
-    └── 2026-05-19_1430_zutacore-demo/
+    └── 2026-05-19_1430_demo-assembly/
         ├── session.json           # session metadata + capture list
         ├── 001_capture.jpg        # full-resolution capture
         ├── 001_thumbnail.jpg      # 256-px thumbnail
+        ├── 001_aligned.jpg        # optional frame warped to reference coordinates
+        ├── 001_roi_overlay.jpg    # optional ROI overlay in reference coordinates
         ├── 001_capture.json       # quality + AI verdict JSON
         ├── 002_capture.jpg
         ├── …
@@ -167,7 +169,7 @@ language TZ document.
 
 ## Configuration reference
 
-`~/NeutronVision/config.json` (all fields optional; defaults shown):
+`~/NeuronVisionDisplay/config.json` (all fields optional; defaults shown):
 
 ```json
 {
@@ -179,6 +181,7 @@ language TZ document.
   "grok_model": "grok-2-vision-1212",
   "grok_endpoint": "https://api.x.ai/v1/chat/completions",
   "grok_timeout_s": 15.0,
+  "product_profile_path": "~/NeuronVisionDisplay/products/demo-assembly.json",
   "quality": {
     "sharpness_min": 0.5,
     "exposure_min": 0.5,
@@ -187,6 +190,37 @@ language TZ document.
   }
 }
 ```
+
+### Product profile
+
+If `product_profile_path` is set, each capture is registered against a reference
+image before the Grok verdict is requested. The session then stores alignment
+metadata, per-ROI metrics, an aligned JPEG, and an ROI overlay JPEG.
+
+```json
+{
+  "product_code": "DEMO-001",
+  "name": "Demo assembly",
+  "reference_image_path": "reference.jpg",
+  "registration_min_score": 0.25,
+  "rois": [
+    {
+      "roi_id": "screw-a",
+      "label": "Top-left screw",
+      "kind": "screw",
+      "x": 0.12,
+      "y": 0.18,
+      "width": 0.08,
+      "height": 0.08,
+      "expected": "present"
+    }
+  ]
+}
+```
+
+ROI coordinates are normalized to the reference image: `x`, `y`, `width`, and
+`height` are all in the `[0, 1]` range. Relative `reference_image_path` values
+are resolved from the profile JSON directory.
 
 ---
 
@@ -197,8 +231,8 @@ language TZ document.
   Settings (0, 1, 2). The first frame after open often takes ~200 ms — the
   app's warmup loop already accounts for this.
 - **Grok API 401.** Settings dialog → re-enter the key. The app will rewrite
-  `~/NeutronVision/secrets.env` for you.
-- **Verdict consistently `unknown`.** Check `~/NeutronVision/logs/checker_*.log`
+  `~/NeuronVisionDisplay/secrets.env` for you.
+- **Verdict consistently `unknown`.** Check `~/NeuronVisionDisplay/logs/checker_*.log`
   — if the response body is non-JSON, your `grok_model` may not support
   `response_format=json_object`. The engine falls back to regex extraction,
   but a clearly-instructed model id is the cleanest fix.
@@ -235,13 +269,11 @@ skip automatically off-platform.
 
 ## License
 
-MIT (matches the rest of the NeutronVision QC repo). See `LICENSE` at the
+MIT (matches the rest of the RomeoFlexVision repo). See `LICENSE` at the
 repository root.
 
 ---
 
 ## Related projects
 
-- [`roboqc_data/`](../roboqc_data) — NeutronVision QC dataset preparation pipeline.
-- NeutronVision QC commercial SKUs (NV1100–NV4100) are extensions on top of this
-  reference application.
+- [`roboqc_data/`](../roboqc_data) - public and synthetic dataset tooling.

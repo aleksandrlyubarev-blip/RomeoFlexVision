@@ -1,4 +1,4 @@
-"""Сборка LangGraph-графа RoboQC."""
+"""Build the experimental inspection LangGraph using a legacy package path."""
 
 from __future__ import annotations
 

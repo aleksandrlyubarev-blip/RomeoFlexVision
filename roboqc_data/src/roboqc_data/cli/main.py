@@ -21,7 +21,7 @@ from ..schema.records import Manifest
 from ..schema.splits import SplitSpec
 from ..schema.taxonomy import DefectClass
 
-app = typer.Typer(no_args_is_help=True, help="RoboQC dataset tooling")
+app = typer.Typer(no_args_is_help=True, help="Experimental inspection dataset tooling")
 
 ADAPTERS = {
     "mvtec_ad": MVTecADAdapter,

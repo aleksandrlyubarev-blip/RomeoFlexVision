@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import cv2
 import numpy as np
 from PyQt6.QtCore import Qt, QThread, pyqtSlot
 from PyQt6.QtGui import QAction, QKeySequence, QShortcut
@@ -31,6 +32,9 @@ from ..inference.quality_thread import QualityWorker
 from ..inference.quality_validator import evaluate
 from ..session.session_manager import CameraInfo, SessionManager
 from ..utils.logging import get_logger
+from ..vision.product_profile import ProductProfile
+from ..vision.registration import AlignmentResult, align_to_reference
+from ..vision.roi import RoiInspectionResult, draw_roi_overlay, inspect_rois
 from .capture_panel import CapturePanel
 from .preview_widget import PreviewWidget
 from .quality_panel import QualityPanel
@@ -56,7 +60,7 @@ def _build_engine(settings: Settings) -> AIEngine | None:
 class MainWindow(QMainWindow):
     def __init__(self, settings: Settings) -> None:
         super().__init__()
-        self.setWindowTitle("NeutronVision Checker v0.1")
+        self.setWindowTitle("Neuron Vision Display v0.1")
         self.resize(1280, 760)
         self._settings = settings
 
@@ -69,6 +73,8 @@ class MainWindow(QMainWindow):
         )
 
         self._latest_frame: np.ndarray | None = None
+        self._product_profile: ProductProfile | None = None
+        self._reference_frame: np.ndarray | None = None
 
         self._preview = PreviewWidget()
         self._quality_panel = QualityPanel()
@@ -119,6 +125,7 @@ class MainWindow(QMainWindow):
         self._inference_thread: QThread | None = None
 
         self._start_pipeline()
+        self._load_product_profile()
 
     # ------------------------- toolbar / menu -------------------------
 
@@ -192,6 +199,25 @@ class MainWindow(QMainWindow):
         self._inference_thread.start()
         self._engine_status.setText(f"Engine: {engine.name} ({self._settings.grok_model})")
 
+    def _load_product_profile(self) -> None:
+        profile_path = self._settings.product_profile_path
+        if profile_path is None:
+            return
+        try:
+            profile = ProductProfile.load(profile_path)
+            reference = cv2.imread(str(profile.reference_image_path))
+            if reference is None:
+                raise RuntimeError(f"could not read reference image: {profile.reference_image_path}")
+        except Exception as exc:
+            _log.warning("product profile load failed: %s", exc)
+            self.statusBar().showMessage(f"Product profile disabled: {exc}", 8000)
+            return
+        self._product_profile = profile
+        self._reference_frame = reference
+        self.statusBar().showMessage(
+            f"Product profile loaded: {profile.product_code} ({len(profile.rois)} ROI)", 8000
+        )
+
     def _restart_camera(self) -> None:
         if self._camera_thread is not None:
             self._camera_thread.stop()
@@ -252,7 +278,15 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             _log.exception("evaluate failed in _on_capture: %s", exc)
             return
-        record = self._session_manager.add_capture(self._latest_frame, quality)
+        alignment, roi_results, aligned_frame, roi_overlay = self._inspect_against_profile(self._latest_frame)
+        record = self._session_manager.add_capture(
+            self._latest_frame,
+            quality,
+            alignment=alignment,
+            roi_results=roi_results,
+            aligned_frame_bgr=aligned_frame,
+            roi_overlay_bgr=roi_overlay,
+        )
         self._preview.freeze(100)
 
         session = self._session_manager.session
@@ -269,6 +303,30 @@ class MainWindow(QMainWindow):
                 record.capture_id,
                 CaptureResult(verdict="unknown", confidence=0.0, notes="No AI engine configured.", engine="none"),
             )
+
+    def _inspect_against_profile(
+        self, frame_bgr: np.ndarray
+    ) -> tuple[AlignmentResult | None, list[RoiInspectionResult], np.ndarray | None, np.ndarray | None]:
+        if self._product_profile is None or self._reference_frame is None:
+            return None, [], None, None
+
+        output = align_to_reference(self._reference_frame, frame_bgr)
+        if output.aligned_frame_bgr is None:
+            return output.result, [], None, None
+        if output.result.score < self._product_profile.registration_min_score:
+            low_score = output.result.model_copy(
+                update={
+                    "message": (
+                        f"Alignment score below profile threshold "
+                        f"{self._product_profile.registration_min_score:.2f}."
+                    )
+                }
+            )
+            return low_score, [], output.aligned_frame_bgr, None
+
+        roi_results = inspect_rois(output.aligned_frame_bgr, self._product_profile.rois)
+        overlay = draw_roi_overlay(output.aligned_frame_bgr, roi_results) if roi_results else None
+        return output.result, roi_results, output.aligned_frame_bgr, overlay
 
     @pyqtSlot(str, object)
     def _on_inference_done(self, capture_id: str, result: object) -> None:

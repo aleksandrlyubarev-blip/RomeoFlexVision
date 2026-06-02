@@ -1,4 +1,4 @@
-"""Prompt-templates для LangGraph-агентов RoboQC.
+"""Prompt templates for the experimental inspection LangGraph.
 
 Шесть ролей для пирамиды perception → understanding → planning → specialist → action → critic.
 Шаблоны живут в templates/<name>.j2 и подгружаются через PackageLoader — это позволяет

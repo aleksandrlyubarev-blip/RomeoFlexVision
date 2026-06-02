@@ -1,4 +1,4 @@
-"""Logging setup: stderr + rotating file under ~/NeutronVision/logs/."""
+"""Logging setup: stderr + rotating file under ~/NeuronVisionDisplay/logs/."""
 
 from __future__ import annotations
 

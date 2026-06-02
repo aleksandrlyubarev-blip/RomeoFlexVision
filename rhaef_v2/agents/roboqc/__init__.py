@@ -1,4 +1,6 @@
-"""RoboQC LangGraph-супервайзер.
+"""Experimental inspection LangGraph supervisor.
+
+The package path retains the legacy ``roboqc`` implementation codename.
 
 6-этапный pipeline: vision_perception → scene_understanding → reasoning_planner
 → roboqc_specialist → action_command → critic_verifier (с возвратом в planner при retry).
