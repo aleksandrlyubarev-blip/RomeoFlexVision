@@ -1,12 +1,12 @@
 import json
 
+from _fixtures import make_mvtec_ad_tree
+
 from roboqc_data.ingest.base import write_manifest_jsonl
 from roboqc_data.ingest.mvtec_ad import MVTecADAdapter
 from roboqc_data.schema.records import Manifest
 from roboqc_data.schema.splits import SplitSpec
 from roboqc_data.schema.taxonomy import DefectClass
-
-from _fixtures import make_mvtec_ad_tree
 
 
 def test_mvtec_ad_adapter_builds_manifest(tmp_path):
@@ -37,9 +37,7 @@ def test_manifest_round_trip_to_disk(tmp_path):
 
     lines = records_path.read_text().strip().splitlines()
     assert len(lines) == len(manifest.records)
-    rehydrated = Manifest.model_validate_json(
-        json.dumps({**header, "records": [json.loads(line) for line in lines]})
-    )
+    rehydrated = Manifest.model_validate_json(json.dumps({**header, "records": [json.loads(line) for line in lines]}))
     assert rehydrated == manifest
 
 

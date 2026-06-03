@@ -29,9 +29,7 @@ def manifest_to_anomalib_folder(manifest: Manifest, out_dir: Path) -> Path:
     counts = {"normal": 0, "abnormal": 0, "masks": 0}
     for record in manifest.records:
         safe_id = record.record_id.replace("/", "__")
-        is_normal = not record.annotations or all(
-            ann.defect_class is DefectClass.OK for ann in record.annotations
-        )
+        is_normal = not record.annotations or all(ann.defect_class is DefectClass.OK for ann in record.annotations)
         target = normal if is_normal else abnormal
         (target / f"{safe_id}.uri").write_text(record.uri, encoding="utf-8")
         counts["normal" if is_normal else "abnormal"] += 1

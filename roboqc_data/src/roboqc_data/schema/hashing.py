@@ -9,8 +9,8 @@ during ingestion.
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 
 def sha256_bytes(data: bytes) -> str:

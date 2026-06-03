@@ -11,7 +11,7 @@ instances and emit COCO / YOLO-seg / Anomalib-folder layouts.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -62,7 +62,7 @@ class AnomalyHeatmapRef(BaseModel):
     range: tuple[float, float] = (0.0, 1.0)
 
 
-Provenance = Literal["human", "grounded_sam2", "brigada", "auto"]
+Provenance = Literal["human", "grounded_sam2", "sam3", "brigada", "logic_qa", "velm", "auto"]
 
 
 class Annotation(BaseModel):
@@ -70,11 +70,11 @@ class Annotation(BaseModel):
 
     id: str
     defect_class: DefectClass
-    bbox: Optional[BBox] = None
-    polygon: Optional[Polygon] = None
-    mask: Optional[MaskRef] = None
-    heatmap: Optional[AnomalyHeatmapRef] = None
-    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    bbox: BBox | None = None
+    polygon: Polygon | None = None
+    mask: MaskRef | None = None
+    heatmap: AnomalyHeatmapRef | None = None
+    confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     provenance: Provenance
 
 
@@ -86,20 +86,22 @@ class StationContext(BaseModel):
 
     model_config = ConfigDict(strict=True, frozen=True)
 
-    station_id: Optional[str] = None
-    sop_id: Optional[str] = None
-    work_order: Optional[str] = None
-    captured_at: Optional[datetime] = None
-    operator_id: Optional[str] = None
+    station_id: str | None = None
+    sop_id: str | None = None
+    work_order: str | None = None
+    captured_at: datetime | None = None
+    operator_id: str | None = None
 
 
 SourceDataset = Literal[
     "mvtec_ad",
+    "mvtec_ad_2",
     "mvtec_loco",
     "visa",
     "isp_ad",
     "pku_pcb",
     "dagm_2007",
+    "real_iad_d3",
     "brigada",
     "plant",
     "custom",
@@ -111,7 +113,7 @@ class SourceInfo(BaseModel):
 
     dataset: SourceDataset
     license: str
-    attribution: Optional[str] = None
+    attribution: str | None = None
     original_id: str
 
 
@@ -125,7 +127,7 @@ class ImageRecord(BaseModel):
     height: int = Field(gt=0)
     split: Split
     source: SourceInfo
-    station: Optional[StationContext] = None
+    station: StationContext | None = None
     annotations: tuple[Annotation, ...] = ()
     tags: tuple[str, ...] = ()
 

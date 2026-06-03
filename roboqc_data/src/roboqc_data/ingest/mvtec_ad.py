@@ -14,8 +14,8 @@ so they are not silently lost.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from ..schema.records import (
     Annotation,
@@ -65,8 +65,7 @@ class MVTecADAdapter(BaseAdapter):
                 if not images_dir.is_dir():
                     continue
                 for defect_dir in sorted(p for p in images_dir.iterdir() if p.is_dir()):
-                    for img_path in sorted(defect_dir.glob("*.png")):
-                        yield img_path
+                    yield from sorted(defect_dir.glob("*.png"))
 
     def to_record(self, raw: Path, root: Path, split_spec: SplitSpec) -> ImageRecord:
         rel = raw.relative_to(root)

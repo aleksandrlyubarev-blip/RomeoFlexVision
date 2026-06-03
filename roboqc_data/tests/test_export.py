@@ -1,12 +1,12 @@
 import json
 
+from _fixtures import make_mvtec_ad_tree
+
 from roboqc_data.export.anomalib_folder import manifest_to_anomalib_folder
 from roboqc_data.export.coco import manifest_to_coco, write_coco
-from roboqc_data.export.yolo_seg import CLASSES, CLASS_INDEX, manifest_to_yolo_seg
+from roboqc_data.export.yolo_seg import CLASS_INDEX, CLASSES, manifest_to_yolo_seg
 from roboqc_data.ingest.mvtec_ad import MVTecADAdapter
 from roboqc_data.schema.splits import SplitSpec
-
-from _fixtures import make_mvtec_ad_tree
 
 
 def _build(tmp_path):

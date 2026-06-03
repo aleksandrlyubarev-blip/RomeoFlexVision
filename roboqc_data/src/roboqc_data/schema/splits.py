@@ -26,7 +26,7 @@ class SplitSpec(BaseModel):
     seed: int = 0
 
     @model_validator(mode="after")
-    def _sums_to_one(self) -> "SplitSpec":
+    def _sums_to_one(self) -> SplitSpec:
         total = self.train + self.val + self.test
         if abs(total - 1.0) > 1e-6:
             raise ValueError(f"SplitSpec fractions must sum to 1.0, got {total}")
@@ -34,7 +34,7 @@ class SplitSpec(BaseModel):
 
     def assign(self, record_id: str) -> Split:
         """Deterministically assign a record to a split."""
-        h = hashlib.sha256(f"{self.seed}:{record_id}".encode("utf-8")).digest()
+        h = hashlib.sha256(f"{self.seed}:{record_id}".encode()).digest()
         bucket = int.from_bytes(h[:8], "big") / 2**64
         if bucket < self.train:
             return "train"

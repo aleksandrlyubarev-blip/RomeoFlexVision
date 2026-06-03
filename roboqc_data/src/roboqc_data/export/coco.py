@@ -18,8 +18,7 @@ def manifest_to_coco(manifest: Manifest) -> dict[str, Any]:
     splits remain visible to consumers.
     """
     categories = [
-        {"id": idx + 1, "name": cls.value}
-        for idx, cls in enumerate(c for c in DefectClass if c is not DefectClass.OK)
+        {"id": idx + 1, "name": cls.value} for idx, cls in enumerate(c for c in DefectClass if c is not DefectClass.OK)
     ]
     cat_id = {entry["name"]: entry["id"] for entry in categories}
 

@@ -9,9 +9,10 @@ so licensing is an explicit choice.
 from __future__ import annotations
 
 import abc
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Iterable, Protocol
+from typing import Protocol
 from uuid import uuid4
 
 from PIL import Image
@@ -61,7 +62,7 @@ class BaseAdapter(abc.ABC):
         digest = manifest_digest((r.record_id, r.sha256) for r in records)
         return Manifest(
             manifest_id=f"{self.name}-{uuid4().hex[:8]}",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=datetime.now(tz=UTC),
             seed=split_spec.seed,
             taxonomy_version=TAXONOMY_VERSION,
             manifest_sha256=digest,

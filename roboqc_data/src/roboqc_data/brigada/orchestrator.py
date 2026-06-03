@@ -12,9 +12,8 @@ CODING_STANDARDS clause 6.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 from PIL import Image
@@ -49,9 +48,7 @@ try:
 except Exception:  # pragma: no cover
     FrictionGate = None  # type: ignore[assignment]
 
-HIGH_RISK_CLASSES: frozenset[DefectClass] = frozenset(
-    {DefectClass.LEAK, DefectClass.WRONG_ROUTING}
-)
+HIGH_RISK_CLASSES: frozenset[DefectClass] = frozenset({DefectClass.LEAK, DefectClass.WRONG_ROUTING})
 FRICTION_COUNT_THRESHOLD = 100
 
 
@@ -93,11 +90,11 @@ class BrigadaSynthesizer:
 
     def __init__(
         self,
-        general: Optional[GeneralAgent] = None,
-        major: Optional[MajorAgent] = None,
-        sergeant: Optional[SergeantAgent] = None,
-        soldier: Optional[SoldierAgent] = None,
-        friction: Optional[object] = None,
+        general: GeneralAgent | None = None,
+        major: MajorAgent | None = None,
+        sergeant: SergeantAgent | None = None,
+        soldier: SoldierAgent | None = None,
+        friction: object | None = None,
     ) -> None:
         self.general = general or HeuristicGeneral()
         self.major = major or HeuristicMajor()
@@ -124,15 +121,13 @@ class BrigadaSynthesizer:
             outcome = await self.soldier.validate(tool_call, int((mask > 0).sum()))
             if not outcome.valid:
                 continue
-            record, artifact = self._persist(
-                request, tool_call, rgb, mask, idx, spec
-            )
+            record, artifact = self._persist(request, tool_call, rgb, mask, idx, spec)
             records.append(record)
             artifacts.append(artifact)
 
         manifest = Manifest(
             manifest_id=f"brigada-{request.target_class.value}-{request.seed}",
-            created_at=datetime.now(tz=timezone.utc),
+            created_at=datetime.now(tz=UTC),
             seed=request.seed,
             taxonomy_version=TAXONOMY_VERSION,
             manifest_sha256=manifest_digest((r.record_id, r.sha256) for r in records),
