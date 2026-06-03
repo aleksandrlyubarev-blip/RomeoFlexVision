@@ -75,15 +75,19 @@ def _pump_progress(fp, on_progress: Callable[[Progress], None]) -> None:
             if key == "frame" and val.isdigit():
                 p.frame = int(val)
             elif key == "fps":
-                try: p.fps = float(val)
-                except ValueError: pass
+                try:
+                    p.fps = float(val)
+                except ValueError:
+                    pass
             elif key == "out_time_us" and val.lstrip("-").isdigit():
                 p.out_time_us = int(val)
             elif key == "bitrate":
                 p.bitrate = val
             elif key == "speed":
-                try: p.speed = float(val.rstrip("x"))
-                except ValueError: pass
+                try:
+                    p.speed = float(val.rstrip("x"))
+                except ValueError:
+                    pass
             elif key == "total_size" and val.isdigit():
                 p.total_size = int(val)
             elif key == "progress":
@@ -95,8 +99,10 @@ def _pump_progress(fp, on_progress: Callable[[Progress], None]) -> None:
                 if val == "end":
                     break
     finally:
-        try: fp.close()
-        except Exception: pass
+        try:
+            fp.close()
+        except Exception:
+            pass
 
 
 def _pump_stderr(fp, sink: list[bytes], echo: bool) -> None:
@@ -104,11 +110,15 @@ def _pump_stderr(fp, sink: list[bytes], echo: bool) -> None:
         for chunk in iter(lambda: fp.read(8192), b""):
             sink.append(chunk)
             if echo:
-                try: os.write(2, chunk)
-                except OSError: pass
+                try:
+                    os.write(2, chunk)
+                except OSError:
+                    pass
     finally:
-        try: fp.close()
-        except Exception: pass
+        try:
+            fp.close()
+        except Exception:
+            pass
 
 
 class FFmpegError(RuntimeError):

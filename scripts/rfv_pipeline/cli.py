@@ -121,7 +121,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.probe_only:
         info = probe(args.input)
-        import dataclasses, json
+        import dataclasses
+        import json
         # Don't dump the full ffprobe payload — it's huge. Round-trip the
         # rest via dataclasses.asdict.
         d = dataclasses.asdict(info)

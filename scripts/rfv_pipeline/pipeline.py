@@ -29,7 +29,10 @@ import subprocess
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable, Optional
+
+if TYPE_CHECKING:
+    import numpy as np
 
 from .ffmpeg_runner import (
     FFmpegError,
@@ -49,7 +52,7 @@ log = logging.getLogger("rfv.pipeline")
 #   2. (frame: np.ndarray)              -> np.ndarray  [stream mode]
 # Both are wrapped behind a uniform .restore() call below.
 RestoreDiskFn = Callable[[Path, Path], None]
-RestoreArrayFn = Callable[["np.ndarray"], "np.ndarray"]  # type: ignore[name-defined]
+RestoreArrayFn = Callable[["np.ndarray"], "np.ndarray"]
 
 
 @dataclass
@@ -355,8 +358,8 @@ def mux_audio(
     cmd += [
         "-c:v", "copy",
         "-c:a", "copy",
-        f"-map_metadata", str(src_idx),
-        f"-map_metadata:s:v:0", f"{src_idx}:s:v:0",
+        "-map_metadata", str(src_idx),
+        "-map_metadata:s:v:0", f"{src_idx}:s:v:0",
     ]
     if output.suffix.lower() in {".mp4", ".m4v", ".mov"}:
         cmd += ["-movflags", "+faststart"]
@@ -442,8 +445,10 @@ class RFVPipeline:
         try:
             self._pump_frames(decoder, encoder_p, v, proc_pix)
         finally:
-            try: encoder_p.stdin and encoder_p.stdin.close()
-            except Exception: pass
+            try:
+                encoder_p.stdin and encoder_p.stdin.close()
+            except Exception:
+                pass
             wait(encoder_p)
             wait(decoder)
 
@@ -484,7 +489,8 @@ class RFVPipeline:
         v = info.video
         frames_in = wd / "frames_in"
         frames_out = wd / "frames_out"
-        frames_in.mkdir(); frames_out.mkdir()
+        frames_in.mkdir()
+        frames_out.mkdir()
 
         # PNG-16 only when source actually carries >8-bit data, otherwise
         # PNG-8: 16-bit PNGs are ~2× the size and most restorer models cast
@@ -541,7 +547,7 @@ class RFVPipeline:
             input_args = ["-f", "concat", "-safe", "0", "-i", str(concat_path)]
         else:
             input_args = [
-                "-framerate", str(v.avg_fps),
+                "-framerate", str(v.avg_fps) if v.avg_fps else "30",
                 "-start_number", "0",
                 "-i", str(frames_dir / "f_%08d.png"),
             ]
@@ -574,7 +580,8 @@ class RFVPipeline:
         """
         chunks_in = wd / "chunks_in"
         chunks_out = wd / "chunks_out"
-        chunks_in.mkdir(); chunks_out.mkdir()
+        chunks_in.mkdir()
+        chunks_out.mkdir()
 
         # 1. split
         run([
