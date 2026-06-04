@@ -22,6 +22,12 @@ from .probe import (
     probe,
 )
 
+# NOTE: the frame sampler (``sample_frames``) is a self-contained CLI/tool
+# like ``cli``; it is intentionally not re-exported here so that
+# ``python -m rfv_pipeline.sample_frames`` doesn't trip runpy's
+# "found in sys.modules" warning. Import it directly:
+#     from rfv_pipeline.sample_frames import SampleConfig, sample_tree
+
 __all__ = [
     "AudioInfo", "MediaInfo", "ProbeError", "VideoInfo",
     "detect_vfr_strict", "dump_pts", "probe",

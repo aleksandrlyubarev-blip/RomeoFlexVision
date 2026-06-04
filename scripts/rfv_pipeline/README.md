@@ -435,6 +435,40 @@ use as an intermediate.
 
 ---
 
+## Frame sampling for review / labeling
+
+The restoration path above rebuilds a whole clip. The opposite need —
+"pull a handful of still frames out of a tree of inspection videos so a
+human or a classifier can label them" — is served by a separate tool that
+reuses the same `probe`/`ffmpeg_runner` plumbing:
+
+```bash
+# One frame per second from every video under captures/, downscaled to 1280px,
+# written as lossless PNG (default).
+python -m rfv_pipeline.sample_frames captures/ --out frames_out --every 1.0 --max-width 1280
+
+# Sub-second sampling, JPEG to save space when fidelity isn't critical.
+python -m rfv_pipeline.sample_frames clip.mp4 --out frames_out --fps 2 --format jpg
+```
+
+Why a distinct tool rather than the disk-extract mode of the pipeline:
+
+- **Sampling, not reconstruction** — `--every`/`--fps` drive ffmpeg's `fps`
+  filter, so you get an evenly-spaced subset in one pass instead of every frame.
+- **Provenance is the deliverable** — alongside `frames_out/frames/*.png` it
+  writes `frames_out/frames_map.csv` with, per frame: the source video path,
+  the **parent folder** (a *weak label* — if captures are organized by station
+  / fixture / pass-fail, the folder name is a free first-pass annotation), the
+  approximate source timestamp, and the source geometry/fps/duration.
+- **Lossless by default** — fine high-frequency detail (thin lines, scan-line
+  ripple, flicker) is exactly what JPEG smears; PNG is the default so the
+  artifact you label is the artifact that was captured.
+
+Frames are named `v{NN}_{NNNNNN}.<ext>` (`NN` = per-video index) so files from
+different clips never collide and sort in capture order.
+
+---
+
 ## Restorer contracts
 
 ```python
@@ -467,6 +501,7 @@ rfv_pipeline/
 ├── ffmpeg_runner.py     # subprocess + -progress pipe + concat lists
 ├── pipeline.py          # extract → restore → encode → mux orchestration
 ├── probe.py             # ffprobe wrapper, MediaInfo, VFR/HDR detection
+├── sample_frames.py     # `python -m rfv_pipeline.sample_frames` (review/labeling)
 ├── restore_stub.py      # identity & legacy adapters
 ├── requirements.txt
 └── README.md            # this file
