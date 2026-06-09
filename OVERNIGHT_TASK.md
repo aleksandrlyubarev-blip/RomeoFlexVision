@@ -44,24 +44,52 @@ The **`source_folder`** column is a *weak label*: if the capture tree is
 organized by station / fixture / pass-fail, the folder name is a free
 first-pass annotation to seed the labeling UI.
 
+### Triage step
+
+Sampling oversamples on purpose. `triage_frames` drops the throwaways before
+review (numpy + pillow only):
+
+```bash
+python -m rfv_pipeline.triage_frames <frames_out>/frames \
+    --map <frames_out>/frames_map.csv \
+    --copy-kept <frames_out>/kept
+```
+
+It writes `triage.csv` with a `keep` flag + `reason` per frame:
+
+- **blurry** — low Laplacian variance (soft/motion-blurred). Defects are
+  high-frequency, so this gate keeps the frames most likely to carry one.
+- **too_dark / too_bright / clipped** — no usable detail.
+- **duplicate** — within `--dup-hamming` dHash bits of the last kept frame
+  *of the same source video*; `dup_of` back-references the survivor.
+
+`--copy-kept` mirrors the survivors into a directory ready for labeling.
+
 ## Overnight checklist
 
 1. **Stage inputs.** Point `--every`/`--fps` at the desired density. Start at
    1 fps; drop to `--fps 2`+ for fast flicker that one-per-second misses.
 2. **Run the sampler** over the capture tree → frames + `frames_map.csv`.
-3. **Sanity-check** the frame count vs. total video duration in the CSV; spot
+3. **Triage** the frames → `triage.csv` (+ optional `kept/`). Eyeball the
+   kept/dropped counts and tune `--blur-min` / `--dup-hamming` on a sample
+   before committing to the whole tree.
+4. **Sanity-check** the frame count vs. total video duration in the CSV; spot
    that downscaled widths match `--max-width`.
-4. **Hand off to review.** Load `frames_map.csv` into the labeling/review step;
-   pre-group by `source_folder` to use the weak labels.
-5. **Keep data local.** Do not push frames/videos to the public repo.
+5. **Hand off to review.** Feed `kept/` (or the `keep=1` rows of `triage.csv`)
+   into the labeling step; pre-group by `source_folder` to use the weak labels.
+6. **Keep data local.** Do not push frames/videos to the public repo.
 
 ## Verification (already done on this branch)
 
 - `tests/test_sample_frames.py` — config/filter/discovery unit tests plus two
   ffmpeg integration tests (synthetic `testsrc`/`smptebars` clips → frames +
   CSV, including the weak-label folder column and `--max-width` downscale).
+- `tests/test_triage_frames.py` — metric unit tests (Laplacian variance,
+  exposure, dHash/Hamming) plus end-to-end tests covering each drop reason,
+  map-based grouping, `--copy-kept`, and disabling dedup.
 - `ruff check scripts tests` is clean.
-- End-to-end CLI run verified against synthetic clips.
+- End-to-end CLI run verified against synthetic clips (sample → triage:
+  16 sampled frames triaged down to 2 kept exemplars, one per source video).
 
 To reproduce locally you need `ffmpeg` + `ffprobe` on `PATH` (`apt install
 ffmpeg`, or `pip install static-ffmpeg && python -c "import static_ffmpeg,sys;
@@ -69,8 +97,9 @@ static_ffmpeg.add_paths()"`).
 
 ## Possible next steps (not in this pass)
 
-- Near-duplicate pruning (adjacent sampled frames are often identical) before
-  review, to cut labeling volume.
-- A blur/exposure quality gate to drop unusable frames automatically.
 - Optional per-frame assist (a VLM pass) to pre-rank "likely defect" frames —
   kept out here since it needs credentials/models not assumed available.
+- A small contact-sheet/montage of kept frames per source video for fast
+  visual scan before opening a full labeling UI.
+- Tighten the dedup beyond dHash (e.g. require a minimum scene change) if
+  slow pans still leave too many near-duplicates after triage.

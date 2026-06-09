@@ -467,6 +467,34 @@ Why a distinct tool rather than the disk-extract mode of the pipeline:
 Frames are named `v{NN}_{NNNNNN}.<ext>` (`NN` = per-video index) so files from
 different clips never collide and sort in capture order.
 
+### Triage before labeling
+
+Sampling deliberately oversamples; `triage_frames` is the cleanup pass that
+drops the frames not worth a human's time, using only numpy + pillow (no
+OpenCV/scipy):
+
+```bash
+python -m rfv_pipeline.triage_frames frames_out/frames \
+    --map frames_out/frames_map.csv \
+    --copy-kept frames_out/kept
+```
+
+It scores each frame and writes `triage.csv` (`keep` flag + `reason`):
+
+- **Sharpness** — variance of the Laplacian. Soft/motion-blurred frames score
+  low; and because real defects (thin lines, scan-line ripple) are themselves
+  high-frequency, this gate *keeps* the frames most likely to show one.
+- **Exposure** — mean brightness and crushed-black/blown-white fraction; a
+  mostly-clipped frame has no detail to label.
+- **Near-duplication** — a 64-bit dHash compared **within each source video**
+  (via the map's `source_video`, else the `vNN` prefix); a frame within
+  `--dup-hamming` bits of the last *kept* frame is dropped and back-references
+  it in `dup_of`. Quality gates run first, so the kept exemplar of each
+  near-duplicate cluster is always a good frame.
+
+`--copy-kept DIR` mirrors the survivors into `DIR` for handing straight to the
+labeling step.
+
 ---
 
 ## Restorer contracts
@@ -502,6 +530,7 @@ rfv_pipeline/
 ├── pipeline.py          # extract → restore → encode → mux orchestration
 ├── probe.py             # ffprobe wrapper, MediaInfo, VFR/HDR detection
 ├── sample_frames.py     # `python -m rfv_pipeline.sample_frames` (review/labeling)
+├── triage_frames.py     # `python -m rfv_pipeline.triage_frames` (blur/exposure/dedup gate)
 ├── restore_stub.py      # identity & legacy adapters
 ├── requirements.txt
 └── README.md            # this file
