@@ -90,6 +90,12 @@ class FrictionGate(BaseModel):
         return cls(enabled=True, human_approval_required=True, reason=reason)
 
 
+class HumanApprovalRequired(RuntimeError):
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
 class ModelRouter:
     def __init__(self, client: Optional[CompletionClient] = None, settings: Optional[RuntimeSettings] = None) -> None:
         self._client = client or completion
@@ -165,8 +171,7 @@ class ModelRouter:
         self._enrich_for_vertex(model, request_kwargs)
 
         if friction and friction.enabled and friction.human_approval_required:
-            print(f"⚠️ FRICTION GATE: {friction.reason}")
-            input("✅ Подтверди (Enter) или Ctrl+C...")
+            raise HumanApprovalRequired(friction.reason)
 
         if self.settings.langsmith_tracing_v2:
             request_kwargs["tags"] = ["rhaef-v2", category.value]

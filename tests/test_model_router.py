@@ -1,6 +1,12 @@
 from asyncio import run
 
-from rhaef_v2.core.model_router import FrictionGate, MODEL_MAPPING, ModelRouter, TaskCategory
+from rhaef_v2.core.model_router import (
+    FrictionGate,
+    HumanApprovalRequired,
+    MODEL_MAPPING,
+    ModelRouter,
+    TaskCategory,
+)
 from rhaef_v2.core.settings import RuntimeSettings
 
 
@@ -23,6 +29,30 @@ def test_model_mapping_has_explicit_gemini_category():
 def test_critical_gate_requires_approval():
     gate = FrictionGate.critical("X")
     assert gate.human_approval_required is True
+
+
+def test_route_rejects_human_friction_without_blocking(monkeypatch):
+    def fake_input(*args, **kwargs):  # pragma: no cover - should never be called
+        raise AssertionError("route must not block on input()")
+
+    def fake_client(**kwargs):  # pragma: no cover - should never be called
+        raise AssertionError("client must not run before human approval")
+
+    monkeypatch.setattr("builtins.input", fake_input)
+    router = ModelRouter(client=fake_client, settings=RuntimeSettings(langsmith_tracing_v2=False))
+
+    try:
+        run(
+            router.route(
+                TaskCategory.ROUTINE,
+                [{"role": "user", "content": "ping"}],
+                friction=FrictionGate.critical("approval needed"),
+            )
+        )
+    except HumanApprovalRequired as exc:
+        assert exc.reason == "approval needed"
+    else:  # pragma: no cover
+        raise AssertionError("expected HumanApprovalRequired")
 
 
 def test_route_uses_injected_client_and_tags():

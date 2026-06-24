@@ -165,7 +165,7 @@ factory-интеграции; in-house EMS-решения — фрагмента
 | # | Разрыв | Где | Действие |
 |---|---|---|---|
 | 1 | **Gemini/Vertex first-class route + prod smoke — code done** | `model_router.py`, `graph.py`, `Dockerfile`, `deploy/` | ✅ `TaskCategory.GEMINI`, `ROUTINE`/`GEMINI` по умолчанию через `vertex_ai/gemini-2.5-flash`; override `RHAEF_GEMINI_MODEL`. ✅ `/healthz/gemini` делает реальный Vertex-вызов и ловит молчаливый fallback (`degraded`). ✅ Cloud Run wiring (`$PORT`, deploy-скрипт, доки). Осталось: запустить деплой на реальном GCP-проекте (нужны креды владельца). |
-| 2 | **Блокирующий `input()`** | `model_router.py:138` (`FrictionGate`) | Удалить; консолидировать весь human-in-the-loop на `FrictionPolicyEngine` (`status="blocked"` + resume-эндпоинт). Ломает сервер. |
+| 2 | **Блокирующий `input()` removed — resume-flow pending** | `model_router.py` (`FrictionGate`) | ✅ `ModelRouter` больше не вызывает stdin и не вешает серверный воркер; прямой friction-вызов прерывается `HumanApprovalRequired`. Осталось: полноценный resume-эндпоинт и консолидация UX на `FrictionPolicyEngine` (`status="blocked"`). |
 | 3 | **Нет `tenant_id`** | `RoboQCState` (есть только `workcell_id`), `RuntimeSettings`, роуты | Прокинуть `tenant_id` сквозь state, изоляция данных по арендатору, контекст в каждом запросе. |
 | 4 | **Нет auth + глобальный `cost_tracker`** | `routes.py`, `model_router.py:94` | Per-tenant auth (API-key/JWT) + per-tenant метеринг → основа биллинга. |
 | 5 | **`/inspect` — заглушка; нет персистентности** | `routes.py:176` (`StubRoboQCClient`) | Реальный вызов пайплайна; Atlas как multi-tenant evidence-store. |
@@ -189,7 +189,7 @@ factory-интеграции; in-house EMS-решения — фрагмента
       (SA с `roles/aiplatform.user`, ADC-auth без ключа, `VERTEXAI_PROJECT/LOCATION`).
 - [ ] **Запустить деплой на реальном GCP-проекте** и получить `status:ok, gemini_used:true` на `/healthz/gemini`
       (нужны GCP-креды — шаг на стороне владельца).
-- [ ] Убрать блокирующий `input()` (разрыв №2; всё ещё в `model_router.py:169`).
+- [x] Убрать блокирующий `input()` (разрыв №2, серверный hang снят; resume-flow остаётся отдельной задачей).
 - [ ] **Бизнес:** список 30 целевых US-EMS/сборочных SMB; 10 холодных контактов; подтвердить/опровергнуть
       ценовые гипотезы §5 и сегмент §4 живыми разговорами.
 
