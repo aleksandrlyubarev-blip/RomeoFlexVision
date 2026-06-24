@@ -164,7 +164,7 @@ factory-интеграции; in-house EMS-решения — фрагмента
 ### 5 разрывов под мульти-тенант Gemini-SaaS (приоритет сверху вниз):
 | # | Разрыв | Где | Действие |
 |---|---|---|---|
-| 1 | **Gemini/Vertex first-class route — code done** | `MODEL_MAPPING` (`model_router.py`) | ✅ Добавлен `TaskCategory.GEMINI`, `ROUTINE` и `GEMINI` по умолчанию идут через `vertex_ai/gemini-2.5-flash`; есть override `RHAEF_GEMINI_MODEL` для AI Studio / API-key пути. Осталось подтвердить реальный Gemini call в Cloud Run smoke. |
+| 1 | **Gemini/Vertex first-class route + prod smoke — code done** | `model_router.py`, `graph.py`, `Dockerfile`, `deploy/` | ✅ `TaskCategory.GEMINI`, `ROUTINE`/`GEMINI` по умолчанию через `vertex_ai/gemini-2.5-flash`; override `RHAEF_GEMINI_MODEL`. ✅ `/healthz/gemini` делает реальный Vertex-вызов и ловит молчаливый fallback (`degraded`). ✅ Cloud Run wiring (`$PORT`, deploy-скрипт, доки). Осталось: запустить деплой на реальном GCP-проекте (нужны креды владельца). |
 | 2 | **Блокирующий `input()`** | `model_router.py:138` (`FrictionGate`) | Удалить; консолидировать весь human-in-the-loop на `FrictionPolicyEngine` (`status="blocked"` + resume-эндпоинт). Ломает сервер. |
 | 3 | **Нет `tenant_id`** | `RoboQCState` (есть только `workcell_id`), `RuntimeSettings`, роуты | Прокинуть `tenant_id` сквозь state, изоляция данных по арендатору, контекст в каждом запросе. |
 | 4 | **Нет auth + глобальный `cost_tracker`** | `routes.py`, `model_router.py:94` | Per-tenant auth (API-key/JWT) + per-tenant метеринг → основа биллинга. |
@@ -183,9 +183,13 @@ factory-интеграции; in-house EMS-решения — фрагмента
 
 **Неделя 1 (24–30 июня) — билет на вход + первый контакт с рынком:**
 - [x] Gemini/Vertex как first-class в `ModelRouter` (кодовая часть разрыва №1).
-- [ ] Один реальный вызов Gemini в проде через Cloud Run smoke-endpoint.
-- [ ] Убрать блокирующий `input()` (разрыв №2).
-- [ ] Задеплоить минимальный сервис на **Cloud Run** (галочка Google Cloud + публичный endpoint).
+- [x] Smoke-endpoint `GET /healthz/gemini` (`graph.py`): делает один реальный Vertex/Gemini-вызов,
+      возвращает `degraded` (HTTP 503), если роутер молча упал на не-Gemini fallback. Покрыт тестами.
+- [x] Cloud Run wiring: `Dockerfile` слушает `$PORT`; `deploy/cloud-run.sh` + `docs/deployment-cloud-run.md`
+      (SA с `roles/aiplatform.user`, ADC-auth без ключа, `VERTEXAI_PROJECT/LOCATION`).
+- [ ] **Запустить деплой на реальном GCP-проекте** и получить `status:ok, gemini_used:true` на `/healthz/gemini`
+      (нужны GCP-креды — шаг на стороне владельца).
+- [ ] Убрать блокирующий `input()` (разрыв №2; всё ещё в `model_router.py:169`).
 - [ ] **Бизнес:** список 30 целевых US-EMS/сборочных SMB; 10 холодных контактов; подтвердить/опровергнуть
       ценовые гипотезы §5 и сегмент §4 живыми разговорами.
 

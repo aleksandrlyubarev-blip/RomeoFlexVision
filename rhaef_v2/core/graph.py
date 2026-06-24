@@ -19,6 +19,11 @@ except Exception:  # pragma: no cover
 
             return decorator
 
+try:
+    from fastapi.responses import JSONResponse
+except Exception:  # pragma: no cover
+    JSONResponse = None  # type: ignore
+
 
 try:
     from langgraph.graph import END, StateGraph
@@ -105,3 +110,50 @@ else:
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+async def gemini_smoke_check(model_router: ModelRouter) -> dict[str, object]:
+    """Perform exactly one real Gemini call and report whether Gemini actually answered.
+
+    This is the production proof for the XPRIZE requirement of at least one Gemini
+    API call in the *deployed* application. It returns ``status="degraded"`` (not
+    ``"ok"``) when the router silently falls back off the Vertex/Gemini path onto a
+    non-Gemini model, so a health probe catches a broken Vertex wiring even when no
+    exception is raised.
+    """
+    requested = model_router._select_model(TaskCategory.GEMINI)
+    response = await model_router.route(
+        category=TaskCategory.GEMINI,
+        messages=[{"role": "user", "content": "Reply with a single word: pong"}],
+        temperature=0.0,
+        max_tokens=16,
+    )
+    # litellm sets ``response.model`` to the model that actually answered, which
+    # differs from ``requested`` when the fallback path fired.
+    answered = str(getattr(response, "model", "") or requested)
+    message = response.choices[0].message
+    content = message["content"] if isinstance(message, dict) else getattr(message, "content", "")
+    gemini_used = "gemini" in answered.lower()
+    return {
+        "status": "ok" if gemini_used else "degraded",
+        "requested_model": requested,
+        "answered_model": answered,
+        "gemini_used": gemini_used,
+        "reply": content,
+    }
+
+
+@app.get("/healthz/gemini")
+async def gemini_smoke() -> object:
+    """Liveness probe that exercises the real Vertex/Gemini path end-to-end."""
+    try:
+        result = await gemini_smoke_check(router)
+    except Exception as exc:  # pragma: no cover - exercised in deployment, not unit tests
+        result = {
+            "status": "error",
+            "error": type(exc).__name__,
+            "detail": str(exc)[:300],
+        }
+    if JSONResponse is not None and result.get("status") != "ok":
+        return JSONResponse(status_code=503, content=result)
+    return result
