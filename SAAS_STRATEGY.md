@@ -164,7 +164,7 @@ factory-интеграции; in-house EMS-решения — фрагмента
 ### 5 разрывов под мульти-тенант Gemini-SaaS (приоритет сверху вниз):
 | # | Разрыв | Где | Действие |
 |---|---|---|---|
-| 1 | **Нет Gemini/Vertex** | `MODEL_MAPPING` (`model_router.py:45`) | Добавить Gemini как first-class модель (vision + reasoning); сделать дефолтом для QC-вертикали. **Билет на вход в приз.** |
+| 1 | **Gemini/Vertex first-class route — code done** | `MODEL_MAPPING` (`model_router.py`) | ✅ Добавлен `TaskCategory.GEMINI`, `ROUTINE` и `GEMINI` по умолчанию идут через `vertex_ai/gemini-2.5-flash`; есть override `RHAEF_GEMINI_MODEL` для AI Studio / API-key пути. Осталось подтвердить реальный Gemini call в Cloud Run smoke. |
 | 2 | **Блокирующий `input()`** | `model_router.py:138` (`FrictionGate`) | Удалить; консолидировать весь human-in-the-loop на `FrictionPolicyEngine` (`status="blocked"` + resume-эндпоинт). Ломает сервер. |
 | 3 | **Нет `tenant_id`** | `RoboQCState` (есть только `workcell_id`), `RuntimeSettings`, роуты | Прокинуть `tenant_id` сквозь state, изоляция данных по арендатору, контекст в каждом запросе. |
 | 4 | **Нет auth + глобальный `cost_tracker`** | `routes.py`, `model_router.py:94` | Per-tenant auth (API-key/JWT) + per-tenant метеринг → основа биллинга. |
@@ -182,7 +182,8 @@ factory-интеграции; in-house EMS-решения — фрагмента
 > Принцип: **каждую неделю — одна проверяемая бизнес-веха, не только код.** «Projections won't win.»
 
 **Неделя 1 (24–30 июня) — билет на вход + первый контакт с рынком:**
-- [ ] Gemini/Vertex как first-class в `ModelRouter` (разрыв №1) + один реальный вызов Gemini в проде.
+- [x] Gemini/Vertex как first-class в `ModelRouter` (кодовая часть разрыва №1).
+- [ ] Один реальный вызов Gemini в проде через Cloud Run smoke-endpoint.
 - [ ] Убрать блокирующий `input()` (разрыв №2).
 - [ ] Задеплоить минимальный сервис на **Cloud Run** (галочка Google Cloud + публичный endpoint).
 - [ ] **Бизнес:** список 30 целевых US-EMS/сборочных SMB; 10 холодных контактов; подтвердить/опровергнуть
