@@ -16,6 +16,8 @@ dependencies = [
     "fastapi",
     "uvicorn",
     "pytest",
+    # Vertex AI / Gemini route for litellm (vertex_ai/gemini-*). Auth via ADC on Cloud Run.
+    "google-cloud-aiplatform>=1.60",
 ]
 
 [project.optional-dependencies]

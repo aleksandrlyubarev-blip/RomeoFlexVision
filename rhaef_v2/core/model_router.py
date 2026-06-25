@@ -36,6 +36,7 @@ class TaskCategory(str, Enum):
     DATA_TEST = "data_test"
     VIDEO_MEDIA = "video_media"
     ROUTINE = "routine"
+    GEMINI = "gemini"
     # RoboQC testbed (local SGLang)
     ROBOQC_VISION = "roboqc_vision"
     ROBOQC_REASONING = "roboqc_reasoning"
@@ -51,7 +52,8 @@ MODEL_MAPPING: Dict[TaskCategory, str] = {
     TaskCategory.ORCHESTRATION: "xai/grok-4",
     TaskCategory.DATA_TEST: "qwen/qwen3.6-plus",
     TaskCategory.VIDEO_MEDIA: "xai/grok-4",
-    TaskCategory.ROUTINE: "qwen/qwen3.6-plus",
+    TaskCategory.ROUTINE: "vertex_ai/gemini-2.5-flash",
+    TaskCategory.GEMINI: "vertex_ai/gemini-2.5-flash",
     # RoboQC: openai/* имена заставляют litellm использовать OpenAI-совместимый путь.
     # Реальный endpoint — SGLang на GPU-полигоне (см. SGLANG_BASE_URL).
     TaskCategory.ROBOQC_VISION: "openai/qwen3-vl-local",
@@ -63,10 +65,13 @@ FALLBACK_MAPPING: Dict[str, str] = {
     "anthropic/claude-opus-4-7": "openai/gpt-5.5-pro",
     "openai/gpt-5.5-pro": "qwen/qwen3.6-plus",
     "xai/grok-4": "qwen/qwen3.6-plus",
+    "vertex_ai/gemini-2.5-flash": "qwen/qwen3.6-plus",
     # RoboQC: если локальный SGLang недоступен, роутим на облачный qwen.
     "openai/qwen3-vl-local": "qwen/qwen3.6-plus",
     "openai/qwen3.6-35b-local": "qwen/qwen3.6-plus",
 }
+
+VERTEX_REQUEST_KEYS = {"vertex_project", "vertex_location", "vertex_credentials"}
 
 
 class CompletionClient(Protocol):
@@ -85,6 +90,12 @@ class FrictionGate(BaseModel):
         return cls(enabled=True, human_approval_required=True, reason=reason)
 
 
+class HumanApprovalRequired(RuntimeError):
+    def __init__(self, reason: str) -> None:
+        self.reason = reason
+        super().__init__(reason)
+
+
 class ModelRouter:
     def __init__(self, client: Optional[CompletionClient] = None, settings: Optional[RuntimeSettings] = None) -> None:
         self._client = client or completion
@@ -95,6 +106,12 @@ class ModelRouter:
 
     def _build_metadata(self, category: TaskCategory) -> dict[str, str]:
         return {"rhaef_category": category.value, "framework": "rhaef-v2"}
+
+    def _select_model(self, category: TaskCategory) -> str:
+        model = MODEL_MAPPING.get(category, MODEL_MAPPING[TaskCategory.ROUTINE])
+        if category in {TaskCategory.ROUTINE, TaskCategory.GEMINI}:
+            return os.environ.get("RHAEF_GEMINI_MODEL", model).strip() or model
+        return model
 
     def _enrich_for_local(self, model: str, kwargs: dict[str, Any]) -> None:
         """Для локальных ROBOQC_*-моделей вбиваем api_base/api_key/custom_llm_provider."""
@@ -110,6 +127,25 @@ class ModelRouter:
         kwargs.setdefault("api_key", "sglang-no-auth")
         kwargs.setdefault("custom_llm_provider", "openai")
 
+    def _enrich_for_vertex(self, model: str, kwargs: dict[str, Any]) -> None:
+        if not model.startswith("vertex_ai/"):
+            return
+        project = os.environ.get("VERTEXAI_PROJECT") or os.environ.get("VERTEX_AI_PROJECT")
+        location = os.environ.get("VERTEXAI_LOCATION") or os.environ.get("VERTEX_AI_LOCATION")
+        credentials = os.environ.get("VERTEXAI_CREDENTIALS") or os.environ.get("VERTEX_CREDENTIALS_JSON")
+        if project:
+            kwargs.setdefault("vertex_project", project)
+        if location:
+            kwargs.setdefault("vertex_location", location)
+        if credentials:
+            kwargs.setdefault("vertex_credentials", credentials)
+
+    def _clear_vertex_kwargs_for_non_vertex(self, model: str, kwargs: dict[str, Any]) -> None:
+        if model.startswith("vertex_ai/"):
+            return
+        for key in VERTEX_REQUEST_KEYS:
+            kwargs.pop(key, None)
+
     async def route(
         self,
         category: TaskCategory,
@@ -122,7 +158,7 @@ class ModelRouter:
         if self._client is None:
             raise RuntimeError("litellm is not installed. Install project dependencies to run model routing.")
 
-        model = MODEL_MAPPING.get(category, MODEL_MAPPING[TaskCategory.ROUTINE])
+        model = self._select_model(category)
         request_kwargs = {
             "model": model,
             "messages": messages,
@@ -132,10 +168,10 @@ class ModelRouter:
             **kwargs,
         }
         self._enrich_for_local(model, request_kwargs)
+        self._enrich_for_vertex(model, request_kwargs)
 
         if friction and friction.enabled and friction.human_approval_required:
-            print(f"⚠️ FRICTION GATE: {friction.reason}")
-            input("✅ Подтверди (Enter) или Ctrl+C...")
+            raise HumanApprovalRequired(friction.reason)
 
         if self.settings.langsmith_tracing_v2:
             request_kwargs["tags"] = ["rhaef-v2", category.value]
@@ -145,7 +181,9 @@ class ModelRouter:
         except Exception:
             fallback_model = FALLBACK_MAPPING.get(model, "qwen/qwen3.6-plus")
             request_kwargs["model"] = fallback_model
+            self._clear_vertex_kwargs_for_non_vertex(fallback_model, request_kwargs)
             self._enrich_for_local(fallback_model, request_kwargs)
+            self._enrich_for_vertex(fallback_model, request_kwargs)
             response = self._client(**request_kwargs)
 
         cost = 0.0
