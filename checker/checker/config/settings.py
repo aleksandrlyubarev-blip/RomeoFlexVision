@@ -51,6 +51,11 @@ class Settings(BaseModel):
 
     sessions_dir: Path = Field(default_factory=sessions_root)
 
+    # NeutronVision Display (dashboard). Empty url = feature off.
+    dashboard_url: str = ""
+    dashboard_token: SecretStr | None = None
+    stand_id: str = "stand-01"
+
     @classmethod
     def load(cls) -> "Settings":
         """Read config.json + secrets.env, create the app dirs."""
@@ -72,6 +77,10 @@ class Settings(BaseModel):
         if api_key:
             data["grok_api_key"] = api_key
 
+        dash_token = os.environ.get("DASHBOARD_TOKEN") or data.pop("dashboard_token", None)
+        if dash_token:
+            data["dashboard_token"] = dash_token
+
         if "sessions_dir" in data and isinstance(data["sessions_dir"], str):
             data["sessions_dir"] = Path(data["sessions_dir"]).expanduser()
 
@@ -82,6 +91,7 @@ class Settings(BaseModel):
         ensure_app_dirs()
         payload = self.model_dump(mode="json")
         payload.pop("grok_api_key", None)  # secrets stay in dotenv
+        payload.pop("dashboard_token", None)
         config_path().write_text(json.dumps(payload, indent=2))
 
 

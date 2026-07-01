@@ -184,9 +184,20 @@ language TZ document.
     "exposure_min": 0.5,
     "framing_min": 0.5,
     "all_must_pass": false
-  }
+  },
+  "dashboard_url": "",
+  "stand_id": "stand-01"
 }
 ```
+
+### NeutronVision Display (optional)
+
+Set `dashboard_url` to a [NeutronVision Display](../dashboard/README.md)
+deployment and add `DASHBOARD_TOKEN=<token>` to `~/NeutronVision/secrets.env`
+to stream session events (heartbeats, captures, verdicts) to the supervisor
+dashboard. Events are spooled locally when the dashboard is unreachable and
+replayed later; an empty `dashboard_url` (the default) disables the feature
+entirely.
 
 ---
 

@@ -1,0 +1,31 @@
+# NeutronVision Display: single-host cloud deploy.
+#
+#   DISPLAY_TOKEN=$(openssl rand -hex 24) docker compose up -d --build
+#
+# Put a TLS-terminating reverse proxy (Caddy/nginx/Cloudflare) in front and
+# route  /api/* -> backend:8000  and  /* -> web:3000  on one domain; then the
+# web build needs no NEXT_PUBLIC_API_BASE (same-origin default).
+
+services:
+  backend:
+    build: ./backend
+    environment:
+      DISPLAY_TOKEN: ${DISPLAY_TOKEN:?set DISPLAY_TOKEN}
+      DISPLAY_CORS_ORIGINS: ${DISPLAY_CORS_ORIGINS:-*}
+    volumes:
+      - display-data:/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  display-data:

@@ -23,6 +23,7 @@ from PyQt6.QtWidgets import (
 from ..camera.camera_thread import CameraThread
 from ..camera.uvc_camera import UVCCamera
 from ..config.settings import Settings
+from ..dashboard_client import DashboardClient, encode_thumbnail
 from ..inference.ai_engine import AIEngine, CaptureResult
 from ..inference.grok_engine import GrokEngine
 from ..inference.inference_thread import InferenceWorker
@@ -31,12 +32,24 @@ from ..inference.quality_thread import QualityWorker
 from ..inference.quality_validator import evaluate
 from ..session.session_manager import CameraInfo, SessionManager
 from ..utils.logging import get_logger
+from ..utils.paths import app_root
 from .capture_panel import CapturePanel
 from .preview_widget import PreviewWidget
 from .quality_panel import QualityPanel
 from .settings_dialog import SettingsDialog
 
 _log = get_logger()
+
+
+def _build_dashboard(settings: Settings) -> DashboardClient | None:
+    if not settings.dashboard_url or settings.dashboard_token is None:
+        return None
+    return DashboardClient(
+        url=settings.dashboard_url,
+        token=settings.dashboard_token.get_secret_value(),
+        stand_id=settings.stand_id,
+        spool_path=app_root() / "dashboard_spool.jsonl",
+    )
 
 
 def _build_engine(settings: Settings) -> AIEngine | None:
@@ -69,6 +82,13 @@ class MainWindow(QMainWindow):
         )
 
         self._latest_frame: np.ndarray | None = None
+        self._dashboard = _build_dashboard(settings)
+        if self._dashboard is not None:
+            self._dashboard.set_heartbeat_state(
+                engine=settings.engine,
+                engine_key_present=settings.grok_api_key is not None,
+                camera_connected=False,
+            )
 
         self._preview = PreviewWidget()
         self._quality_panel = QualityPanel()
@@ -206,11 +226,15 @@ class MainWindow(QMainWindow):
             self._latest_frame = frame
             if not self._capture_btn.isEnabled():
                 self._capture_btn.setEnabled(True)
+                if self._dashboard is not None:
+                    self._dashboard.set_heartbeat_state(camera_connected=True)
 
     @pyqtSlot(str)
     def _on_camera_error(self, message: str) -> None:
         QMessageBox.warning(self, "Camera", message)
         self._capture_btn.setEnabled(False)
+        if self._dashboard is not None:
+            self._dashboard.set_heartbeat_state(camera_connected=False)
 
     @pyqtSlot(bool)
     def _on_engine_busy(self, busy: bool) -> None:
@@ -228,11 +252,24 @@ class MainWindow(QMainWindow):
         cam_info = CameraInfo(name=f"camera index {self._settings.camera_index}", resolution="1920x1080")
         session = self._session_manager.start(name.strip() or None, camera=cam_info)
         self._session_label.setText(f"Session: {session.name}  |  captures: 0")
+        if self._dashboard is not None:
+            self._dashboard.set_session(session.session_id)
+            self._dashboard.emit(
+                "session_started",
+                {
+                    "name": session.name,
+                    "operator": session.operator,
+                    "product_code": session.product_code,
+                    "ai_engine": session.ai_engine,
+                    "camera": session.camera.model_dump(),
+                },
+            )
 
     def _on_end_session(self) -> None:
         if not self._session_manager.is_open():
             return
         finished = self._session_manager.end()
+        self._emit_session_ended(finished)
         pdf = finished.dir / "session_summary.pdf"
         QMessageBox.information(
             self,
@@ -259,6 +296,16 @@ class MainWindow(QMainWindow):
         if session is None:
             return
         jpeg_path = session.dir / record.frame_path
+        if self._dashboard is not None:
+            self._dashboard.emit(
+                "capture",
+                {
+                    "capture_id": record.capture_id,
+                    "quality": record.quality.model_dump(),
+                    "quality_passed": record.quality_passed,
+                    "thumbnail_b64": encode_thumbnail(session.dir / record.thumbnail_path),
+                },
+            )
         self._capture_panel.show_pending(jpeg_path)
         self._session_label.setText(f"Session: {session.name}  |  captures: {session.capture_count}")
 
@@ -280,6 +327,17 @@ class MainWindow(QMainWindow):
                 self._session_manager.attach_result(capture_id, result)
             except KeyError:
                 _log.warning("attach_result: capture %s not in session", capture_id)
+        if self._dashboard is not None:
+            self._dashboard.emit(
+                "verdict",
+                {
+                    "capture_id": capture_id,
+                    "verdict": result.verdict.upper(),
+                    "confidence": result.confidence,
+                    "rationale": result.notes,
+                    "engine": result.engine,
+                },
+            )
 
     def _on_open_settings(self) -> None:
         dialog = SettingsDialog(self._settings, parent=self)
@@ -290,6 +348,26 @@ class MainWindow(QMainWindow):
                 "Settings",
                 "Saved. Restart the app to apply camera/engine changes.",
             )
+
+    def _emit_session_ended(self, finished) -> None:
+        if self._dashboard is None:
+            return
+        verdicts = [
+            rec.ai_inference.verdict.upper()
+            for rec in finished.captures
+            if rec.ai_inference is not None
+        ]
+        self._dashboard.emit(
+            "session_ended",
+            {
+                "capture_count": finished.capture_count,
+                "pass": verdicts.count("PASS"),
+                "fail": verdicts.count("FAIL"),
+                "retake": verdicts.count("RETAKE"),
+            },
+            session_id=finished.session_id,
+        )
+        self._dashboard.set_session(None)
 
     # ------------------------- shutdown -------------------------
 
@@ -307,9 +385,12 @@ class MainWindow(QMainWindow):
             self._inference_thread.wait(2000)
         if self._session_manager.is_open():
             try:
-                self._session_manager.end()
+                finished = self._session_manager.end()
+                self._emit_session_ended(finished)
             except Exception as exc:
                 _log.warning("auto-end session on close failed: %s", exc)
+        if self._dashboard is not None:
+            self._dashboard.close()
         super().closeEvent(event)
 
 
