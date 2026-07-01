@@ -7,7 +7,7 @@ name = "checker"
 version = "0.1.0"
 description = "macOS desktop demo app for industrial QC photo inspection of HPC liquid-cooling components, powered by xAI Grok vision."
 requires-python = ">=3.11,<3.13"
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 dependencies = [
     "PyQt6>=6.7",
     "opencv-python>=4.10",
