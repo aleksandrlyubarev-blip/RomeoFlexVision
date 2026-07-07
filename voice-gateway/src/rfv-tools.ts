@@ -1,4 +1,4 @@
-import type { FunctionDeclaration } from './types.js';
+import type { FunctionDeclaration, GrokFunctionTool, ParameterSchema } from './types.js';
 
 export const RFV_FUNCTION_DECLARATIONS: FunctionDeclaration[] = [
   {
@@ -80,6 +80,49 @@ export const RFV_FUNCTION_DECLARATIONS: FunctionDeclaration[] = [
     },
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Grok realtime API uses standard JSON Schema (lowercase types) for function
+// tools; convert the Gemini-style declarations so both providers share one
+// tool definition.
+// ---------------------------------------------------------------------------
+
+const GEMINI_TO_JSON_SCHEMA_TYPE: Record<ParameterSchema['type'], string> = {
+  STRING: 'string',
+  INTEGER: 'integer',
+  NUMBER: 'number',
+  BOOLEAN: 'boolean',
+  ARRAY: 'array',
+  OBJECT: 'object',
+};
+
+function toJsonSchemaProperty(schema: ParameterSchema): Record<string, unknown> {
+  const out: Record<string, unknown> = { type: GEMINI_TO_JSON_SCHEMA_TYPE[schema.type] };
+  if (schema.description) out.description = schema.description;
+  if (schema.enum) out.enum = schema.enum;
+  if (schema.items) out.items = toJsonSchemaProperty(schema.items);
+  return out;
+}
+
+export function toGrokFunctionTools(
+  declarations: FunctionDeclaration[] = RFV_FUNCTION_DECLARATIONS,
+): GrokFunctionTool[] {
+  return declarations.map((decl) => ({
+    type: 'function',
+    name: decl.name,
+    description: decl.description,
+    parameters: {
+      type: 'object',
+      properties: Object.fromEntries(
+        Object.entries(decl.parameters.properties).map(([key, value]) => [
+          key,
+          toJsonSchemaProperty(value),
+        ]),
+      ),
+      required: decl.parameters.required ?? [],
+    },
+  }));
+}
 
 // ---------------------------------------------------------------------------
 // Mock tool handlers — replace with real API/DB calls in production

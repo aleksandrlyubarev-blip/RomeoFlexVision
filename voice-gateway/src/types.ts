@@ -125,3 +125,49 @@ export type GeminiServerMessage =
   | GeminiSetupComplete
   | GeminiServerContent
   | GeminiToolCall;
+
+// ---------- Provider-agnostic session interface ----------
+
+import type { EventEmitter } from 'node:events';
+
+/**
+ * Common surface of GeminiSession / GrokSession so the gateway can bridge
+ * either provider. Events: 'message' (ClientBoundMessage), 'audio' (Buffer),
+ * 'error' (Error), 'close'.
+ */
+export interface VoiceSession extends EventEmitter {
+  connect(): Promise<void>;
+  sendAudio(pcm16: Buffer): void;
+  close(): void;
+}
+
+// ---------- Grok realtime protocol types (wss://api.x.ai/v1/realtime) ----------
+
+export interface GrokFunctionTool {
+  type: 'function';
+  name: string;
+  description: string;
+  parameters: {
+    type: 'object';
+    properties: Record<string, unknown>;
+    required: string[];
+  };
+}
+
+/** Server → gateway events. Only the fields the gateway consumes are typed. */
+export interface GrokServerEvent {
+  type: string;
+  // response.output_audio.delta
+  audio?: string;
+  // response.output_audio_transcript.delta / .done
+  delta?: string;
+  transcript?: string;
+  // response.function_call_arguments.done
+  name?: string;
+  call_id?: string;
+  arguments?: string;
+  // conversation.created
+  conversation?: { id?: string };
+  // error
+  error?: { message?: string; [key: string]: unknown };
+}

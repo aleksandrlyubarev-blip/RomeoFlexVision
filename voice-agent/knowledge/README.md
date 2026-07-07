@@ -10,8 +10,8 @@ are public/synthetic.
 
 | Collection | Contents | Source |
 |---|---|---|
-| `roboqc-defect-glossary` | One doc per defect class: name, spoken description, typical cause, severity guidance (solder bridge, missing component, misalignment, insufficient solder, tombstoning, ...) | Write from public AOI/IPC-A-610 general knowledge — no customer defect records |
-| `roboqc-operator-guide` | How to phrase questions to Romeo, what each stat means (pass rate vs. first-pass yield, throughput), escalation matrix | Derived from `../playbook.md`; keep in sync |
+| `roboqc-defect-glossary` | One doc per defect class: name, spoken description, typical cause, severity guidance (solder bridge, missing component, misalignment, insufficient solder, tombstoning, ...) | `roboqc-defect-glossary.md` in this directory (public AOI/IPC-A-610 general knowledge — no customer defect records) |
+| `roboqc-operator-guide` | How to phrase questions to Romeo, what each stat means (pass rate vs. first-pass yield, throughput), escalation matrix | `roboqc-operator-guide.md` in this directory; derived from `../playbook.md`, keep in sync |
 | `neutronvision-overview` | Public positioning docs: what NeutronVision / RoboQC / the Checker demo are, what they are not | Root `README.md`, `ARCHITECTURE.md` (public sections only) |
 
 Formats accepted by the builder: PDF, MD, DOCX, TXT and similar. Prefer

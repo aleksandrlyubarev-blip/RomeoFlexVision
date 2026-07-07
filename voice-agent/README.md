@@ -24,10 +24,13 @@ differs.
 
 ## Relationship to `voice-gateway`
 
-`voice-gateway` is the self-hosted path: browser ↔ our WebSocket ↔ Gemini
-Live, with tools executed in-process. The Voice Agent Builder path inverts
+`voice-gateway` is the self-hosted path: browser ↔ our WebSocket ↔ a voice
+provider, with tools executed in-process. It supports two providers, switched
+by `VOICE_PROVIDER` in `.env`: `gemini` (Gemini Live, default) and `grok`
+(the same xAI realtime API the builder uses — set `XAI_API_KEY`, optionally
+`GROK_VOICE_MODEL` / `GROK_VOICE`). The Voice Agent Builder path inverts
 this: xAI hosts the voice loop (including a phone number), and calls back into
-our stack over MCP. Both paths share `voice-gateway/src/rfv-tools.ts`, so tool
+our stack over MCP. All paths share `voice-gateway/src/rfv-tools.ts`, so tool
 behavior stays identical whichever frontend answers.
 
 ```
