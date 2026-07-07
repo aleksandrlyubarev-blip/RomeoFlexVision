@@ -1,0 +1,49 @@
+{
+  "_comment": "session.update payload for the xAI Voice Agent realtime API (wss://api.x.ai/v1/realtime?model=grok-voice-latest). Mirrors the console Voice Agent Builder setup so the agent can also be driven API-first. Replace <...> placeholders before use; inline the body of playbook.md as `instructions`.",
+  "type": "session.update",
+  "session": {
+    "voice": "rex",
+    "instructions": "<contents of voice-agent/playbook.md, from 'You are Romeo' to the end>",
+    "reasoning.effort": "high",
+    "turn_detection": {
+      "type": "server_vad",
+      "threshold": 0.85,
+      "silence_duration_ms": 500,
+      "prefix_padding_ms": 333
+    },
+    "audio": {
+      "input": {
+        "format": { "type": "audio/pcm", "rate": 24000 }
+      },
+      "output": {
+        "format": { "type": "audio/pcm", "rate": 24000 },
+        "speed": 1.0
+      }
+    },
+    "replace": {
+      "RoboQC": "Robo Q C",
+      "AOI": "A O I",
+      "RomeoFlexVision": "Romeo Flex Vision"
+    },
+    "resumption": { "enabled": true },
+    "tools": [
+      {
+        "type": "mcp",
+        "server_label": "roboqc",
+        "server_description": "Live RoboQC inspection data and line control",
+        "server_url": "https://<your-host>/mcp",
+        "authorization": "Bearer <MCP_AUTH_TOKEN from voice-gateway/.env>",
+        "allowed_tools": [
+          "get_inspection_stats",
+          "get_active_alerts",
+          "get_defect_breakdown",
+          "control_inspection"
+        ]
+      },
+      {
+        "type": "file_search",
+        "_comment": "Attach collection IDs created per voice-agent/knowledge/README.md"
+      }
+    ]
+  }
+}
