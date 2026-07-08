@@ -5,22 +5,44 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GeminiSession } from './gemini-session.js';
+import { GrokSession } from './grok-session.js';
+import type { VoiceSession } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
 
 const PORT = parseInt(process.env.PORT ?? '8765', 10);
+const VOICE_PROVIDER = (process.env.VOICE_PROVIDER?.trim() ?? 'gemini').toLowerCase();
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY?.trim() ?? '';
 const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() ?? 'gemini-2.0-flash-live-001';
+const XAI_API_KEY = process.env.XAI_API_KEY?.trim() ?? '';
+const GROK_VOICE_MODEL = process.env.GROK_VOICE_MODEL?.trim() ?? 'grok-voice-latest';
+const GROK_VOICE = process.env.GROK_VOICE?.trim() ?? 'rex';
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
 
-if (!GEMINI_API_KEY) {
+if (VOICE_PROVIDER !== 'gemini' && VOICE_PROVIDER !== 'grok') {
+  console.error(`Fatal: unknown VOICE_PROVIDER "${VOICE_PROVIDER}" (expected "gemini" or "grok")`);
+  process.exit(1);
+}
+if (VOICE_PROVIDER === 'gemini' && !GEMINI_API_KEY) {
   console.error('Fatal: GEMINI_API_KEY environment variable is required');
   process.exit(1);
+}
+if (VOICE_PROVIDER === 'grok' && !XAI_API_KEY) {
+  console.error('Fatal: XAI_API_KEY environment variable is required');
+  process.exit(1);
+}
+
+const ACTIVE_MODEL = VOICE_PROVIDER === 'grok' ? GROK_VOICE_MODEL : GEMINI_MODEL;
+
+function createSession(): VoiceSession {
+  return VOICE_PROVIDER === 'grok'
+    ? new GrokSession(XAI_API_KEY, GROK_VOICE_MODEL, GROK_VOICE)
+    : new GeminiSession(GEMINI_API_KEY, GEMINI_MODEL);
 }
 
 // ---------------------------------------------------------------------------
@@ -31,7 +53,7 @@ const app = express();
 app.disable('x-powered-by');
 
 app.get('/', (_req: Request, res: Response) => {
-  res.json({ ok: true, service: 'rfv-voice-gateway', model: GEMINI_MODEL });
+  res.json({ ok: true, service: 'rfv-voice-gateway', provider: VOICE_PROVIDER, model: ACTIVE_MODEL });
 });
 
 app.get('/healthz', (_req: Request, res: Response) => {
@@ -60,7 +82,7 @@ wss.on('connection', (clientWs: WebSocket, req: IncomingMessage) => {
   const remote = req.socket.remoteAddress ?? 'unknown';
   console.log(`[voice-gateway] Client connected: ${remote}`);
 
-  const session = new GeminiSession(GEMINI_API_KEY, GEMINI_MODEL);
+  const session = createSession();
 
   // ---- Bridge: session events → client ----
 
@@ -78,7 +100,7 @@ wss.on('connection', (clientWs: WebSocket, req: IncomingMessage) => {
   });
 
   session.on('error', (err: Error) => {
-    console.error(`[voice-gateway] Gemini error for ${remote}:`, err.message);
+    console.error(`[voice-gateway] ${VOICE_PROVIDER} error for ${remote}:`, err.message);
     if (clientWs.readyState === WebSocket.OPEN) {
       clientWs.send(JSON.stringify({ type: 'error', message: 'AI service error' }));
     }
@@ -106,11 +128,11 @@ wss.on('connection', (clientWs: WebSocket, req: IncomingMessage) => {
     session.close();
   });
 
-  // ---- Start Gemini Live session ----
+  // ---- Start provider session ----
 
   session.connect().catch((err: unknown) => {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error(`[voice-gateway] Failed to connect to Gemini for ${remote}:`, msg);
+    console.error(`[voice-gateway] Failed to connect to ${VOICE_PROVIDER} for ${remote}:`, msg);
     if (clientWs.readyState === WebSocket.OPEN) {
       clientWs.send(JSON.stringify({ type: 'error', message: 'Failed to connect to AI service' }));
       clientWs.close(1011, 'AI service unavailable');
@@ -124,7 +146,7 @@ wss.on('connection', (clientWs: WebSocket, req: IncomingMessage) => {
 
 server.listen(PORT, () => {
   console.log(`[voice-gateway] Listening on port ${PORT}`);
-  console.log(`[voice-gateway] Model: ${GEMINI_MODEL}`);
+  console.log(`[voice-gateway] Provider: ${VOICE_PROVIDER}, model: ${ACTIVE_MODEL}`);
   console.log(`[voice-gateway] Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
 });
 
