@@ -176,7 +176,7 @@ language TZ document.
   "quality_hz": 5.0,
   "inference_max_side": 512,
   "engine": "grok",
-  "grok_model": "grok-2-vision-1212",
+  "grok_model": "grok-4",
   "grok_endpoint": "https://api.x.ai/v1/chat/completions",
   "grok_timeout_s": 15.0,
   "quality": {
