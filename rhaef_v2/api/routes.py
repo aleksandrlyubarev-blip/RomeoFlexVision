@@ -247,10 +247,23 @@ async def run_inspection(payload: InspectionRequest, services: APIServices) -> I
     return await client.run_check(payload)
 
 
+def _default_roboqc_client() -> Optional[Any]:
+    """Реальный пайплайн для /inspect включается через RHAEF_INSPECT_PIPELINE=1;
+    по умолчанию остаётся детерминированный стаб (без сети и langgraph)."""
+    import os
+
+    if os.environ.get("RHAEF_INSPECT_PIPELINE") != "1":
+        return None
+    from rhaef_v2.agents.roboqc.client import PipelineRoboQCClient
+
+    return PipelineRoboQCClient()
+
+
 def create_api_router(services: APIServices | None = None) -> APIRouter:
     svc = services or APIServices(
         model_router=ModelRouter(client=_fake_completion_client),
         policy_engine=FrictionPolicyEngine(),
+        roboqc_client=_default_roboqc_client(),
     )
     router = APIRouter()
 

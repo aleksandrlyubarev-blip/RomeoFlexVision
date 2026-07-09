@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Optional, Protocol
 
 try:
-    from pydantic import BaseModel, ConfigDict, Field
+    from pydantic import BaseModel, ConfigDict, Field, model_validator
 except Exception:  # pragma: no cover
     class BaseModel:  # type: ignore
         def __init__(self, **data: Any) -> None:
@@ -15,6 +15,11 @@ except Exception:  # pragma: no cover
 
     def Field(default: Any = None, **_: Any) -> Any:  # type: ignore
         return default
+
+    def model_validator(**_: Any):  # type: ignore
+        def decorator(func: Any) -> Any:
+            return func
+        return decorator
 
 
 class DetectedDefect(BaseModel):
@@ -30,16 +35,27 @@ class InspectionRequest(BaseModel):
     model_config = ConfigDict(strict=True)
 
     inspection_id: str
-    image_uri: str
+    # Кадр передаётся либо ссылкой (image_uri), либо инлайн-байтами
+    # (image_b64 — base64 без data-URL префикса). Байты — предпочтительный
+    # путь: инференс получает пиксели, не полагаясь на доступность URI.
+    image_uri: Optional[str] = None
+    image_b64: Optional[str] = None
+    image_mime: str = "image/jpeg"
     station_id: Optional[str] = None
     sop_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def _require_image(self) -> "InspectionRequest":
+        if not self.image_uri and not self.image_b64:
+            raise ValueError("InspectionRequest requires image_uri or image_b64")
+        return self
 
 
 class InspectionResult(BaseModel):
     model_config = ConfigDict(strict=True, frozen=True)
 
     inspection_id: str
-    image_uri: str
+    image_uri: Optional[str] = None
     defects: tuple[DetectedDefect, ...] = ()
     overall_pass: bool
     confidence: float = Field(ge=0.0, le=1.0)

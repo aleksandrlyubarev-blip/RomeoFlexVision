@@ -59,11 +59,43 @@ def _parse_json(raw: str, fallback: dict[str, Any] | None = None) -> dict[str, A
         return fallback or {}
 
 
-async def _call(router: ModelRouter, category: TaskCategory, name: str, **vars: Any) -> dict[str, Any]:
+def _attach_image(messages: list[dict[str, Any]], image_b64: str, mime: str) -> list[dict[str, Any]]:
+    """Прикрепить инлайн-кадр к последнему user-сообщению (OpenAI multimodal формат).
+
+    Текст промпта остаётся, но content становится списком частей:
+    [{"type": "text", ...}, {"type": "image_url", ...}] — этот формат понимают
+    litellm, OpenAI-совместимый SGLang и облачные vision-модели.
+    """
+    data_url = f"data:{mime};base64,{image_b64}"
+    attached = [dict(m) for m in messages]
+    for message in reversed(attached):
+        if message.get("role") == "user":
+            text = message.get("content") or ""
+            message["content"] = [
+                {"type": "text", "text": text},
+                {"type": "image_url", "image_url": {"url": data_url}},
+            ]
+            return attached
+    attached.append(
+        {"role": "user", "content": [{"type": "image_url", "image_url": {"url": data_url}}]}
+    )
+    return attached
+
+
+async def _call(
+    router: ModelRouter,
+    category: TaskCategory,
+    name: str,
+    image_b64: str | None = None,
+    image_mime: str = "image/jpeg",
+    **vars: Any,
+) -> dict[str, Any]:
     """Общая обёртка: собираем messages из roboqc_data.prompts и роутим."""
     from roboqc_data.prompts import as_messages  # локальный import — mock-friendly
 
     messages = as_messages(name, **vars)
+    if image_b64:
+        messages = _attach_image(messages, image_b64, image_mime)
     response = await router.route(category=category, messages=messages, temperature=0.2, max_tokens=2048)
     return _parse_json(_content(response))
 
@@ -73,9 +105,11 @@ async def perception_node(state: RoboQCState, *, router: ModelRouter) -> dict[st
         router,
         TaskCategory.ROBOQC_VISION,
         "vision_perception",
+        image_b64=state.image_b64,
+        image_mime=state.image_mime,
         subject=state.subject,
         source=f"workcell {state.workcell_id}",
-        frame_uri=state.image_uri,
+        frame_uri=state.image_uri or "(inline frame attached)",
         frames=state.extra_frames,
         extra_notes=None,
         schema_json='{"facts": ["string"], "objects": [], "lighting": "string"}',
