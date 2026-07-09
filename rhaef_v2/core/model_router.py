@@ -139,9 +139,14 @@ class ModelRouter:
         broker = self.approval_broker
         if approval_id:
             record = broker.get(approval_id)
-            if record is not None and record.status is ApprovalStatus.APPROVED:
+            if record is None:
+                # Чужой/опечатанный id: регистрируем свежую запись и отдаём её id,
+                # иначе вызывающий будет вечно ретраить нерезолвируемый идентификатор.
+                record = broker.request(friction.reason)
+                raise ApprovalPendingError(record.approval_id, friction.reason)
+            if record.status is ApprovalStatus.APPROVED:
                 return
-            if record is not None and record.status is ApprovalStatus.REJECTED:
+            if record.status is ApprovalStatus.REJECTED:
                 raise ApprovalRejectedError(approval_id, friction.reason)
             raise ApprovalPendingError(approval_id, friction.reason)
         if self._approver is not None:

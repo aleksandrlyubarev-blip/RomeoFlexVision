@@ -163,7 +163,19 @@ async def resolve_approval(
         return APIError(code="APPROVAL_ALREADY_RESOLVED", message=record.status.value, request_id=approval_id)
 
     record = broker.resolve(approval_id, approved=payload.approved, note=payload.note)
-    original = RunRequest(**(record.payload or {}))
+    if record.payload is None:
+        # Одобрение, зарегистрированное самим роутером (_pass_friction_gate):
+        # исходного RunRequest нет, перезапускать нечего — вызывающий сам
+        # продолжит через route(..., approval_id=...). Просто фиксируем решение.
+        return RunResponse(
+            request_id=approval_id,
+            status="approved" if payload.approved else "rejected",
+            decision="human_approved" if payload.approved else "human_rejected",
+            reason=payload.note or record.reason,
+            policy_code="HUMAN_DECISION",
+            approval_id=approval_id,
+        )
+    original = RunRequest(**record.payload)
     if not payload.approved:
         return RunResponse(
             request_id=original.request_id,
@@ -267,7 +279,7 @@ def create_api_router(services: APIServices | None = None) -> APIRouter:
     )
     router = APIRouter()
 
-    @router.post("/run", response_model=RunResponse)
+    @router.post("/run")
     async def run_route(payload: RunRequest) -> RunResponse | APIError:
         return await execute_run(payload, svc)
 

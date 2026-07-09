@@ -17,7 +17,9 @@ from rhaef_v2.core.model_router import TaskCategory
 
 
 class RunRequest(BaseModel):
-    model_config = ConfigDict(strict=True)
+    # Не strict: тело приходит из JSON, и FastAPI валидирует его в python-режиме —
+    # strict отверг бы category="critical" (str vs TaskCategory) с 422 на любом запросе.
+    model_config = ConfigDict(strict=False)
     request_id: str
     messages: list[dict[str, Any]]
     category: TaskCategory

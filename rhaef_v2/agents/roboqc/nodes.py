@@ -15,6 +15,12 @@ from typing import Any
 
 from rhaef_v2.core.model_router import ModelRouter, TaskCategory
 
+try:
+    from pydantic import ValidationError
+except Exception:  # pragma: no cover
+    class ValidationError(Exception):  # type: ignore
+        pass
+
 from .state import (
     ActionCommand,
     CriticOutcome,
@@ -82,6 +88,18 @@ def _attach_image(messages: list[dict[str, Any]], image_b64: str, mime: str) -> 
     return attached
 
 
+def _safe_model(cls: Any, payload: dict[str, Any] | None, fallback: Any) -> Any:
+    """Типизировать ответ LLM с fallback'ом: валидный JSON с недопустимыми
+    значениями (например command="self_destruct") не должен ронять пайплайн."""
+    if not payload:
+        return fallback
+    try:
+        return cls(**payload)
+    except (ValidationError, TypeError) as exc:
+        log.warning("invalid %s payload, falling back: %s (%s)", cls.__name__, payload, exc)
+        return fallback
+
+
 async def _call(
     router: ModelRouter,
     category: TaskCategory,
@@ -127,7 +145,11 @@ async def scene_node(state: RoboQCState, *, router: ModelRouter) -> dict[str, An
         known_priors=[],
         schema_json='{"hypotheses": [{"defect_class": "...", "confidence": 0.0, "why": "..."}]}',
     )
-    hypotheses = [Hypothesis(**h) for h in payload.get("hypotheses", []) if isinstance(h, dict)]
+    hypotheses = [
+        hyp
+        for h in payload.get("hypotheses", [])
+        if isinstance(h, dict) and (hyp := _safe_model(Hypothesis, h, None)) is not None
+    ]
     return {"hypotheses": hypotheses, "trace": state.trace + [{"node": "scene", "payload": payload}]}
 
 
@@ -145,7 +167,7 @@ async def planner_node(state: RoboQCState, *, router: ModelRouter) -> dict[str, 
         previous_critique=(state.critic.suggestion if state.critic else None),
         schema_json='{"next_step": "call_specialist|emit_action|request_reimage|accept", "args": {}, "rationale": "..."}',
     )
-    planner = PlannerDecision(**payload) if payload else PlannerDecision(next_step="emit_action")
+    planner = _safe_model(PlannerDecision, payload, PlannerDecision(next_step="emit_action"))
     return {"planner": planner, "trace": state.trace + [{"node": "planner", "payload": payload}]}
 
 
@@ -165,7 +187,7 @@ async def specialist_node(state: RoboQCState, *, router: ModelRouter) -> dict[st
         few_shot_examples=[],
         schema_json='{"verdict": "defect|suspect|ok", "confidence": 0.0, "evidence": [], "required_views": []}',
     )
-    specialist = SpecialistVerdict(**payload) if payload else SpecialistVerdict(verdict="suspect")
+    specialist = _safe_model(SpecialistVerdict, payload, SpecialistVerdict(verdict="suspect"))
     return {"specialist": specialist, "trace": state.trace + [{"node": "specialist", "payload": payload}]}
 
 
@@ -209,7 +231,7 @@ async def action_node(state: RoboQCState, *, router: ModelRouter) -> dict[str, A
         workcell_id=state.workcell_id,
         schema_json='{"command": "pick|reject|re_image|hold_for_review", "args": {}, "defect_tag": "string|null"}',
     )
-    action = ActionCommand(**payload) if payload else ActionCommand(command="hold_for_review")
+    action = _safe_model(ActionCommand, payload, ActionCommand(command="hold_for_review"))
     return {"action": action, "trace": state.trace + [{"node": "action", "payload": payload}]}
 
 
@@ -227,7 +249,7 @@ async def critic_node(state: RoboQCState, *, router: ModelRouter) -> dict[str, A
         max_retries=state.max_retries,
         schema_json='{"decision": "accept|retry", "reason": "string?", "suggestion": "string?"}',
     )
-    critic = CriticOutcome(**payload) if payload else CriticOutcome(decision="accept")
+    critic = _safe_model(CriticOutcome, payload, CriticOutcome(decision="accept"))
     bumped_retries = state.retries + (1 if critic.decision == "retry" else 0)
     return {
         "critic": critic,
