@@ -3,8 +3,15 @@ from __future__ import annotations
 import os
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Optional, Protocol
+from typing import Any, Awaitable, Callable, Dict, Optional, Protocol
 
+from .approvals import (
+    ApprovalBroker,
+    ApprovalPendingError,
+    ApprovalRejectedError,
+    ApprovalStatus,
+    get_default_broker,
+)
 from .settings import RuntimeSettings
 
 try:
@@ -85,10 +92,23 @@ class FrictionGate(BaseModel):
         return cls(enabled=True, human_approval_required=True, reason=reason)
 
 
+Approver = Callable[["FrictionGate"], Awaitable[bool]]
+
+
 class ModelRouter:
-    def __init__(self, client: Optional[CompletionClient] = None, settings: Optional[RuntimeSettings] = None) -> None:
+    def __init__(
+        self,
+        client: Optional[CompletionClient] = None,
+        settings: Optional[RuntimeSettings] = None,
+        approver: Optional[Approver] = None,
+        approval_broker: Optional[ApprovalBroker] = None,
+    ) -> None:
         self._client = client or completion
         self.settings = settings or RuntimeSettings.from_env()
+        # approver — интерактивный путь (CLI); broker — неблокирующий
+        # blocked/resume-путь (API). Если approver не задан, используем broker.
+        self._approver = approver
+        self.approval_broker = approval_broker or get_default_broker()
         if litellm is not None:
             litellm.set_verbose = False
         self.cost_tracker: Dict[str, float | int] = {"total_usd": 0.0, "requests": 0}
@@ -110,6 +130,29 @@ class ModelRouter:
         kwargs.setdefault("api_key", "sglang-no-auth")
         kwargs.setdefault("custom_llm_provider", "openai")
 
+    async def _pass_friction_gate(self, friction: FrictionGate, approval_id: Optional[str]) -> None:
+        """Async-совместимая замена блокирующего ``input()``.
+
+        Порядок: resume по approval_id → интерактивный approver → брокер
+        (регистрирует pending и поднимает ApprovalPendingError со статусом blocked).
+        """
+        broker = self.approval_broker
+        if approval_id:
+            record = broker.get(approval_id)
+            if record is not None and record.status is ApprovalStatus.APPROVED:
+                return
+            if record is not None and record.status is ApprovalStatus.REJECTED:
+                raise ApprovalRejectedError(approval_id, friction.reason)
+            raise ApprovalPendingError(approval_id, friction.reason)
+        if self._approver is not None:
+            if await self._approver(friction):
+                return
+            record = broker.request(friction.reason)
+            broker.resolve(record.approval_id, approved=False, note="rejected interactively")
+            raise ApprovalRejectedError(record.approval_id, friction.reason)
+        record = broker.request(friction.reason)
+        raise ApprovalPendingError(record.approval_id, friction.reason)
+
     async def route(
         self,
         category: TaskCategory,
@@ -117,6 +160,7 @@ class ModelRouter:
         temperature: float = 0.7,
         max_tokens: int = 8192,
         friction: Optional[FrictionGate] = None,
+        approval_id: Optional[str] = None,
         **kwargs: Any,
     ) -> Any:
         if self._client is None:
@@ -134,8 +178,7 @@ class ModelRouter:
         self._enrich_for_local(model, request_kwargs)
 
         if friction and friction.enabled and friction.human_approval_required:
-            print(f"⚠️ FRICTION GATE: {friction.reason}")
-            input("✅ Подтверди (Enter) или Ctrl+C...")
+            await self._pass_friction_gate(friction, approval_id)
 
         if self.settings.langsmith_tracing_v2:
             request_kwargs["tags"] = ["rhaef-v2", category.value]
