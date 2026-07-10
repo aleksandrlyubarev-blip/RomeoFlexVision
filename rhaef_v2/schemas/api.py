@@ -17,7 +17,9 @@ from rhaef_v2.core.model_router import TaskCategory
 
 
 class RunRequest(BaseModel):
-    model_config = ConfigDict(strict=True)
+    # Не strict: тело приходит из JSON, и FastAPI валидирует его в python-режиме —
+    # strict отверг бы category="critical" (str vs TaskCategory) с 422 на любом запросе.
+    model_config = ConfigDict(strict=False)
     request_id: str
     messages: list[dict[str, Any]]
     category: TaskCategory
@@ -34,6 +36,30 @@ class RunResponse(BaseModel):
     reason: str
     policy_code: str
     output: str | None = None
+    # Заполняется при status="blocked": идентификатор для resume-эндпоинта
+    # POST /approvals/{approval_id}/resolve.
+    approval_id: str | None = None
+
+
+class ApprovalResolveRequest(BaseModel):
+    model_config = ConfigDict(strict=True)
+    approved: bool
+    note: str = ""
+
+
+class ApprovalView(BaseModel):
+    model_config = ConfigDict(strict=True)
+    approval_id: str
+    reason: str
+    status: str
+    created_at: str
+    resolved_at: str | None = None
+    note: str = ""
+
+
+class ApprovalListResponse(BaseModel):
+    model_config = ConfigDict(strict=True)
+    pending: list[ApprovalView]
 
 
 class APIError(BaseModel):

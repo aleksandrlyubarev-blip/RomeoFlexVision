@@ -36,7 +36,7 @@ class Settings(BaseModel):
     model_config = ConfigDict(strict=True, frozen=True, arbitrary_types_allowed=True)
 
     grok_api_key: SecretStr | None = None
-    grok_model: str = "grok-2-vision-1212"
+    grok_model: str = "grok-4"
     grok_endpoint: str = "https://api.x.ai/v1/chat/completions"
     grok_timeout_s: float = 15.0
 

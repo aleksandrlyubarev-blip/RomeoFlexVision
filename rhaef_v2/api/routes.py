@@ -30,9 +30,18 @@ except Exception:  # pragma: no cover
     def ConfigDict(**_: Any) -> dict[str, Any]:  # type: ignore
         return {}
 
+from rhaef_v2.core.approvals import ApprovalBroker, ApprovalRecord, ApprovalStatus, get_default_broker
 from rhaef_v2.core.model_router import ModelRouter
 from rhaef_v2.core.policies import FrictionPolicyEngine, FrictionPolicyInput, PolicyAction
-from rhaef_v2.schemas.api import APIError, RunRequest, RunResponse, StatsResponse
+from rhaef_v2.schemas.api import (
+    APIError,
+    ApprovalListResponse,
+    ApprovalResolveRequest,
+    ApprovalView,
+    RunRequest,
+    RunResponse,
+    StatsResponse,
+)
 from rhaef_v2.tools.interfaces import (
     InspectionRequest,
     InspectionResult,
@@ -56,6 +65,10 @@ class APIServices(BaseModel):
     # isinstance validator for a Protocol so we type it as Any here.
     roboqc_client: Optional[Any] = None
     dataset_root: Optional[Path] = None
+    approval_broker: Optional[ApprovalBroker] = None
+
+    def broker(self) -> ApprovalBroker:
+        return self.approval_broker or get_default_broker()
 
 
 class DatasetSummary(BaseModel):
@@ -97,12 +110,14 @@ async def execute_run(payload: RunRequest, services: APIServices) -> RunResponse
         )
     )
     if decision.action == PolicyAction.REQUIRE_HUMAN:
+        record = services.broker().request(reason=decision.reason, payload=payload.model_dump())
         return RunResponse(
             request_id=payload.request_id,
             status="blocked",
             decision=decision.action.value,
             reason=decision.reason,
             policy_code=decision.code.value,
+            approval_id=record.approval_id,
         )
 
     response = await services.model_router.route(category=payload.category, messages=payload.messages)
@@ -114,6 +129,72 @@ async def execute_run(payload: RunRequest, services: APIServices) -> RunResponse
         reason=decision.reason,
         policy_code=decision.code.value,
         output=output,
+    )
+
+
+def _approval_view(record: ApprovalRecord) -> ApprovalView:
+    return ApprovalView(
+        approval_id=record.approval_id,
+        reason=record.reason,
+        status=record.status.value,
+        created_at=record.created_at,
+        resolved_at=record.resolved_at,
+        note=record.note,
+    )
+
+
+def list_pending_approvals(services: APIServices) -> ApprovalListResponse:
+    return ApprovalListResponse(pending=[_approval_view(r) for r in services.broker().pending()])
+
+
+async def resolve_approval(
+    approval_id: str, payload: ApprovalResolveRequest, services: APIServices
+) -> RunResponse | APIError:
+    """Resume-эндпоинт FrictionGate: человек одобряет/отклоняет заблокированный запрос.
+
+    При одобрении сохранённый RunRequest выполняется сразу (политика уже
+    пройдена человеком), при отклонении возвращается status="rejected".
+    """
+    broker = services.broker()
+    record = broker.get(approval_id)
+    if record is None:
+        return APIError(code="APPROVAL_NOT_FOUND", message=approval_id, request_id=approval_id)
+    if record.status is not ApprovalStatus.PENDING:
+        return APIError(code="APPROVAL_ALREADY_RESOLVED", message=record.status.value, request_id=approval_id)
+
+    record = broker.resolve(approval_id, approved=payload.approved, note=payload.note)
+    if record.payload is None:
+        # Одобрение, зарегистрированное самим роутером (_pass_friction_gate):
+        # исходного RunRequest нет, перезапускать нечего — вызывающий сам
+        # продолжит через route(..., approval_id=...). Просто фиксируем решение.
+        return RunResponse(
+            request_id=approval_id,
+            status="approved" if payload.approved else "rejected",
+            decision="human_approved" if payload.approved else "human_rejected",
+            reason=payload.note or record.reason,
+            policy_code="HUMAN_DECISION",
+            approval_id=approval_id,
+        )
+    original = RunRequest(**record.payload)
+    if not payload.approved:
+        return RunResponse(
+            request_id=original.request_id,
+            status="rejected",
+            decision="human_rejected",
+            reason=payload.note or record.reason,
+            policy_code="HUMAN_DECISION",
+            approval_id=approval_id,
+        )
+
+    response = await services.model_router.route(category=original.category, messages=original.messages)
+    return RunResponse(
+        request_id=original.request_id,
+        status="ok",
+        decision="human_approved",
+        reason=payload.note or record.reason,
+        policy_code="HUMAN_DECISION",
+        output=response.choices[0].message["content"],
+        approval_id=approval_id,
     )
 
 
@@ -178,20 +259,41 @@ async def run_inspection(payload: InspectionRequest, services: APIServices) -> I
     return await client.run_check(payload)
 
 
+def _default_roboqc_client() -> Optional[Any]:
+    """Реальный пайплайн для /inspect включается через RHAEF_INSPECT_PIPELINE=1;
+    по умолчанию остаётся детерминированный стаб (без сети и langgraph)."""
+    import os
+
+    if os.environ.get("RHAEF_INSPECT_PIPELINE") != "1":
+        return None
+    from rhaef_v2.agents.roboqc.client import PipelineRoboQCClient
+
+    return PipelineRoboQCClient()
+
+
 def create_api_router(services: APIServices | None = None) -> APIRouter:
     svc = services or APIServices(
         model_router=ModelRouter(client=_fake_completion_client),
         policy_engine=FrictionPolicyEngine(),
+        roboqc_client=_default_roboqc_client(),
     )
     router = APIRouter()
 
-    @router.post("/run", response_model=RunResponse)
+    @router.post("/run")
     async def run_route(payload: RunRequest) -> RunResponse | APIError:
         return await execute_run(payload, svc)
 
     @router.get("/stats")
     async def stats() -> StatsResponse:
         return build_stats(svc)
+
+    @router.get("/approvals", response_model=ApprovalListResponse)
+    def approvals() -> ApprovalListResponse:
+        return list_pending_approvals(svc)
+
+    @router.post("/approvals/{approval_id}/resolve")
+    async def approvals_resolve(approval_id: str, payload: ApprovalResolveRequest) -> RunResponse | APIError:
+        return await resolve_approval(approval_id, payload, svc)
 
     @router.get("/dataset/manifest/{manifest_id}")
     def dataset_manifest(manifest_id: str) -> DatasetSummary | APIError:

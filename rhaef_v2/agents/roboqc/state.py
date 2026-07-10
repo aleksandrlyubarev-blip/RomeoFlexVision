@@ -69,8 +69,12 @@ class RoboQCState(BaseModel):
 
     model_config = ConfigDict(strict=False)
 
-    # Вход
-    image_uri: str
+    # Вход: либо URI кадра, либо инлайн-байты (base64, без data-URL префикса).
+    # Байты — предпочтительный путь: vision-модель получает сами пиксели,
+    # а не строку URI в тексте промпта.
+    image_uri: str = ""
+    image_b64: str | None = None
+    image_mime: str = "image/jpeg"
     extra_frames: list[str] = Field(default_factory=list)
     subject: str = "unknown"
     workcell_id: str = "WC-00"

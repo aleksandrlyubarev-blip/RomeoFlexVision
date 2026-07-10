@@ -35,6 +35,12 @@ export = [
     "onnx>=1.16",
     "onnxruntime>=1.19",
 ]
+test = [
+    "pytest>=8.0",
+    "numpy>=1.26",
+    "pillow>=10.4",
+    "opencv-python-headless>=4.10",
+]
 
 [project.scripts]
 roboqc-data = "roboqc_data.cli.main:app"
