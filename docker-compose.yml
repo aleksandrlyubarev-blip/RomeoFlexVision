@@ -12,3 +12,26 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+
+  # Браузерный голосовой шлюз Romeo (Gemini Live / Grok Voice, см. voice-gateway/.env.example)
+  voice-gateway:
+    build: ./voice-gateway
+    container_name: rfv-voice-gateway
+    ports:
+      - "8765:8765"
+    env_file:
+      - path: ./voice-gateway/.env
+        required: false
+    restart: unless-stopped
+
+  # Remote MCP-сервер инструментов RoboQC для xAI Voice Agent Builder
+  roboqc-mcp:
+    build: ./voice-gateway
+    container_name: rfv-roboqc-mcp
+    command: ["node", "dist/mcp-server.js"]
+    ports:
+      - "8766:8766"
+    env_file:
+      - path: ./voice-gateway/.env
+        required: false
+    restart: unless-stopped

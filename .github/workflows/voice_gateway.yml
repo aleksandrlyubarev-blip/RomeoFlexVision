@@ -1,0 +1,52 @@
+name: voice_gateway
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+    paths:
+      - "voice-gateway/**"
+      - ".github/workflows/voice_gateway.yml"
+  pull_request:
+    paths:
+      - "voice-gateway/**"
+      - ".github/workflows/voice_gateway.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./voice-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: voice-gateway/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck (src + tests)
+        run: npm run typecheck
+      - name: Run test suite
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image (gateway + MCP entrypoints)
+        run: docker build -t rfv-voice-gateway:ci ./voice-gateway
+      - name: Smoke-test MCP entrypoint
+        run: |
+          docker run -d --name mcp -p 8766:8766 rfv-voice-gateway:ci node dist/mcp-server.js
+          for i in $(seq 1 10); do
+            curl -sf http://localhost:8766/healthz && break
+            sleep 1
+          done
+          curl -sf http://localhost:8766/healthz | grep rfv-roboqc-mcp
+          docker rm -f mcp
