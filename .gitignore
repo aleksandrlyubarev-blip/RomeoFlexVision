@@ -7,3 +7,12 @@ __pycache__/
 
 voice-gateway/node_modules/
 node_modules/
+
+# Litho documentation automation (including its actual internal directory)
+.litho/
+.litho-cache/
+*.litho-cache/
+litho.docs/
+litho/.inputs/
+.env
+.env.*
